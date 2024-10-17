@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "36674562226",
+    "project_id": "minion-db-5fff3",
+    "storage_bucket": "minion-db-5fff3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36674562226:android:55f7086934d3e0aab581ab",
+        "android_client_info": {
+          "package_name": "com.example.minion_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbDyPT4hlmbOotXz-368H1IG7EK_-cxRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
