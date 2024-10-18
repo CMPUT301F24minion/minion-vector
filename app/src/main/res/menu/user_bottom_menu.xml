@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/user_nearby"
+        android:title="Nearby"
+        android:icon="@drawable/baseline_location"/>
+    <item
+        android:id="@+id/user_attending"
+        android:title="Attending"
+        android:icon="@drawable/baseline_tag_faces"/>
+    <item
+        android:id="@+id/user_waitlisted"
+        android:title="Waitlisted"
+        android:icon="@drawable/baseline_format_list"/>
+    <item
+        android:id="@+id/user_updates"
+        android:title="Updates"
+        android:icon="@drawable/baseline_notifications"/>
+    <item
+        android:id="@+id/user_scan_qr"
+        android:title="Scan QR"
+        android:icon="@drawable/baseline_qr_code_scanner"/>
+</menu>
