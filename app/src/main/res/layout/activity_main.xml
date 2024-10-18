@@ -5,15 +5,84 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/fragment_sign_up"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="198dp"
+        tools:layout_editor_absoluteY="0dp">
+    </FrameLayout>
     <TextView
+        android:id="@+id/choose_page_launch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_page_launch"
+        android:layout_marginBottom="160dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/organizerBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/organizerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:background="@drawable/round_button"
+        android:text="@string/organizer"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/userBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/userBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:text="@string/user"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/organizerBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/adminBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:text="@string/admin"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/userBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="341dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="341dp"
+        android:background="@drawable/round_button"
+        android:text="@string/login_signup_with_deviceid"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
