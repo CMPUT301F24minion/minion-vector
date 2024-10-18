@@ -28,7 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10px"
         android:hint="Phone Number"
-        android:paddingBottom="50px" />
+        android:paddingBottom="50px"
+        android:inputType="phone"/>
     <EditText
         android:id="@+id/city"
         android:layout_width="match_parent"
