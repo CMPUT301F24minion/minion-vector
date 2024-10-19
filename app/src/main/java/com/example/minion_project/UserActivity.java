@@ -21,6 +21,8 @@ public class UserActivity extends AppCompatActivity {
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        // NOTE: NOT SURE IF THIS IS NEEDED - Drae
         replaceFragment(new UserNearbyFragment());
 
         binding.userBottomNavigationView.setOnItemSelectedListener(item -> {
