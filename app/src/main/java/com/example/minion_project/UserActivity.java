@@ -21,16 +21,13 @@ public class UserActivity extends AppCompatActivity {
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-        // NOTE: NOT SURE IF THIS IS NEEDED - Drae
-        replaceFragment(new UserNearbyFragment());
+        replaceFragment(new UserAttendingFragment());
 
         binding.userBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the item ID
 
-            if (itemId == R.id.user_nearby) {
-                replaceFragment(new UserNearbyFragment());
-            } else if (itemId == R.id.user_attending) {
+
+             if (itemId == R.id.user_attending) {
                 replaceFragment(new UserAttendingFragment());
             } else if (itemId == R.id.user_waitlisted) {
                 replaceFragment(new UserWaitlistedFragment());

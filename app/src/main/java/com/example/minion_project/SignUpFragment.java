@@ -38,7 +38,8 @@ public class SignUpFragment extends Fragment {
         fragment.usersRef=usersRef;
         fragment.android_id=android_id;
         return  fragment;
-    };
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,7 +90,6 @@ public class SignUpFragment extends Fragment {
                         Log.d("Firestore", "DocumentSnapshot successfully written!");
                         if (organizerSeleced){
                             // launch organizer activity
-                             ;
                         } else if (userSeleced) {
                             // launch user activity
                             startActivity(new Intent(getActivity(), UserActivity.class));
