@@ -1,37 +1,52 @@
 package com.example.minion_project;
 
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.minion_project.databinding.ActivityUserBinding;
 
 public class UserActivity extends AppCompatActivity {
     // a basic activity
     // TODO: IMPLEMENT the bottom naviagtion for user
+
+    ActivityUserBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        binding = ActivityUserBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        replaceFragment(new UserNearbyFragment());
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragmentContainerView2);// Use the correct ID
-        NavController navController = navHostFragment.getNavController();
+        binding.userBottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId(); // Get the item ID
 
-        // Now you can use navController for navigation actions
-        BottomNavigationView bottomNavigationView = findViewById(R.id.userBottomNavigationView);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+            if (itemId == R.id.user_nearby) {
+                replaceFragment(new UserNearbyFragment());
+            } else if (itemId == R.id.user_attending) {
+                replaceFragment(new UserAttendingFragment());
+            } else if (itemId == R.id.user_waitlisted) {
+                replaceFragment(new UserWaitlistedFragment());
+            } else if (itemId == R.id.user_updates) {
+                replaceFragment(new UserUpdatesFragment());
+            } else if (itemId == R.id.user_scan_qr) {
+                replaceFragment(new UserScanFragment());
+            }
+            return true;
+        });
+
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainerView2, fragment);
+        fragmentTransaction.commit();
     }
 
 }
+
