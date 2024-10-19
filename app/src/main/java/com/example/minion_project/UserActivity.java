@@ -22,7 +22,7 @@ public class UserActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        // NOTE: NOT SURE IF THIS IS NEEDED - Drae
+        // NOTE: NOT SURE IF THIS IS NEEDED - DraeY
         replaceFragment(new UserNearbyFragment());
 
         binding.userBottomNavigationView.setOnItemSelectedListener(item -> {
