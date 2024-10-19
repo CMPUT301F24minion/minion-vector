@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_nav"
+    app:startDestination="@id/user_nearby">
+
+    <fragment
+        android:id="@+id/user_nearby"
+        android:name="com.example.minion_project.UserNearbyFragment"
+        android:label="fragment_user_nearby"
+        tools:layout="@layout/fragment_user_nearby" />
+    <fragment
+        android:id="@+id/user_attending"
+        android:name="com.example.minion_project.UserAttendingFragment"
+        android:label="fragment_user_attending"
+        tools:layout="@layout/fragment_user_attending" />
+    <fragment
+        android:id="@+id/user_waitlisted"
+        android:name="com.example.minion_project.UserWaitlistedFragment"
+        android:label="fragment_user_waitlisted"
+        tools:layout="@layout/fragment_user_waitlisted" />
+    <fragment
+        android:id="@+id/user_updates"
+        android:name="com.example.minion_project.UserUpdatesFragment"
+        android:label="fragment_user_updates"
+        tools:layout="@layout/fragment_user_updates" />
+    <fragment
+        android:id="@+id/user_scanQR"
+        android:name="com.example.minion_project.UserScanFragment"
+        android:label="fragment_user_scan_q_r"
+        tools:layout="@layout/fragment_user_scan_q_r" />
+</navigation>
