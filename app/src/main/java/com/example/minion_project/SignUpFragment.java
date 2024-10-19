@@ -63,17 +63,22 @@ public class SignUpFragment extends Fragment {
         String phone = phoneEditText.getText().toString().trim();
         String city = cityEditText.getText().toString().trim();
 
-        Boolean organizerSeleced=organizerCheckBox.isChecked();
-        Boolean userSeleced=userCheckBox.isChecked();
+        Boolean organizerSelected=organizerCheckBox.isChecked();
+        Boolean userSelected=userCheckBox.isChecked();
 
         if (name.isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter your name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please, enter your name!", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!(organizerSelected || userSelected)) {
+            Toast.makeText(getActivity(), "You forgot to select your role!", Toast.LENGTH_SHORT).show();
+        }
+
+
         Map<String, Boolean> roles=new HashMap<>();
         roles.put("Admin",Boolean.FALSE);
-        roles.put("Organizer",organizerSeleced);
-        roles.put("User",userSeleced);
+        roles.put("Organizer",organizerSelected);
+        roles.put("User",userSelected);
 
         Map<String, Object> user = new HashMap<>();
         user.put("Name", name);
@@ -88,9 +93,10 @@ public class SignUpFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Firestore", "DocumentSnapshot successfully written!");
-                        if (organizerSeleced){
+                        if (organizerSelected){
                             // launch organizer activity
-                        } else if (userSeleced) {
+
+                        } else if (userSelected) {
                             // launch user activity
                             startActivity(new Intent(getActivity(), UserActivity.class));
                         }
