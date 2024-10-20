@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,15 +29,18 @@ public class SignUpFragment extends Fragment {
     private EditText nameEditText, emailEditText, phoneEditText,cityEditText;
     private CheckBox organizerCheckBox, userCheckBox;
     private Button signupButton;
-    private CollectionReference usersRef;
+    private CollectionReference usersRef,All_UsersRef,organizersRef;
     private String android_id;
     // instantiate a fragment and set the arguments passed
-    public static  SignUpFragment newInstance(CollectionReference usersRef,String android_id){
+    public static  SignUpFragment newInstance(CollectionReference All_UsersRef,String android_id,CollectionReference usersRef,CollectionReference organizersRef){
         SignUpFragment fragment=new SignUpFragment();
         Bundle args =new Bundle();
         fragment.setArguments(args);
         fragment.usersRef=usersRef;
         fragment.android_id=android_id;
+        fragment.All_UsersRef=All_UsersRef;
+        fragment.organizersRef=organizersRef;
+
         return  fragment;
     }
 
@@ -80,26 +84,43 @@ public class SignUpFragment extends Fragment {
         roles.put("Organizer",organizerSelected);
         roles.put("User",userSelected);
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("Name", name);
-        user.put("Email", email);
-        user.put("Phone_number",phone);
-        user.put("City",city);
-        user.put("Roles",roles);
+        Map<String, Object> alluser = new HashMap<>();
+        alluser.put("Name", name);
+        alluser.put("Email", email);
+        alluser.put("Phone_number",phone);
+        alluser.put("City",city);
+        alluser.put("Roles",roles);
 
-        usersRef.document(android_id)
-                .set(user)
+
+        if (organizerSelected){
+            Map<String, Object> organizer = new HashMap<>();
+            organizer.put("Name", name);
+            organizer.put("Email", email);
+            organizer.put("Phone_number",phone);
+            ArrayList events=new ArrayList<>();
+            organizer.put("Events", events);
+            saveDocument(organizersRef,organizer);
+
+
+        }
+        if (userSelected){
+            Map<String, Object> user = new HashMap<>();
+            user.put("Name", name);
+            user.put("Email", email);
+            user.put("Phone_number",phone);
+            ArrayList events=new ArrayList<>();
+            user.put("Events", events);
+            saveDocument(usersRef,user);
+
+
+        }
+        All_UsersRef.document(android_id)
+                .set(alluser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Firestore", "DocumentSnapshot successfully written!");
-                        if (organizerSelected){
-                            // launch organizer activity
+                    public void onSuccess(Void result) {
+                        showLoginButtons(roles);
 
-                        } else if (userSelected) {
-                            // launch user activity
-                            startActivity(new Intent(getActivity(), UserActivity.class));
-                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -109,6 +130,23 @@ public class SignUpFragment extends Fragment {
                     }
                 });
 
+    }
+    private void saveDocument(CollectionReference collectionRef, Map<String, Object> data) {
+        collectionRef.document(android_id).set(data)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Document successfully written!"))
+                .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
+    }
+    private void showLoginButtons(Map<String, Boolean> role) {
+        nameEditText.setVisibility(View.GONE);
+        emailEditText.setVisibility(View.GONE);
+        phoneEditText.setVisibility(View.GONE);
+        cityEditText.setVisibility(View.GONE);
+        organizerCheckBox.setVisibility(View.GONE);
+        userCheckBox.setVisibility(View.GONE);
+        signupButton.setVisibility(View.GONE);
+
+        // Show the login buttons
+        ((MainActivity) getActivity()).displayButtons(role);
     }
 
 

@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
-    private CollectionReference usersRef;
+    private CollectionReference usersRef,All_UsersRef,organizersRef;
     private String android_id;
 
     Button loginBtn,userBtn,organizerBtn,adminBtn;
@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
         organizerBtn = findViewById(R.id.organizerBtn);
         adminBtn=findViewById(R.id.adminBtn);
         choosePageText=findViewById(R.id.choose_page_launch);
+        All_UsersRef = db.collection("All_Users");
         usersRef = db.collection("Users");
+        organizersRef=db.collection("Organizers");
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 
                 // Check if user exists
-                usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                All_UsersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -54,24 +56,10 @@ public class MainActivity extends AppCompatActivity {
                                 Map<String, Object> data = document.getData();
                                 if (data!=null) {
                                     // User exists, retrieve data
-                                    // this type checking prevents app to still function if something
-                                    // breaks
                                     Object roleObj = data.get("Roles");
                                     if (roleObj instanceof Map) {
                                         Map<String, Boolean> role = (Map<String, Boolean>) roleObj;
-                                        loginBtn.setVisibility(View.GONE); //hide log in button
-                                        choosePageText.setVisibility(View.VISIBLE);
-                                        // check which roles user can access then allow those buttons
-                                        if (role.get("Admin") != null && role.get("Admin")) {
-                                            adminBtn.setVisibility(View.VISIBLE);
-                                        }
-                                        if (role.get("User") != null && role.get("User")) {
-                                            userBtn.setVisibility(View.VISIBLE);
-                                        }
-                                        if (role.get("Organizer") != null && role.get("Organizer")) {
-                                            organizerBtn.setVisibility(View.VISIBLE);
-                                        }
-
+                                        displayButtons(role);
                                     }
                                     }
                             } else {
@@ -106,10 +94,24 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public void displayButtons(Map<String, Boolean> role){
+        loginBtn.setVisibility(View.GONE); //hide log in button
+        choosePageText.setVisibility(View.VISIBLE);
+        // check which roles user can access then allow those buttons
+        if (role.get("Admin") != null && role.get("Admin")) {
+            adminBtn.setVisibility(View.VISIBLE);
+        }
+        if (role.get("User") != null && role.get("User")) {
+            userBtn.setVisibility(View.VISIBLE);
+        }
+        if (role.get("Organizer") != null && role.get("Organizer")) {
+            organizerBtn.setVisibility(View.VISIBLE);
+        }
 
+    }
     private void showSignUpFragment() {
         loginBtn.setVisibility(View.GONE); //hide log in button
-        SignUpFragment signUpFragment = SignUpFragment.newInstance(usersRef,android_id);
+        SignUpFragment signUpFragment = SignUpFragment.newInstance(All_UsersRef,android_id,usersRef,organizersRef);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_sign_up, signUpFragment);
         transaction.addToBackStack(null);
