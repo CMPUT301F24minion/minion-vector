@@ -26,8 +26,7 @@ public class UserActivity extends AppCompatActivity {
         binding.userBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the item ID
 
-
-             if (itemId == R.id.user_attending) {
+            if (itemId == R.id.user_attending) {
                 replaceFragment(new UserAttendingFragment());
             } else if (itemId == R.id.user_waitlisted) {
                 replaceFragment(new UserWaitlistedFragment());
