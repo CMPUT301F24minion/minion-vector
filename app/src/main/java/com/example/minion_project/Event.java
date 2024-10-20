@@ -5,7 +5,7 @@ import com.google.firebase.firestore.auth.User;
 import java.util.ArrayList;
 import java.util.UUID;
 
-// TODO: Waiting on user class to be implemented
+// Waiting on user class to be implemented
 //       Somethings are commented out as we are waiting for the user class to be implemented
 //       - Drae
 
