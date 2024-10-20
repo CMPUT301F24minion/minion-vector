@@ -1,13 +1,7 @@
 package com.example.minion_project;
 
-import com.google.firebase.firestore.auth.User;
-
 import java.util.ArrayList;
 import java.util.UUID;
-
-// Waiting on user class to be implemented
-//       Somethings are commented out as we are waiting for the user class to be implemented
-//       - Drae
 
 public class Event {
     private UUID eventID;
@@ -15,9 +9,9 @@ public class Event {
     private String eventName;
     private String eventDescription;
     private int eventCapacity;
-    // private User eventOrganizer;
-    // private ArrayList<User> eventAttendees;
-    // private ArrayList<User> eventWaitlist;
+    private User eventOrganizer;
+    private ArrayList<User> eventAttendees;
+    private ArrayList<User> eventWaitlist;
 
     // Default constructor
     public Event() {
@@ -26,21 +20,25 @@ public class Event {
         this.eventName = "";
         this.eventDescription = "";
         this.eventCapacity = 0;
-        // this.eventOrganizer = null;
-        // this.eventAttendees = new ArrayList<>();
-        // this.eventWaitlist = new ArrayList<>();
+        this.eventOrganizer = null;
+        this.eventAttendees = new ArrayList<>();
+        this.eventWaitlist = new ArrayList<>();
     }
 
-//    public Event(String eventDate, String eventName, String eventDescription, int eventCapacity,
-//                 ArrayList<User> waitList, ArrayList<User> participants, User eventOrganizer) {
-//        this.eventID = UUID.randomUUID(); // Always generate a unique event ID
-//        this.eventDate = eventDate;
-//        this.eventDescription = eventDescription;
-//        this.waitList = waitList != null ? waitList : new ArrayList<>();
-//        this.eventAttendees = participants != null ? participants : new ArrayList<>();
-//        this.eventCapacity = eventCapacity;;
-//        this.eventOrganizer = eventOrganizer;
-//    }
+    // Parameterized constructor
+    public Event(String eventDate, String eventName, String eventDescription, int eventCapacity,
+                 ArrayList<User> waitlist, ArrayList<User> participants, User eventOrganizer) {
+        this.eventID = UUID.randomUUID();
+        this.eventDate = eventDate;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventCapacity = eventCapacity;
+        this.eventOrganizer = eventOrganizer;
+
+        // If participants and waitlist are null, initialize them to empty lists
+        this.eventAttendees = (participants != null) ? participants : new ArrayList<>();
+        this.eventWaitlist = (waitlist != null) ? waitlist : new ArrayList<>();
+    }
 
     // Getters and setters for each field
     public UUID getEventID() {
