@@ -1,15 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/user_attending"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UserAttendingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- Root Vertical LinearLayout -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="User Attending" />
+        android:orientation="vertical"
+        android:id="@+id/header">
 
+        <!-- Header Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/top_margin"
+            android:gravity="center_vertical"
+            android:id="@+id/topBar"
+            >
+
+            <!-- Settings Button on the Left -->
+            <ImageButton
+                android:id="@+id/settings"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground"
+                android:src="@android:drawable/ic_dialog_info"
+                android:padding="8dp"
+                app:layout_constraintLeft_toLeftOf="@id/topBar"
+                app:layout_constraintTop_toTopOf="@id/topBar"
+                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                android:layout_gravity="start|center_vertical" />
+
+
+
+            <!-- Text in the Middle -->
+            <TextView
+                android:id="@+id/whats_poppin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What's Popping"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@id/topBar"
+                app:layout_constraintRight_toRightOf="@id/topBar"
+                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                app:layout_constraintTop_toTopOf="@id/topBar"
+                android:textColor="@android:color/black" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ListView Below -->
+        <ListView
+            android:id="@+id/eventList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </FrameLayout>
