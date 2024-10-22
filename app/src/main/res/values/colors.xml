@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="navBar">#48ABD9</color>
+    <color name="userNavBar">#48ABD9</color>
+    <color name="organizerNavBar">#F8594D</color>
     <color name="top_margin">#96C4D9</color>
 
 </resources>
