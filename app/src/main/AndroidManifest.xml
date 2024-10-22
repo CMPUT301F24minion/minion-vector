@@ -18,6 +18,11 @@
             android:label="@string/title_activity_user"
             android:theme="@style/Theme.Minionproject" />
         <activity
+            android:name=".OrganizerActivity"
+            android:exported="false"
+            android:label="OrganizerActivity"
+            android:theme="@style/Theme.Minionproject" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

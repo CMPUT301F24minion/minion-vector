@@ -40,7 +40,7 @@ public class OrganizerActivity extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerView2, fragment);
+        fragmentTransaction.replace(R.id.frameLayoutOrganizer, fragment);
         fragmentTransaction.commit();
     }
 }
