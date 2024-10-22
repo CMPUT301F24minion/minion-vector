@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         organizerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(MainActivity.this, OrganizerActivity.class));
+                startActivity(new Intent(MainActivity.this, OrganizerActivity.class));
             }
         });
         adminBtn.setOnClickListener(new View.OnClickListener() {
