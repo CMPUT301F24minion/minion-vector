@@ -1,8 +1,11 @@
-package com.example.minion_project;
+package com.example.minion_project.user;
 
 import android.app.Notification;
 
+import com.example.minion_project.Event;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User {
     private String deviceID;
@@ -12,6 +15,7 @@ public class User {
     private ArrayList<Event> attendingEvents;
     private ArrayList<Event> waitlistedEvents;
     private ArrayList<Notification> notificationsArrayList;
+    private HashMap<String,String> allEvents;
 
     // Default Constructor
     public User() {
@@ -20,12 +24,14 @@ public class User {
         this.email = "";
         this.phoneNumber = "";
         this.attendingEvents = new ArrayList<>();
+        this.allEvents = new HashMap<>();
         this.waitlistedEvents = new ArrayList<>();
         this.notificationsArrayList = new ArrayList<>();
     }
 
     // Constructor with parameters
-    public User(String deviceID, String name, String email, String phoneNumber) {
+    // all events is a a hashmap where we have {event_id: status} then we need to populate the waitlist and attending dep on status
+    public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents) {
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
@@ -33,6 +39,7 @@ public class User {
         this.attendingEvents = new ArrayList<>();
         this.waitlistedEvents = new ArrayList<>();
         this.notificationsArrayList = new ArrayList<>();
+        this.allEvents=allEvents;
     }
 
     public String getDeviceID() {

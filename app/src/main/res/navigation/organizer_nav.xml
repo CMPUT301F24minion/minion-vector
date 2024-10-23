@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/organizerEvents"
-        android:name="com.example.minion_project.OrganizerEvents"
+        android:name="com.example.minion_project.organizer.OrganizerEvents"
         android:label="fragment_organizer_events"
         tools:layout="@layout/fragment_organizer_events" />
     <fragment
         android:id="@+id/organizerCreateEvent"
-        android:name="com.example.minion_project.OrganizerCreateEvent"
+        android:name="com.example.minion_project.organizer.OrganizerCreateEvent"
         android:label="fragment_organizer_create_event"
         tools:layout="@layout/fragment_organizer_create_event" />
 </navigation>

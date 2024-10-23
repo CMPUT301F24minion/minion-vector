@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.minion_project.organizer.OrganizerActivity;
+import com.example.minion_project.user.UserActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,25 +22,23 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseFirestore db;
     private CollectionReference usersRef,All_UsersRef,organizersRef;
     private String android_id;
-
+    public FireStore Our_Firestore=new FireStore();
     Button loginBtn,userBtn,organizerBtn,adminBtn;
     TextView choosePageText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = FirebaseFirestore.getInstance();
         loginBtn = findViewById(R.id.start);
         userBtn = findViewById(R.id.userBtn);
         organizerBtn = findViewById(R.id.organizerBtn);
         adminBtn=findViewById(R.id.adminBtn);
         choosePageText=findViewById(R.id.choose_page_launch);
-        All_UsersRef = db.collection("All_Users");
-        usersRef = db.collection("Users");
-        organizersRef=db.collection("Organizers");
+        All_UsersRef = Our_Firestore.getAll_UsersRef();
+        usersRef = Our_Firestore.getUsersRef();
+        organizersRef=Our_Firestore.getOrganizersRef();
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

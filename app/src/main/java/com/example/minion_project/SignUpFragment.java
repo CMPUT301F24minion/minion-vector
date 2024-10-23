@@ -97,7 +97,7 @@ public class SignUpFragment extends Fragment {
             organizer.put("Name", name);
             organizer.put("Email", email);
             organizer.put("Phone_number",phone);
-            ArrayList events=new ArrayList<>();
+            HashMap events=new HashMap<>();
             organizer.put("Events", events);
             saveDocument(organizersRef,organizer);
 
@@ -108,7 +108,7 @@ public class SignUpFragment extends Fragment {
             user.put("Name", name);
             user.put("Email", email);
             user.put("Phone_number",phone);
-            ArrayList events=new ArrayList<>();
+            HashMap events=new HashMap<>();
             user.put("Events", events);
             saveDocument(usersRef,user);
 
