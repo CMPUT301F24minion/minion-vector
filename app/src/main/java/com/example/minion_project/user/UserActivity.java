@@ -26,8 +26,6 @@ import java.util.Map;
 
 public class UserActivity extends AppCompatActivity {
     // a basic activity
-    // TODO: IMPLEMENT the bottom naviagtion for user
-    // todo: add user ref to db here and set up the user class
 
     ActivityUserBinding binding;
     public User user;
