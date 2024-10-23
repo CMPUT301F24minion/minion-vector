@@ -1,15 +1,19 @@
 package com.example.minion_project.organizer;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.minion_project.R;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,63 +22,78 @@ import com.example.minion_project.R;
  */
 public class OrganizerCreateEvent extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Button selectTime;
+    private Button selectDate;
+    private Button uploadImage;
 
     public OrganizerCreateEvent() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerCreateEvent.
-     */
-    // TODO: Rename and change types and number of parameters
     public static OrganizerCreateEvent newInstance(String param1, String param2) {
         OrganizerCreateEvent fragment = new OrganizerCreateEvent();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
 
-
-    private Button selectTime;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        selectTime = findViewById(R.id.select_time_button);
-        selectTime.setOnClickListener(v -> openTimePickerDialog());
-
     }
-
-    // Opens select time dialogue for user to select time
-    public void openTimePickerDialog() {
-
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
+
+        // Find views by their IDs
+        selectTime = view.findViewById(R.id.selectTimeButton);
+        selectDate = view.findViewById(R.id.selectDateButton);
+        uploadImage = view.findViewById(R.id.uploadImageButton);
+
+        // Set click listener for the Select Time button
+        selectTime.setOnClickListener(v -> openTimePickerDialog());
+
+        // You can also set listeners for the other buttons here
+        selectDate.setOnClickListener(v -> openDatePickerDialog());
+        uploadImage.setOnClickListener(v -> uploadImage());
+
+        return view;
+    }
+
+    // Method to open the TimePickerDialog
+    public void openTimePickerDialog() {
+        // Get the current time to set as default in the TimePickerDialog
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        // Create a new TimePickerDialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                (TimePicker view, int hourOfDay, int minuteOfHour) -> {
+                    // Format the selected time and show it in a Toast message or update your UI
+                    String selectedTime = hourOfDay + ":" + String.format("%02d", minuteOfHour);
+                    Toast.makeText(getContext(), "Selected Time: " + selectedTime, Toast.LENGTH_SHORT).show();
+                    // You can update the button text or store the selected time here
+                    selectTime.setText("Time: " + selectedTime);
+                }, hour, minute, true);  // Set true for 24-hour format
+
+        timePickerDialog.show();  // Show the dialog
+    }
+
+    // Method to open the DatePickerDialog (you can implement this similarly to TimePickerDialog)
+    public void openDatePickerDialog() {
+        // Implementation for opening the date picker
+        // You can use DatePickerDialog similar to how TimePickerDialog is used
+    }
+
+    // Method to handle image upload (just a placeholder for now)
+    public void uploadImage() {
+        // You can implement the logic for uploading an image, maybe using an intent to open the gallery
+        Toast.makeText(getContext(), "Upload Image clicked!", Toast.LENGTH_SHORT).show();
     }
 }
