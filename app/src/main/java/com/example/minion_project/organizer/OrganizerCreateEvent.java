@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.minion_project.R;
 
@@ -48,6 +49,9 @@ public class OrganizerCreateEvent extends Fragment {
         return fragment;
     }
 
+
+    private Button selectTime;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +59,17 @@ public class OrganizerCreateEvent extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        selectTime = findViewById(R.id.select_time_button);
+        selectTime.setOnClickListener(v -> openTimePickerDialog());
+
     }
+
+    // Opens select time dialogue for user to select time
+    public void openTimePickerDialog() {
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
