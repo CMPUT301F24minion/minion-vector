@@ -1,5 +1,7 @@
 package com.example.minion_project.user;
 
+import static java.lang.Boolean.TRUE;
+
 import android.app.Notification;
 
 import com.example.minion_project.Event;
@@ -11,17 +13,23 @@ public class User {
     private String deviceID;
     private String name;
     private String email;
+    private String location;
+    private  Boolean AllowNotication;
     private String phoneNumber;
     private ArrayList<Event> attendingEvents;
     private ArrayList<Event> waitlistedEvents;
     private ArrayList<Notification> notificationsArrayList;
     private HashMap<String,String> allEvents;
+    private HashMap<String,ArrayList> Notifcations;
 
     // Default Constructor
     public User() {
         this.deviceID = "";
         this.name = "";
         this.email = "";
+        this.location="";
+        this.AllowNotication=TRUE;
+        this.Notifcations=new HashMap<>();
         this.phoneNumber = "";
         this.attendingEvents = new ArrayList<>();
         this.allEvents = new HashMap<>();
@@ -92,6 +100,30 @@ public class User {
 
     public ArrayList<Notification> getNotificationsArrayList() {
         return notificationsArrayList;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Boolean getAllowNotication() {
+        return AllowNotication;
+    }
+
+    public void setAllowNotication(Boolean allowNotication) {
+        AllowNotication = allowNotication;
+    }
+
+    public HashMap<String, ArrayList> getNotifcations() {
+        return Notifcations;
+    }
+
+    public void setNotifcations(HashMap<String, ArrayList> notifcations) {
+        Notifcations = notifcations;
     }
 
     public void setNotificationsArrayList(ArrayList<Notification> notificationsArrayList) {

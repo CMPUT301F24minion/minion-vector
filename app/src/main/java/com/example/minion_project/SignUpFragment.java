@@ -1,5 +1,7 @@
 package com.example.minion_project;
 
+import static java.lang.Boolean.TRUE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -108,8 +110,17 @@ public class SignUpFragment extends Fragment {
             user.put("Name", name);
             user.put("Email", email);
             user.put("Phone_number",phone);
+            user.put("Location","");
             HashMap events=new HashMap<>();
             user.put("Events", events);
+            user.put("AllowNotication",TRUE);
+
+            HashMap<String,ArrayList> notifactions= new HashMap<>();
+            ArrayList<String> temp = new ArrayList<>();
+            notifactions.put("join_event_notifcation",temp);
+            notifactions.put("not_selected_notifcation",temp);
+            user.put("Notfication",notifactions);
+
             saveDocument(usersRef,user);
 
 
