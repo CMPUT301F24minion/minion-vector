@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/user_attending"
-        android:name="com.example.minion_project.UserAttendingFragment"
+        android:name="com.example.minion_project.user.UserAttendingFragment"
         android:label="fragment_user_attending"
         tools:layout="@layout/fragment_user_attending" />
     <fragment
         android:id="@+id/user_waitlisted"
-        android:name="com.example.minion_project.UserWaitlistedFragment"
+        android:name="com.example.minion_project.user.UserWaitlistedFragment"
         android:label="fragment_user_waitlisted"
         tools:layout="@layout/fragment_user_waitlisted" />
     <fragment
         android:id="@+id/user_updates"
-        android:name="com.example.minion_project.UserUpdatesFragment"
+        android:name="com.example.minion_project.user.UserUpdatesFragment"
         android:label="fragment_user_updates"
         tools:layout="@layout/fragment_user_updates" />
     <fragment
         android:id="@+id/user_scanQR"
-        android:name="com.example.minion_project.UserScanFragment"
+        android:name="com.example.minion_project.user.UserScanFragment"
         android:label="fragment_user_scan_q_r"
         tools:layout="@layout/fragment_user_scan_q_r" />
 </navigation>

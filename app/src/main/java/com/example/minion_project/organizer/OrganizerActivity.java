@@ -1,4 +1,4 @@
-package com.example.minion_project;
+package com.example.minion_project.organizer;
 
 import android.os.Bundle;
 
@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityOrganizerBinding;
 
 public class OrganizerActivity extends AppCompatActivity {

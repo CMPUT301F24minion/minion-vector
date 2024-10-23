@@ -13,12 +13,12 @@
         android:theme="@style/Theme.Minionproject"
         tools:targetApi="31">
         <activity
-            android:name=".UserActivity"
+            android:name=".user.UserActivity"
             android:exported="false"
             android:label="@string/title_activity_user"
             android:theme="@style/Theme.Minionproject" />
         <activity
-            android:name=".OrganizerActivity"
+            android:name=".organizer.OrganizerActivity"
             android:exported="false"
             android:label="OrganizerActivity"
             android:theme="@style/Theme.Minionproject" />

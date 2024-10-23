@@ -1,4 +1,4 @@
-package com.example.minion_project;
+package com.example.minion_project.user;
 
 import java.util.Date;
 
