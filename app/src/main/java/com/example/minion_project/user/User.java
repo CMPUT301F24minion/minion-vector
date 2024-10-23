@@ -3,6 +3,7 @@ package com.example.minion_project.user;
 import static java.lang.Boolean.TRUE;
 
 import android.app.Notification;
+import android.location.Location;
 
 import com.example.minion_project.Event;
 
@@ -20,7 +21,7 @@ public class User {
     private ArrayList<Event> waitlistedEvents;
     private ArrayList<Notification> notificationsArrayList;
     private HashMap<String,String> allEvents;
-    private HashMap<String,ArrayList> Notifcations;
+    private HashMap<String,ArrayList> notifcations;
 
     // Default Constructor
     public User() {
@@ -29,7 +30,7 @@ public class User {
         this.email = "";
         this.location="";
         this.AllowNotication=TRUE;
-        this.Notifcations=new HashMap<>();
+        this.notifcations=new HashMap<>();
         this.phoneNumber = "";
         this.attendingEvents = new ArrayList<>();
         this.allEvents = new HashMap<>();
@@ -39,7 +40,7 @@ public class User {
 
     // Constructor with parameters
     // all events is a a hashmap where we have {event_id: status} then we need to populate the waitlist and attending dep on status
-    public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents) {
+    public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents , String location, HashMap<String,ArrayList> notification) {
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
@@ -48,6 +49,8 @@ public class User {
         this.waitlistedEvents = new ArrayList<>();
         this.notificationsArrayList = new ArrayList<>();
         this.allEvents=allEvents;
+        this.location = location;
+        this.notifcations = notification;
     }
 
     public String getDeviceID() {
@@ -119,11 +122,11 @@ public class User {
     }
 
     public HashMap<String, ArrayList> getNotifcations() {
-        return Notifcations;
+        return notifcations;
     }
 
     public void setNotifcations(HashMap<String, ArrayList> notifcations) {
-        Notifcations = notifcations;
+        notifcations = notifcations;
     }
 
     public void setNotificationsArrayList(ArrayList<Notification> notificationsArrayList) {

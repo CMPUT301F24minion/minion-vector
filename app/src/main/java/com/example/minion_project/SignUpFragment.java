@@ -99,6 +99,7 @@ public class SignUpFragment extends Fragment {
             organizer.put("Name", name);
             organizer.put("Email", email);
             organizer.put("Phone_number",phone);
+            organizer.put("Location",city);
             HashMap events=new HashMap<>();
             organizer.put("Events", events);
             saveDocument(organizersRef,organizer);
@@ -110,7 +111,7 @@ public class SignUpFragment extends Fragment {
             user.put("Name", name);
             user.put("Email", email);
             user.put("Phone_number",phone);
-            user.put("Location","");
+            user.put("Location",city);
             HashMap events=new HashMap<>();
             user.put("Events", events);
             user.put("AllowNotication",TRUE);
