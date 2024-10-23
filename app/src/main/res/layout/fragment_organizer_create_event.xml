@@ -1,14 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".organizer.OrganizerCreateEvent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/organizerCreateEvent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <EditText
+        android:id="@+id/createEventTitleEditText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Create Event" />
+        android:layout_height="wrap_content"
+        android:hint="What is your event called?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </EditText>
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/createEventDetailsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Are there any details attendees should know?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createEventTitleEditText">
+    </EditText>
+
+    <EditText
+        android:id="@+id/createEventInvitations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How many people are you able to host?"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/createEventDetailsEditText">
+
+    </EditText>
+
+    <Button
+        android:background="@drawable/round_button"
+        android:id="@+id/selectTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Time"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitations"></Button>
+
+    <Button
+        android:background="@drawable/round_button"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:id="@+id/selectDateButton"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitations"
+        app:layout_constraintLeft_toRightOf="@id/selectTimeButton">
+    </Button>
+
+    <Button
+        android:background="@drawable/round_button"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:id="@+id/uploadImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitations"
+        app:layout_constraintLeft_toRightOf="@id/selectDateButton">
+    </Button>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
