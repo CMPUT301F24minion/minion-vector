@@ -1,11 +1,13 @@
 package com.example.minion_project.organizer;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -79,17 +81,26 @@ public class OrganizerCreateEvent extends Fragment {
                     String selectedTime = hourOfDay + ":" + String.format("%02d", minuteOfHour);
                     Toast.makeText(getContext(), "Selected Time: " + selectedTime, Toast.LENGTH_SHORT).show();
                     // You can update the button text or store the selected time here
-                    selectTime.setText("Time: " + selectedTime);
                 }, hour, minute, true);  // Set true for 24-hour format
 
         timePickerDialog.show();  // Show the dialog
     }
 
     // Method to open the DatePickerDialog (you can implement this similarly to TimePickerDialog)
+    // Method to open the DatePickerDialog
     public void openDatePickerDialog() {
-        // Implementation for opening the date picker
-        // You can use DatePickerDialog similar to how TimePickerDialog is used
+        // Get the current date to show in the picker by default
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Create a DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext());
+
+        datePickerDialog.show();
     }
+
 
     // Method to handle image upload (just a placeholder for now)
     public void uploadImage() {
