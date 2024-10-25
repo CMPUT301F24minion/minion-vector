@@ -81,6 +81,9 @@ public class UserActivity extends AppCompatActivity {
             if (itemId == R.id.user_attending) {
                 replaceFragment(new UserAttendingFragment());
                 binding.textView.setText("What's Popping");
+            } else if (itemId == R.id.user_settings) {
+                replaceFragment(new UserSettingsFragment());
+                binding.textView.setText("Settings");
             } else if (itemId == R.id.user_waitlisted) {
                 replaceFragment(new UserWaitlistedFragment());
                 binding.textView.setText("Waitlists");

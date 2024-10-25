@@ -6,6 +6,12 @@
     app:startDestination="@id/user_attending">
 
     <fragment
+        android:id="@+id/user_settings"
+        android:name="com.example.minion_project.user.UserAttendingFragment"
+        android:label="fragment_user_attending"
+        tools:layout="@layout/fragment_user_settings" />
+
+    <fragment
         android:id="@+id/user_attending"
         android:name="com.example.minion_project.user.UserAttendingFragment"
         android:label="fragment_user_attending"
