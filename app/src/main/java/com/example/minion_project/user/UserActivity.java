@@ -2,6 +2,7 @@ package com.example.minion_project.user;
 
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class UserActivity extends AppCompatActivity {
     public User user;
     public FireStore Our_Firestore=new FireStore();
     private String android_id;
+    private TextView text;
 
     private CollectionReference usersRef,eventsRef;
     @Override
@@ -76,12 +78,16 @@ public class UserActivity extends AppCompatActivity {
 
             if (itemId == R.id.user_attending) {
                 replaceFragment(new UserAttendingFragment());
+                binding.textView.setText("What's Popping");
             } else if (itemId == R.id.user_waitlisted) {
                 replaceFragment(new UserWaitlistedFragment());
+                binding.textView.setText("Waitlists");
             } else if (itemId == R.id.user_updates) {
                 replaceFragment(new UserUpdatesFragment());
+                binding.textView.setText("Notifications");
             } else if (itemId == R.id.user_scan_qr) {
                 replaceFragment(new UserScanFragment());
+                binding.textView.setText("Scan QR");
             }
             return true;
         });
