@@ -41,13 +41,22 @@
         android:hint="City"
         android:paddingBottom="50px" />
 
+    <CheckBox
+        android:id="@+id/role"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="50px"
+        android:layout_margin="10px"
+        android:text="Organizer Access"/>
+
+
     <Button
-        android:id="@+id/signup_button"
+        android:id="@+id/save"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:text="Sign Up"
+        android:text="Save"
 
         android:textColor="@color/white" />
 

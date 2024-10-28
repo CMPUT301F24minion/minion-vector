@@ -3,7 +3,7 @@ package com.example.minion_project;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class FireStore {
+public class FireStoreClass {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference usersRef = db.collection("Users");
     private final CollectionReference All_UsersRef = db.collection("All_Users");
