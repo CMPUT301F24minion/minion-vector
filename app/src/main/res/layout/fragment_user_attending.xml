@@ -5,5 +5,5 @@
     android:id="@+id/user_attending"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user.UserActivity">
+    tools:context=".user.UserAttendingFragment">
 </FrameLayout>

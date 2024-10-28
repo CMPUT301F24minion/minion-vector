@@ -1,4 +1,4 @@
-package com.example.minion_project;
+package com.example.minion_project.user;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.minion_project.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +32,7 @@ public class UserSettingsFragment extends Fragment {
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment using the provided parameters
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
