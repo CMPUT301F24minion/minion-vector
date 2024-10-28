@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/user_settings"
-        android:title="Settings"
-        android:icon="@drawable/baseline_settings"/>
-    <item
         android:id="@+id/user_attending"
         android:title="Attending"
         android:icon="@drawable/baseline_tag_faces"/>
@@ -20,4 +16,8 @@
         android:id="@+id/user_scan_qr"
         android:title="Scan QR"
         android:icon="@drawable/baseline_qr_code_scanner"/>
+    <item
+        android:id="@+id/user_settings"
+        android:title="Settings"
+        android:icon="@drawable/baseline_settings"/>
 </menu>

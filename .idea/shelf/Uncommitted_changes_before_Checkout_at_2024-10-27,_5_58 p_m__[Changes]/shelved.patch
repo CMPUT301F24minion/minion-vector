@@ -1,0 +1,754 @@
+Index: app/src/main/java/com/example/minion_project/user/UserActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.minion_project.user;\n\nimport android.os.Bundle;\nimport android.provider.Settings;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.fragment.app.Fragment;\nimport androidx.fragment.app.FragmentManager;\nimport androidx.fragment.app.FragmentTransaction;\n\nimport com.example.minion_project.Event;\nimport com.example.minion_project.FireStore;\nimport com.example.minion_project.MainActivity;\nimport com.example.minion_project.R;\nimport com.example.minion_project.databinding.ActivityUserBinding;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.firebase.firestore.CollectionReference;\nimport com.google.firebase.firestore.DocumentSnapshot;\n\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class UserActivity extends AppCompatActivity {\n    // a basic activity\n\n    ActivityUserBinding binding;\n    public User user;\n    public FireStore Our_Firestore=new FireStore();\n    private String android_id;\n    private TextView text;\n\n    private CollectionReference usersRef,eventsRef;\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        binding = ActivityUserBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n        usersRef = Our_Firestore.getUsersRef();\n        eventsRef= Our_Firestore.getEventsRef();\n        // set up the user class\n        android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);\n\n        // Check if user exists\n        usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\n            @Override\n            public void onComplete(@NonNull Task<DocumentSnapshot> task) {\n                if (task.isSuccessful()) {\n                    DocumentSnapshot document = task.getResult();\n                    if (document != null && document.exists()) {\n                        Map<String, Object> data = document.getData();\n                        if (data!=null) {\n\n                            String name = (String) data.get(\"Name\");\n\n                            // Todo: need to for loop here and make every event an Event class\n                            HashMap <String,String> events = (HashMap<String, String>)data.get(\"Events\");\n\n                            String phoneNumber = (String) data.get(\"Phone_number\");\n                            String email = (String) data.get(\"Email\");\n                            String Location = (String) data.get(\"Location\");\n                            HashMap <String,ArrayList> Notification = (HashMap<String, ArrayList>) data.get(\"Notfication\");\n\n                            // Create the User object\n                            User user = new User(android_id,name, email, phoneNumber,events, Location, Notification);\n                        }\n                    }\n                } else {\n                    Toast.makeText(UserActivity.this, \"Error fetching user data\", Toast.LENGTH_SHORT).show();\n                }\n            }\n        });\n\n        binding.userBottomNavigationView.setOnItemSelectedListener(item -> {\n            int itemId = item.getItemId(); // Get the item ID\n\n            if (itemId == R.id.user_attending) {\n                replaceFragment(new UserAttendingFragment());\n                binding.textView.setText(\"What's Popping\");\n            } else if (itemId == R.id.user_settings) {\n                replaceFragment(new UserSettingsFragment());\n                binding.textView.setText(\"Settings\");\n            } else if (itemId == R.id.user_waitlisted) {\n                replaceFragment(new UserWaitlistedFragment());\n                binding.textView.setText(\"Waitlists\");\n            } else if (itemId == R.id.user_updates) {\n                replaceFragment(new UserUpdatesFragment());\n                binding.textView.setText(\"Notifications\");\n            } else if (itemId == R.id.user_scan_qr) {\n                replaceFragment(new UserScanFragment());\n                binding.textView.setText(\"Scan QR\");\n            }\n            return true;\n        });\n\n    }\n    private void replaceFragment(Fragment fragment) {\n        FragmentManager fragmentManager = getSupportFragmentManager();\n        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();\n        fragmentTransaction.replace(R.id.fragmentContainerView2, fragment);\n        fragmentTransaction.commit();\n    }\n\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/minion_project/user/UserActivity.java b/app/src/main/java/com/example/minion_project/user/UserActivity.java
+--- a/app/src/main/java/com/example/minion_project/user/UserActivity.java	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/java/com/example/minion_project/user/UserActivity.java	(date 1730071956128)
+@@ -16,6 +16,7 @@
+ import com.example.minion_project.MainActivity;
+ import com.example.minion_project.R;
+ import com.example.minion_project.databinding.ActivityUserBinding;
++import com.example.minion_project.organizer.OrganizerEvents;
+ import com.google.android.gms.tasks.OnCompleteListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.firebase.firestore.CollectionReference;
+@@ -40,6 +41,7 @@
+         super.onCreate(savedInstanceState);
+         binding = ActivityUserBinding.inflate(getLayoutInflater());
+         setContentView(binding.getRoot());
++        replaceFragment(new UserAttendingFragment());
+         usersRef = Our_Firestore.getUsersRef();
+         eventsRef= Our_Firestore.getEventsRef();
+         // set up the user class
+@@ -81,9 +83,6 @@
+             if (itemId == R.id.user_attending) {
+                 replaceFragment(new UserAttendingFragment());
+                 binding.textView.setText("What's Popping");
+-            } else if (itemId == R.id.user_settings) {
+-                replaceFragment(new UserSettingsFragment());
+-                binding.textView.setText("Settings");
+             } else if (itemId == R.id.user_waitlisted) {
+                 replaceFragment(new UserWaitlistedFragment());
+                 binding.textView.setText("Waitlists");
+@@ -93,6 +92,9 @@
+             } else if (itemId == R.id.user_scan_qr) {
+                 replaceFragment(new UserScanFragment());
+                 binding.textView.setText("Scan QR");
++            } else if (itemId == R.id.user_settings) {
++                replaceFragment(new UserSettingsFragment());
++                binding.textView.setText("Settings");
+             }
+             return true;
+         });
+Index: app/src/main/res/layout/fragment_user_waitlisted.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/user_attending\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".user.UserAttendingFragment\">\n\n\n</FrameLayout>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_user_waitlisted.xml b/app/src/main/res/layout/fragment_user_waitlisted.xml
+--- a/app/src/main/res/layout/fragment_user_waitlisted.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/fragment_user_waitlisted.xml	(date 1730073003426)
+@@ -2,10 +2,10 @@
+ <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+-    android:id="@+id/user_attending"
++    android:id="@+id/user_waitlisted"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    tools:context=".user.UserAttendingFragment">
++    tools:context=".user.UserWaitlistedFragment">
+ 
+ 
+ </FrameLayout>
+Index: app/src/main/res/layout/fragment_user_scan_q_r.xml
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_user_scan_q_r.xml b/app/src/main/res/layout/fragment_user_scan_qr.xml
+rename from app/src/main/res/layout/fragment_user_scan_q_r.xml
+rename to app/src/main/res/layout/fragment_user_scan_qr.xml
+--- a/app/src/main/res/layout/fragment_user_scan_q_r.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/fragment_user_scan_qr.xml	(date 1730072838281)
+@@ -2,10 +2,18 @@
+ <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+-    android:id="@+id/user_attending"
++    android:id="@+id/user_scan_qr"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    tools:context=".user.UserAttendingFragment">
+-
++    tools:context=".user.UserScanFragment"
++    android:gravity = "center">
++    <TextView
++        android:id="@+id/centeredTextView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Hello, scan_Qr!"
++        android:textSize="24sp"
++        android:textColor="@android:color/black"
++        android:layout_gravity="center" /> <!-- This centers the TextView in the middle of the screen -->
+ 
+ </FrameLayout>
+Index: app/src/main/res/layout/fragment_user_attending.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/user_attending\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".user.UserActivity\">\n</FrameLayout>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_user_attending.xml b/app/src/main/res/layout/fragment_user_attending.xml
+--- a/app/src/main/res/layout/fragment_user_attending.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/fragment_user_attending.xml	(date 1730071111465)
+@@ -5,5 +5,14 @@
+     android:id="@+id/user_attending"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    tools:context=".user.UserActivity">
++    tools:context=".user.UserAttendingFragment">
++
++    <TextView
++        android:id="@+id/centeredTextView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Hello, attending!"
++        android:textSize="24sp"
++        android:textColor="@android:color/black"
++        android:layout_gravity="center" /> <!-- This centers the TextView in the middle of the screen -->
+ </FrameLayout>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38__Changes_.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38__Changes_.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ /dev/null	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]" date="1729294715751" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 18/10/2024 17:38 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ /dev/null	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
+@@ -1,15 +0,0 @@
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/misc.xml b/.idea/misc.xml
+---- a/.idea/misc.xml	(revision e70cf74b1ead34e215e6f1c801db114da7fe39c5)
+-+++ b/.idea/misc.xml	(date 1729456511483)
+-@@ -1,4 +1,3 @@
+--<?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ /dev/null	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
+@@ -1,37 +0,0 @@
+-Index: .gitignore
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>*.iml\r\n.gradle\r\n/local.properties\r\n/.idea/caches\r\n/.idea/libraries\r\n/.idea/modules.xml\r\n/.idea/workspace.xml\r\n/.idea/navEditor.xml\r\n/.idea/assetWizardSettings.xml\r\n.DS_Store\r\n/build\r\n/captures\r\n.externalNativeBuild\r\n.cxx\r\nlocal.properties\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.gitignore b/.gitignore
+---- a/.gitignore	(revision 969e990338ec9f9b0e112c27b71b65ed4ecc729f)
+-+++ b/.gitignore	(date 1729294598190)
+-@@ -4,7 +4,7 @@
+- /.idea/caches
+- /.idea/libraries
+- /.idea/modules.xml
+--/.idea/workspace.xml
+-+/.idea/workspace.xml pull
+- /.idea/navEditor.xml
+- /.idea/assetWizardSettings.xml
+- .DS_Store
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveExternalAnnotations\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 969e990338ec9f9b0e112c27b71b65ed4ecc729f)
+-+++ b/.idea/gradle.xml	(date 1729294678607)
+-@@ -4,7 +4,6 @@
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+--        <option name="testRunner" value="CHOOSE_PER_TEST" />
+-         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+-         <option name="modules">
+Index: .idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ /dev/null	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_rebase_[Changes]" date="1729456536355" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before rebase [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_organizer_create_event.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".organizer.OrganizerCreateEvent\">\n\n    <!-- TODO: Update blank fragment layout -->\n    <TextView\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:text=\"Create Event\" />\n\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_organizer_create_event.xml b/app/src/main/res/layout/fragment_organizer_create_event.xml
+--- a/app/src/main/res/layout/fragment_organizer_create_event.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/fragment_organizer_create_event.xml	(date 1730071163806)
+@@ -5,10 +5,13 @@
+     android:layout_height="match_parent"
+     tools:context=".organizer.OrganizerCreateEvent">
+ 
+-    <!-- TODO: Update blank fragment layout -->
+     <TextView
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:text="Create Event" />
++        android:id="@+id/centeredTextView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Hello, create event!"
++        android:textSize="24sp"
++        android:textColor="@android:color/black"
++        android:layout_gravity="center" /> <!-- This centers the TextView in the middle of the screen -->
+ 
+ </FrameLayout>
+\ No newline at end of file
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\n    <string name=\"app_name\">minion-project</string>\n    <!-- TODO: Remove or change this placeholder text -->\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\n    <string name=\"title_activity_user\">UserActivity</string>\n    <string name=\"title_home\">Home</string>\n    <string name=\"title_dashboard\">Dashboard</string>\n    <string name=\"title_notifications\">Notifications</string>\n    <!-- Strings used for fragments for navigation -->\n    <string name=\"first_fragment_label\">First Fragment</string>\n    <string name=\"second_fragment_label\">Second Fragment</string>\n    <string name=\"next\">Next</string>\n    <string name=\"previous\">Previous</string>\n\n    <string name=\"lorem_ipsum\">\n        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris\n        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus\n        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad\n        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend\n        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,\n        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\\n\\n\n        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus\n        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed\n        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada\n        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,\n        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor\n        bibendum, vel congue leo egestas.\\n\\n\n        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit\n        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,\n        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer\n        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at\n        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,\n        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque\n        est.\\n\\n\n        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.\n        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui\n        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In\n        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,\n        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra\n        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a\n        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus\n        convallis.\\n\\n\n        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et\n        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa\n        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,\n        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper\n        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus\n        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus\n        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.\n    </string>\n    <string name=\"user\">User</string>\n    <string name=\"login_signup_with_deviceid\">Login/Signup with DeviceID</string>\n    <string name=\"organizer\">Organizer</string>\n    <string name=\"admin\">Admin</string>\n    <string name=\"choose_page_launch\">Choose which page to launch</string>\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/values/strings.xml	(date 1730069152583)
+@@ -11,43 +11,6 @@
+     <string name="second_fragment_label">Second Fragment</string>
+     <string name="next">Next</string>
+     <string name="previous">Previous</string>
+-
+-    <string name="lorem_ipsum">
+-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+-        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+-        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+-        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+-        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+-        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+-        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+-        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+-        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+-        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+-        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+-        bibendum, vel congue leo egestas.\n\n
+-        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+-        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+-        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+-        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+-        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+-        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+-        est.\n\n
+-        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+-        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+-        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+-        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+-        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+-        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+-        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+-        convallis.\n\n
+-        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+-        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+-        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+-        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+-        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+-        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+-        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+-    </string>
+     <string name="user">User</string>
+     <string name="login_signup_with_deviceid">Login/Signup with DeviceID</string>
+     <string name="organizer">Organizer</string>
+Index: app/src/main/res/layout/activity_organizer.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/main\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".organizer.OrganizerActivity\">\n    <!-- Root Vertical LinearLayout -->\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:orientation=\"vertical\"\n        android:id=\"@+id/header\">\n\n        <!-- Header Section -->\n        <androidx.constraintlayout.widget.ConstraintLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:orientation=\"horizontal\"\n            android:background=\"#F9C4BF\"\n            android:gravity=\"center_vertical\"\n            android:id=\"@+id/topBar\"\n            >\n\n            <!-- Settings Button on the Left -->\n            <ImageButton\n                android:id=\"@+id/settings\"\n                android:layout_width=\"48dp\"\n                android:layout_height=\"48dp\"\n                android:background=\"?attr/selectableItemBackground\"\n                android:src=\"@android:drawable/ic_dialog_info\"\n                android:padding=\"8dp\"\n                app:layout_constraintLeft_toLeftOf=\"@id/topBar\"\n                app:layout_constraintTop_toTopOf=\"@id/topBar\"\n                app:layout_constraintBottom_toBottomOf=\"@id/topBar\"\n                android:layout_gravity=\"start|center_vertical\" />\n\n\n\n            <!-- Text in the Middle -->\n            <TextView\n                android:id=\"@+id/organizerTextView\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:text=\"My Events\"\n                android:gravity=\"center\"\n                android:textAlignment=\"center\"\n                android:textSize=\"18sp\"\n                android:textStyle=\"bold\"\n                app:layout_constraintLeft_toLeftOf=\"@id/topBar\"\n                app:layout_constraintRight_toRightOf=\"@id/topBar\"\n                app:layout_constraintBottom_toBottomOf=\"@id/topBar\"\n                app:layout_constraintTop_toTopOf=\"@id/topBar\"\n                android:textColor=\"@android:color/black\" />\n\n        </androidx.constraintlayout.widget.ConstraintLayout>\n    </LinearLayout>\n\n    <!-- BottomNavigationView at the bottom -->\n    <com.google.android.material.bottomnavigation.BottomNavigationView\n        android:id=\"@+id/organizerBottomNavigationView\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:background=\"@color/organizerNavBar\"\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:menu=\"@menu/organizer_bottom_menu\"  />\n\n    <!-- FrameLayout for hosting fragments -->\n    <FrameLayout\n        android:id=\"@+id/frameLayoutOrganizer\"\n        android:layout_width=\"0dp\"\n        android:layout_height=\"0dp\"\n        app:layout_constraintTop_toBottomOf=\"@id/organizerTextView\"\n        app:layout_constraintBottom_toTopOf=\"@id/organizerBottomNavigationView\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\" />\n\n</androidx.constraintlayout.widget.ConstraintLayout>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_organizer.xml b/app/src/main/res/layout/activity_organizer.xml
+--- a/app/src/main/res/layout/activity_organizer.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/activity_organizer.xml	(date 1730071453014)
+@@ -15,27 +15,14 @@
+ 
+         <!-- Header Section -->
+         <androidx.constraintlayout.widget.ConstraintLayout
++            android:id="@+id/topBar"
+             android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:orientation="horizontal"
++            android:layout_height="63dp"
+             android:background="#F9C4BF"
+             android:gravity="center_vertical"
+-            android:id="@+id/topBar"
+-            >
++            android:orientation="horizontal">
+ 
+             <!-- Settings Button on the Left -->
+-            <ImageButton
+-                android:id="@+id/settings"
+-                android:layout_width="48dp"
+-                android:layout_height="48dp"
+-                android:background="?attr/selectableItemBackground"
+-                android:src="@android:drawable/ic_dialog_info"
+-                android:padding="8dp"
+-                app:layout_constraintLeft_toLeftOf="@id/topBar"
+-                app:layout_constraintTop_toTopOf="@id/topBar"
+-                app:layout_constraintBottom_toBottomOf="@id/topBar"
+-                android:layout_gravity="start|center_vertical" />
+-
+ 
+ 
+             <!-- Text in the Middle -->
+@@ -43,16 +30,16 @@
+                 android:id="@+id/organizerTextView"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+-                android:text="My Events"
+                 android:gravity="center"
++                android:text="My Events"
+                 android:textAlignment="center"
++                android:textColor="@android:color/black"
+                 android:textSize="18sp"
+                 android:textStyle="bold"
++                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                 app:layout_constraintLeft_toLeftOf="@id/topBar"
+                 app:layout_constraintRight_toRightOf="@id/topBar"
+-                app:layout_constraintBottom_toBottomOf="@id/topBar"
+-                app:layout_constraintTop_toTopOf="@id/topBar"
+-                android:textColor="@android:color/black" />
++                app:layout_constraintTop_toTopOf="@id/topBar" />
+ 
+         </androidx.constraintlayout.widget.ConstraintLayout>
+     </LinearLayout>
+@@ -71,9 +58,8 @@
+     <!-- FrameLayout for hosting fragments -->
+     <FrameLayout
+         android:id="@+id/frameLayoutOrganizer"
+-        android:layout_width="0dp"
+-        android:layout_height="0dp"
+-        app:layout_constraintTop_toBottomOf="@id/organizerTextView"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
+         app:layout_constraintBottom_toTopOf="@id/organizerBottomNavigationView"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent" />
+Index: app/src/main/java/com/example/minion_project/user/UserScanFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.minion_project.user;\n\nimport android.os.Bundle;\n\nimport androidx.fragment.app.Fragment;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\n\nimport com.example.minion_project.R;\n\n/**\n * A simple {@link Fragment} subclass.\n * Use the {@link UserScanFragment#newInstance} factory method to\n * create an instance of this fragment.\n */\npublic class UserScanFragment extends Fragment {\n\n    // TODO: Rename parameter arguments, choose names that match\n    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER\n    private static final String ARG_PARAM1 = \"param1\";\n    private static final String ARG_PARAM2 = \"param2\";\n\n    // TODO: Rename and change types of parameters\n    private String mParam1;\n    private String mParam2;\n\n    public UserScanFragment() {\n        // Required empty public constructor\n    }\n\n    /**\n     * Use this factory method to create a new instance of\n     * this fragment using the provided parameters.\n     *\n     * @param param1 Parameter 1.\n     * @param param2 Parameter 2.\n     * @return A new instance of fragment user_scanQR.\n     */\n    // TODO: Rename and change types and number of parameters\n    public static UserScanFragment newInstance(String param1, String param2) {\n        UserScanFragment fragment = new UserScanFragment();\n        Bundle args = new Bundle();\n        args.putString(ARG_PARAM1, param1);\n        args.putString(ARG_PARAM2, param2);\n        fragment.setArguments(args);\n        return fragment;\n    }\n\n    @Override\n    public void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        if (getArguments() != null) {\n            mParam1 = getArguments().getString(ARG_PARAM1);\n            mParam2 = getArguments().getString(ARG_PARAM2);\n        }\n    }\n\n    @Override\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\n                             Bundle savedInstanceState) {\n        // Inflate the layout for this fragment\n        return inflater.inflate(R.layout.fragment_user_scan_q_r, container, false);\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/minion_project/user/UserScanFragment.java b/app/src/main/java/com/example/minion_project/user/UserScanFragment.java
+--- a/app/src/main/java/com/example/minion_project/user/UserScanFragment.java	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/java/com/example/minion_project/user/UserScanFragment.java	(date 1730069486765)
+@@ -61,6 +61,6 @@
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+         // Inflate the layout for this fragment
+-        return inflater.inflate(R.layout.fragment_user_scan_q_r, container, false);
++        return inflater.inflate(R.layout.fragment_user_scan_qr, container, false);
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_user.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:id=\"@+id/main\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n    <!-- Root Vertical LinearLayout -->\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:orientation=\"vertical\"\n        android:id=\"@+id/header\">\n\n        <!-- Header Section -->\n        <androidx.constraintlayout.widget.ConstraintLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:orientation=\"horizontal\"\n            android:background=\"@color/top_margin\"\n            android:gravity=\"center_vertical\"\n            android:id=\"@+id/topBar\"\n            >\n\n            <!-- Settings Button on the Left -->\n            <ImageButton\n                android:id=\"@+id/settings\"\n                android:layout_width=\"48dp\"\n                android:layout_height=\"48dp\"\n                android:background=\"?attr/selectableItemBackground\"\n                android:src=\"@android:drawable/ic_dialog_info\"\n                android:padding=\"8dp\"\n                app:layout_constraintLeft_toLeftOf=\"@id/topBar\"\n                app:layout_constraintTop_toTopOf=\"@id/topBar\"\n                app:layout_constraintBottom_toBottomOf=\"@id/topBar\"\n                android:layout_gravity=\"start|center_vertical\" />\n\n\n\n            <!-- Text in the Middle -->\n            <TextView\n                android:id=\"@+id/textView\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:text=\"What's Popping\"\n                android:gravity=\"center\"\n                android:textAlignment=\"center\"\n                android:textSize=\"18sp\"\n                android:textStyle=\"bold\"\n                app:layout_constraintLeft_toLeftOf=\"@id/topBar\"\n                app:layout_constraintRight_toRightOf=\"@id/topBar\"\n                app:layout_constraintBottom_toBottomOf=\"@id/topBar\"\n                app:layout_constraintTop_toTopOf=\"@id/topBar\"\n                android:textColor=\"@android:color/black\" />\n\n        </androidx.constraintlayout.widget.ConstraintLayout>\n    </LinearLayout>\n\n    <!-- BottomNavigationView at the bottom -->\n    <com.google.android.material.bottomnavigation.BottomNavigationView\n        android:id=\"@+id/userBottomNavigationView\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:background=\"@color/userNavBar\"\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:menu=\"@menu/user_bottom_menu\" />\n\n    <!-- FrameLayout for hosting fragments -->\n    <FrameLayout\n        android:id=\"@+id/fragmentContainerView2\"\n        android:layout_width=\"0dp\"\n        android:layout_height=\"0dp\"\n        app:layout_constraintTop_toBottomOf=\"@id/textView\"\n        app:layout_constraintBottom_toTopOf=\"@id/userBottomNavigationView\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\" />\n\n</androidx.constraintlayout.widget.ConstraintLayout>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_user.xml b/app/src/main/res/layout/activity_user.xml
+--- a/app/src/main/res/layout/activity_user.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/activity_user.xml	(date 1730072552757)
+@@ -1,9 +1,12 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
+     android:id="@+id/main"
+     android:layout_width="match_parent"
+-    android:layout_height="match_parent">
++    android:layout_height="match_parent"
++    tools:context=".user.UserActivity">
++
+     <!-- Root Vertical LinearLayout -->
+     <LinearLayout
+         android:layout_width="match_parent"
+@@ -13,44 +16,29 @@
+ 
+         <!-- Header Section -->
+         <androidx.constraintlayout.widget.ConstraintLayout
++            android:id="@+id/topBar"
+             android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:orientation="horizontal"
++            android:layout_height="64dp"
+             android:background="@color/top_margin"
+             android:gravity="center_vertical"
+-            android:id="@+id/topBar"
+-            >
+-
+-            <!-- Settings Button on the Left -->
+-            <ImageButton
+-                android:id="@+id/settings"
+-                android:layout_width="48dp"
+-                android:layout_height="48dp"
+-                android:background="?attr/selectableItemBackground"
+-                android:src="@android:drawable/ic_dialog_info"
+-                android:padding="8dp"
+-                app:layout_constraintLeft_toLeftOf="@id/topBar"
+-                app:layout_constraintTop_toTopOf="@id/topBar"
+-                app:layout_constraintBottom_toBottomOf="@id/topBar"
+-                android:layout_gravity="start|center_vertical" />
+-
+-
++            android:orientation="horizontal"
++            app:layout_constraintTop_toTopOf="parent">
+ 
+             <!-- Text in the Middle -->
+             <TextView
+                 android:id="@+id/textView"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
++                android:gravity="center"
+                 android:text="What's Popping"
+-                android:gravity="center"
+                 android:textAlignment="center"
++                android:textColor="@android:color/black"
+                 android:textSize="18sp"
+                 android:textStyle="bold"
++                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                 app:layout_constraintLeft_toLeftOf="@id/topBar"
+                 app:layout_constraintRight_toRightOf="@id/topBar"
+-                app:layout_constraintBottom_toBottomOf="@id/topBar"
+-                app:layout_constraintTop_toTopOf="@id/topBar"
+-                android:textColor="@android:color/black" />
++                app:layout_constraintTop_toTopOf="@id/topBar" />
+ 
+         </androidx.constraintlayout.widget.ConstraintLayout>
+     </LinearLayout>
+@@ -69,10 +57,10 @@
+     <!-- FrameLayout for hosting fragments -->
+     <FrameLayout
+         android:id="@+id/fragmentContainerView2"
+-        android:layout_width="0dp"
++        android:layout_width="match_parent"
+         android:layout_height="0dp"
+-        app:layout_constraintTop_toBottomOf="@id/textView"
+         app:layout_constraintBottom_toTopOf="@id/userBottomNavigationView"
++        app:layout_constraintTop_toTopOf="@id/header"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent" />
+ 
+Index: app/src/main/res/navigation/user_nav.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<navigation xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/user_nav\"\n    app:startDestination=\"@id/user_attending\">\n\n    <fragment\n        android:id=\"@+id/user_settings\"\n        android:name=\"com.example.minion_project.user.UserAttendingFragment\"\n        android:label=\"fragment_user_attending\"\n        tools:layout=\"@layout/fragment_user_settings\" />\n\n    <fragment\n        android:id=\"@+id/user_attending\"\n        android:name=\"com.example.minion_project.user.UserAttendingFragment\"\n        android:label=\"fragment_user_attending\"\n        tools:layout=\"@layout/fragment_user_attending\" />\n    <fragment\n        android:id=\"@+id/user_waitlisted\"\n        android:name=\"com.example.minion_project.user.UserWaitlistedFragment\"\n        android:label=\"fragment_user_waitlisted\"\n        tools:layout=\"@layout/fragment_user_waitlisted\" />\n    <fragment\n        android:id=\"@+id/user_updates\"\n        android:name=\"com.example.minion_project.user.UserUpdatesFragment\"\n        android:label=\"fragment_user_updates\"\n        tools:layout=\"@layout/fragment_user_updates\" />\n    <fragment\n        android:id=\"@+id/user_scanQR\"\n        android:name=\"com.example.minion_project.user.UserScanFragment\"\n        android:label=\"fragment_user_scan_q_r\"\n        tools:layout=\"@layout/fragment_user_scan_q_r\" />\n</navigation>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/navigation/user_nav.xml b/app/src/main/res/navigation/user_nav.xml
+--- a/app/src/main/res/navigation/user_nav.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/navigation/user_nav.xml	(date 1730071782638)
+@@ -7,9 +7,10 @@
+ 
+     <fragment
+         android:id="@+id/user_settings"
+-        android:name="com.example.minion_project.user.UserAttendingFragment"
++        android:name="com.example.minion_project.user.UserSettingsFragment"
+         android:label="fragment_user_attending"
+-        tools:layout="@layout/fragment_user_settings" />
++        tools:layout="@layout/fragment_user_settings" >
++    </fragment>
+ 
+     <fragment
+         android:id="@+id/user_attending"
+@@ -20,15 +21,18 @@
+         android:id="@+id/user_waitlisted"
+         android:name="com.example.minion_project.user.UserWaitlistedFragment"
+         android:label="fragment_user_waitlisted"
+-        tools:layout="@layout/fragment_user_waitlisted" />
++        tools:layout="@layout/fragment_user_waitlisted" >
++    </fragment>
+     <fragment
+         android:id="@+id/user_updates"
+         android:name="com.example.minion_project.user.UserUpdatesFragment"
+         android:label="fragment_user_updates"
+-        tools:layout="@layout/fragment_user_updates" />
++        tools:layout="@layout/fragment_user_updates" >
++    </fragment>
+     <fragment
+         android:id="@+id/user_scanQR"
+         android:name="com.example.minion_project.user.UserScanFragment"
+         android:label="fragment_user_scan_q_r"
+-        tools:layout="@layout/fragment_user_scan_q_r" />
++        tools:layout="@layout/fragment_user_scan_qr" >
++    </fragment>
+ </navigation>
+\ No newline at end of file
+Index: app/src/main/res/menu/user_bottom_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <item\n        android:id=\"@+id/user_settings\"\n        android:title=\"Settings\"\n        android:icon=\"@drawable/baseline_settings\"/>\n    <item\n        android:id=\"@+id/user_attending\"\n        android:title=\"Attending\"\n        android:icon=\"@drawable/baseline_tag_faces\"/>\n    <item\n        android:id=\"@+id/user_waitlisted\"\n        android:title=\"Waitlisted\"\n        android:icon=\"@drawable/baseline_format_list\"/>\n    <item\n        android:id=\"@+id/user_updates\"\n        android:title=\"Updates\"\n        android:icon=\"@drawable/baseline_notifications\"/>\n    <item\n        android:id=\"@+id/user_scan_qr\"\n        android:title=\"Scan QR\"\n        android:icon=\"@drawable/baseline_qr_code_scanner\"/>\n</menu>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/user_bottom_menu.xml b/app/src/main/res/menu/user_bottom_menu.xml
+--- a/app/src/main/res/menu/user_bottom_menu.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/menu/user_bottom_menu.xml	(date 1730068937720)
+@@ -1,10 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <menu xmlns:android="http://schemas.android.com/apk/res/android">
+     <item
+-        android:id="@+id/user_settings"
+-        android:title="Settings"
+-        android:icon="@drawable/baseline_settings"/>
+-    <item
+         android:id="@+id/user_attending"
+         android:title="Attending"
+         android:icon="@drawable/baseline_tag_faces"/>
+@@ -20,4 +16,8 @@
+         android:id="@+id/user_scan_qr"
+         android:title="Scan QR"
+         android:icon="@drawable/baseline_qr_code_scanner"/>
++    <item
++        android:id="@+id/user_settings"
++        android:title="Settings"
++        android:icon="@drawable/baseline_settings"/>
+ </menu>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/.idea/misc.xml	(date 1730068076854)
+@@ -1,4 +1,3 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"deploymentTargetSelector\">\n    <selectionStates>\n      <SelectionState runConfigName=\"app\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n        <DropdownSelection timestamp=\"2024-10-18T22:05:44.613601Z\">\n          <Target type=\"DEFAULT_BOOT\">\n            <handle>\n              <DeviceId pluginId=\"LocalEmulator\" identifier=\"path=/Users/kevin/.android/avd/Pixel_8_API_33.avd\" />\n            </handle>\n          </Target>\n        </DropdownSelection>\n        <DialogSelection />\n      </SelectionState>\n    </selectionStates>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+--- a/.idea/deploymentTargetSelector.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/.idea/deploymentTargetSelector.xml	(date 1730068462947)
+@@ -4,10 +4,10 @@
+     <selectionStates>
+       <SelectionState runConfigName="app">
+         <option name="selectionMode" value="DROPDOWN" />
+-        <DropdownSelection timestamp="2024-10-18T22:05:44.613601Z">
++        <DropdownSelection timestamp="2024-10-27T22:31:59.972136Z">
+           <Target type="DEFAULT_BOOT">
+             <handle>
+-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/kevin/.android/avd/Pixel_8_API_33.avd" />
++              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/mosayaqoobi/.android/avd/Pixel_2_API_33.avd" />
+             </handle>
+           </Target>
+         </DropdownSelection>
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\nagp = \"8.4.0\"\njunit = \"4.13.2\"\njunitVersion = \"1.2.1\"\nespressoCore = \"3.6.1\"\nappcompat = \"1.7.0\"\nmaterial = \"1.12.0\"\nactivity = \"1.9.2\"\nconstraintlayout = \"2.1.4\"\nlifecycleLivedataKtx = \"2.6.1\"\nlifecycleViewmodelKtx = \"2.6.1\"\nnavigationFragment = \"2.8.2\"\nnavigationUi = \"2.8.2\"\n\n[libraries]\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\next-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\nespresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\nappcompat = { group = \"androidx.appcompat\", name = \"appcompat\", version.ref = \"appcompat\" }\nmaterial = { group = \"com.google.android.material\", name = \"material\", version.ref = \"material\" }\nactivity = { group = \"androidx.activity\", name = \"activity\", version.ref = \"activity\" }\nconstraintlayout = { group = \"androidx.constraintlayout\", name = \"constraintlayout\", version.ref = \"constraintlayout\" }\nlifecycle-livedata-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-livedata-ktx\", version.ref = \"lifecycleLivedataKtx\" }\nlifecycle-viewmodel-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-viewmodel-ktx\", version.ref = \"lifecycleViewmodelKtx\" }\nnavigation-fragment = { group = \"androidx.navigation\", name = \"navigation-fragment\", version.ref = \"navigationFragment\" }\nnavigation-ui = { group = \"androidx.navigation\", name = \"navigation-ui\", version.ref = \"navigationUi\" }\n\n[plugins]\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/gradle/libs.versions.toml	(date 1730068100669)
+@@ -1,5 +1,5 @@
+ [versions]
+-agp = "8.4.0"
++agp = "8.7.1"
+ junit = "4.13.2"
+ junitVersion = "1.2.1"
+ espressoCore = "3.6.1"
+Index: app/src/main/java/com/example/minion_project/user/UserSettingsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.minion_project.user;\n\nimport android.os.Bundle;\n\nimport androidx.fragment.app.Fragment;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\n\nimport com.example.minion_project.R;\n\n/**\n * A simple {@link Fragment} subclass.\n * Use the {@link UserSettingsFragment#newInstance} factory method to\n * create an instance of this fragment.\n */\npublic class UserSettingsFragment extends Fragment {\n\n    // TODO: Rename parameter arguments, choose names that match\n    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER\n    private static final String ARG_PARAM1 = \"param1\";\n    private static final String ARG_PARAM2 = \"param2\";\n\n    // TODO: Rename and change types of parameters\n    private String mParam1;\n    private String mParam2;\n\n    public UserSettingsFragment() {\n        // Required empty public constructor\n    }\n\n    /**\n     * Use this factory method to create a new instance of\n     * this fragment using the provided parameters\n     *\n     * @param param1 Parameter 1.\n     * @param param2 Parameter 2.\n     * @return A new instance of fragment user_settings.\n     */\n    // TODO: Rename and change types and number of parameters\n    public static UserSettingsFragment newInstance(String param1, String param2) {\n        UserSettingsFragment fragment = new UserSettingsFragment();\n        Bundle args = new Bundle();\n        args.putString(ARG_PARAM1, param1);\n        args.putString(ARG_PARAM2, param2);\n        fragment.setArguments(args);\n        return fragment;\n    }\n\n    @Override\n    public void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        if (getArguments() != null) {\n            mParam1 = getArguments().getString(ARG_PARAM1);\n            mParam2 = getArguments().getString(ARG_PARAM2);\n        }\n    }\n\n    @Override\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\n                             Bundle savedInstanceState) {\n        // Inflate the layout for this fragment\n        return inflater.inflate(R.layout.fragment_user_settings, container, false);\n    }\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/minion_project/user/UserSettingsFragment.java b/app/src/main/java/com/example/minion_project/user/UserSettingsFragment.java
+--- a/app/src/main/java/com/example/minion_project/user/UserSettingsFragment.java	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/java/com/example/minion_project/user/UserSettingsFragment.java	(date 1730073405957)
+@@ -4,6 +4,7 @@
+ 
+ import androidx.fragment.app.Fragment;
+ 
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+@@ -17,15 +18,6 @@
+  */
+ public class UserSettingsFragment extends Fragment {
+ 
+-    // TODO: Rename parameter arguments, choose names that match
+-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+-    private static final String ARG_PARAM1 = "param1";
+-    private static final String ARG_PARAM2 = "param2";
+-
+-    // TODO: Rename and change types of parameters
+-    private String mParam1;
+-    private String mParam2;
+-
+     public UserSettingsFragment() {
+         // Required empty public constructor
+     }
+@@ -41,26 +33,18 @@
+     // TODO: Rename and change types and number of parameters
+     public static UserSettingsFragment newInstance(String param1, String param2) {
+         UserSettingsFragment fragment = new UserSettingsFragment();
+-        Bundle args = new Bundle();
+-        args.putString(ARG_PARAM1, param1);
+-        args.putString(ARG_PARAM2, param2);
+-        fragment.setArguments(args);
+         return fragment;
+     }
+ 
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        if (getArguments() != null) {
+-            mParam1 = getArguments().getString(ARG_PARAM1);
+-            mParam2 = getArguments().getString(ARG_PARAM2);
+-        }
+     }
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+-        // Inflate the layout for this fragment
+-        return inflater.inflate(R.layout.fragment_user_settings, container, false);
++        View view = inflater.inflate(R.layout.fragment_user_settings, container, false);
++        return view;
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_user_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".user_settings\">\n\n    <!-- TODO: Update blank fragment layout -->\n    <TextView\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:text=\"@string/hello_blank_fragment\" />\n\n</FrameLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_user_settings.xml b/app/src/main/res/layout/fragment_user_settings.xml
+--- a/app/src/main/res/layout/fragment_user_settings.xml	(revision de4e9481d1dfc884c4550738f4c409a1f5b33e09)
++++ b/app/src/main/res/layout/fragment_user_settings.xml	(date 1730073405950)
+@@ -1,14 +1,56 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    tools:context=".user_settings">
++    tools:context=".user.UserSettingsFragment"
++    android:gravity="center"
++    android:id="@+id/user_settings"
++    android:orientation="vertical"
++    android:padding="16dp">
+ 
+-    <!-- TODO: Update blank fragment layout -->
+-    <TextView
++    <EditText
++        android:id="@+id/name"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:text="@string/hello_blank_fragment" />
++        android:layout_height="wrap_content"
++        android:layout_margin="10px"
++        android:hint="Name"
++        android:paddingBottom="50px" />
++
++    <EditText
++        android:id="@+id/email"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_margin="10px"
++        android:hint="Email"
++        android:paddingBottom="50px" />
++
++    <EditText
++        android:id="@+id/phone"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_margin="10px"
++        android:hint="Phone Number (optional)"
++        android:paddingBottom="50px"
++        android:inputType="phone"/>
++    <EditText
++        android:id="@+id/city"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_margin="10px"
++        android:hint="City"
++        android:paddingBottom="50px" />
++
++    <Button
++        android:id="@+id/Save"
++        style="@style/Widget.AppCompat.Button"
++        android:layout_width="180dp"
++        android:layout_height="wrap_content"
++        android:background="@drawable/round_button"
++        android:text="Save"
++
++        android:textColor="@color/white" />
++
+ 
+-</FrameLayout>
+\ No newline at end of file
++</LinearLayout>
+\ No newline at end of file

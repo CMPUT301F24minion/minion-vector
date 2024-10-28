@@ -16,6 +16,7 @@ import com.example.minion_project.FireStore;
 import com.example.minion_project.MainActivity;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityUserBinding;
+import com.example.minion_project.organizer.OrganizerEvents;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,6 +41,7 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        replaceFragment(new UserAttendingFragment());
         usersRef = Our_Firestore.getUsersRef();
         eventsRef= Our_Firestore.getEventsRef();
         // set up the user class

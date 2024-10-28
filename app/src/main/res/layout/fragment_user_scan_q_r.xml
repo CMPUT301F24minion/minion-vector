@@ -5,7 +5,7 @@
     android:id="@+id/user_attending"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user.UserAttendingFragment">
+    tools:context=".user.UserScanFragment">
 
 
 </FrameLayout>
