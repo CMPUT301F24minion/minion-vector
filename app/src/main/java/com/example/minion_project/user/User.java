@@ -14,7 +14,7 @@ public class User {
     private String deviceID;
     private String name;
     private String email;
-    private String location;
+    private String city;
     private  Boolean AllowNotication;
     private String phoneNumber;
     private ArrayList<Event> attendingEvents;
@@ -28,7 +28,7 @@ public class User {
         this.deviceID = "";
         this.name = "";
         this.email = "";
-        this.location="";
+        this.city="";
         this.AllowNotication=TRUE;
         this.notifcations=new HashMap<>();
         this.phoneNumber = "";
@@ -40,7 +40,7 @@ public class User {
 
     // Constructor with parameters
     // all events is a a hashmap where we have {event_id: status} then we need to populate the waitlist and attending dep on status
-    public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents , String location, HashMap<String,ArrayList> notification) {
+    public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents , String city, HashMap<String,ArrayList> notification) {
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
@@ -49,9 +49,17 @@ public class User {
         this.waitlistedEvents = new ArrayList<>();
         this.notificationsArrayList = new ArrayList<>();
         this.allEvents=allEvents;
-        this.location = location;
+        this.city = city;
         this.notifcations = notification;
     }
+    public User(String deviceID, String name, String email, String phoneNumber, String city) {
+        this.deviceID = deviceID;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.city = city;
+    }
+
 
     public String getDeviceID() {
         return deviceID;
@@ -106,11 +114,11 @@ public class User {
     }
 
     public String getLocation() {
-        return location;
+        return city;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocation(String city) {
+        this.city = city;
     }
 
     public Boolean getAllowNotication() {

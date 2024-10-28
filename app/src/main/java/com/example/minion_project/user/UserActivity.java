@@ -12,7 +12,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.minion_project.Event;
-import com.example.minion_project.FireStore;
+import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.MainActivity;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityUserBinding;
@@ -31,7 +32,7 @@ public class UserActivity extends AppCompatActivity {
 
     ActivityUserBinding binding;
     public User user;
-    public FireStore Our_Firestore=new FireStore();
+    public FireStoreClass Our_Firestore=new FireStoreClass();
     private String android_id;
     private TextView text;
 
@@ -100,7 +101,7 @@ public class UserActivity extends AppCompatActivity {
         });
 
     }
-    private void replaceFragment(Fragment fragment) {
+    void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerView2, fragment);
