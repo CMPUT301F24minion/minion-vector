@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/lightLilac"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="20sp"
+    android:contentDescription="Initial Screen Layout, touch anywhere to proceed. Append user's name + '!' to @+id/welcomeBackTextView upon boot.">
+
+    <TextView
+        android:id="@+id/welcomeBackTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome back, "
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:textSize="70sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:textAlignment="center"
+        />
+
+    <TextView
+        android:id="@+id/clickAnywhere"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="to Minion Events,\ntap anywhere to proceed."
+        android:textAllCaps="false"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif-light"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/welcomeBackTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

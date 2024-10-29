@@ -1,62 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center">
+    android:background="@color/lilac"
+    android:padding="20sp">
 
-    <EditText
-        android:id="@+id/name"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10px"
-        android:hint="Name"
-        android:paddingBottom="50px" />
+        android:text="We Don't Recognize You!"
+        android:id="@+id/userNotRecognizedTextView"
+        android:textSize="50sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="sans-serif-light"
+        />
 
-    <EditText
-        android:id="@+id/email"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10px"
-        android:hint="Email"
-        android:paddingBottom="50px" />
+        android:orientation="vertical"
+        android:padding="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <EditText
-        android:id="@+id/phone_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10px"
-        android:hint="Phone Number"
-        android:paddingBottom="50px"
-        android:inputType="phone"/>
-    <EditText
-        android:id="@+id/city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10px"
-        android:hint="City"
-        android:paddingBottom="50px" />
-    <CheckBox
-        android:id="@+id/organizer_checkbox"
-        android:layout_width="113dp"
-        android:layout_height="wrap_content"
-        android:text="Organzier" />
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What's Your Name?"
+            android:background="@color/lightLilac"
+            android:padding="10sp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            />
 
-    <CheckBox
-        android:id="@+id/user_checkbox"
-        android:layout_width="114dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="50px"
-        android:text="User" />
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What's Your Email?"
+            android:background="@color/lightLilac"
+            android:padding="10sp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What's Your Phone Number?"
+            android:background="@color/lightLilac"
+            android:padding="10sp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <EditText
+            android:id="@+id/city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What's Your Name?"
+            android:background="@color/lightLilac"
+            android:padding="10sp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'm an Event Organizer"
+            android:id="@+id/organizer_checkbox"
+            android:buttonTint="@color/white"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'd Like to Attend Events"
+            android:id="@+id/user_checkbox"
+            android:buttonTint="@color/white"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-light"
+            />
+
+
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/signup_button"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="180dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="20sp"
+        android:layout_marginRight="20sp"
         android:text="Sign Up"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:backgroundTint="@color/teal"
+        android:background="@drawable/round_button"
+        android:id="@+id/signup_button"
+        />
 
-        android:textColor="@color/white" />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
