@@ -81,3 +81,66 @@
     </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:hint="Are there any details attendees should know?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createEventTitleEditText">
+    </EditText>
+
+    <EditText
+        android:id="@+id/createEventInvitationsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="How many people are you able to host?"
+        android:inputType="numberSigned"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/createEventDetailsEditText">
+    </EditText>
+
+    <Button
+        android:background="@drawable/round_button"
+        android:id="@+id/selectTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Time"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitationsEditText"></Button>
+
+    <Button
+        android:background="@drawable/round_button"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:id="@+id/selectDateButton"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitationsEditText"
+        app:layout_constraintLeft_toRightOf="@id/selectTimeButton">
+    </Button>
+
+    <Button
+        android:background="@drawable/round_button"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:id="@+id/uploadImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitationsEditText"
+        app:layout_constraintLeft_toRightOf="@id/selectDateButton">
+    </Button>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEventButton"
+        android:text="Create!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white">
+    </Button>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
