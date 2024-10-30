@@ -40,6 +40,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.firebase:firebase-firestore")
     //
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
