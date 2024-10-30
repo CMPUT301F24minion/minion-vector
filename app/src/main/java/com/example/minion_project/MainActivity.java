@@ -24,7 +24,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private CollectionReference usersRef,All_UsersRef,organizersRef;
     private String android_id;
-    public FireStore Our_Firestore=new FireStore();
+    public FireStore Our_Firestore = new FireStore();
     Button loginBtn,userBtn,organizerBtn,adminBtn;
     TextView choosePageText;
     @Override
