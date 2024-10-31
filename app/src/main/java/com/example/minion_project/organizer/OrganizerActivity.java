@@ -12,8 +12,6 @@ import com.example.minion_project.databinding.ActivityOrganizerBinding;
 
 public class OrganizerActivity extends AppCompatActivity {
     // a basic activity
-    // TODO: IMPLEMENT the bottom naviagtion for organizer
-
 
     ActivityOrganizerBinding binding;
 
