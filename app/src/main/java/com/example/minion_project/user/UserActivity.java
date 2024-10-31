@@ -2,6 +2,7 @@ package com.example.minion_project.user;
 
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,10 +12,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.minion_project.Event;
-import com.example.minion_project.FireStore;
+import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.MainActivity;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityUserBinding;
+import com.example.minion_project.organizer.OrganizerEvents;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,8 +32,9 @@ public class UserActivity extends AppCompatActivity {
 
     ActivityUserBinding binding;
     public User user;
-    public FireStore Our_Firestore=new FireStore();
+    public FireStoreClass Our_Firestore=new FireStoreClass();
     private String android_id;
+    private TextView text;
 
     private CollectionReference usersRef,eventsRef;
     @Override
@@ -38,6 +42,7 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        replaceFragment(new UserAttendingFragment());
         usersRef = Our_Firestore.getUsersRef();
         eventsRef= Our_Firestore.getEventsRef();
         // set up the user class
@@ -60,9 +65,11 @@ public class UserActivity extends AppCompatActivity {
 
                             String phoneNumber = (String) data.get("Phone_number");
                             String email = (String) data.get("Email");
+                            String Location = (String) data.get("Location");
+                            HashMap <String,ArrayList> Notification = (HashMap<String, ArrayList>) data.get("Notfication");
 
                             // Create the User object
-                            User user = new User(android_id,name, email, phoneNumber,events);
+                            User user = new User(android_id,name, email, phoneNumber,events, Location, Notification);
                         }
                     }
                 } else {
@@ -76,18 +83,25 @@ public class UserActivity extends AppCompatActivity {
 
             if (itemId == R.id.user_attending) {
                 replaceFragment(new UserAttendingFragment());
+                binding.textView.setText("What's Popping");
+            } else if (itemId == R.id.user_settings) {
+                replaceFragment(new UserSettingsFragment());
+                binding.textView.setText("Settings");
             } else if (itemId == R.id.user_waitlisted) {
                 replaceFragment(new UserWaitlistedFragment());
+                binding.textView.setText("Waitlists");
             } else if (itemId == R.id.user_updates) {
                 replaceFragment(new UserUpdatesFragment());
+                binding.textView.setText("Notifications");
             } else if (itemId == R.id.user_scan_qr) {
                 replaceFragment(new UserScanFragment());
+                binding.textView.setText("Scan QR");
             }
             return true;
         });
 
     }
-    private void replaceFragment(Fragment fragment) {
+    void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerView2, fragment);

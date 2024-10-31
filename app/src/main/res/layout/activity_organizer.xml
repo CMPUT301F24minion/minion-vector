@@ -6,14 +6,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".organizer.OrganizerActivity">
-
-    <TextView
-        android:id="@+id/organizerTextView"
+    <!-- Root Vertical LinearLayout -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Organizer Acitvity"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/header">
+
+        <!-- Header Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="#F9C4BF"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <!-- Text in the Middle -->
+            <TextView
+                android:id="@+id/organizerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Events"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                app:layout_constraintLeft_toLeftOf="@id/topBar"
+                app:layout_constraintRight_toRightOf="@id/topBar"
+                app:layout_constraintTop_toTopOf="@id/topBar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <!-- BottomNavigationView at the bottom -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

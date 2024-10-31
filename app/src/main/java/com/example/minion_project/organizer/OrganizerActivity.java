@@ -30,8 +30,10 @@ public class OrganizerActivity extends AppCompatActivity {
 
             if (itemId == R.id.organizerEvents) {
                 replaceFragment(new OrganizerEvents());
+                binding.organizerTextView.setText("My Events");
             } else if (itemId == R.id.organizerCreateEvent) {
                 replaceFragment(new OrganizerCreateEvent());
+                binding.organizerTextView.setText("Create Event");
             }
 
             return true;
