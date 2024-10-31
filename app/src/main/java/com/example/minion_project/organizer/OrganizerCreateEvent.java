@@ -16,7 +16,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.minion_project.Event;
-import com.example.minion_project.FireStore;
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.google.firebase.firestore.CollectionReference;
 
@@ -26,7 +26,7 @@ public class OrganizerCreateEvent extends Fragment {
 
     private Button selectTime, selectDate, uploadImage, createEventButton;
     private EditText createEventTitle, createEventDetails, createEventInvitations;
-    private FireStore ourFirestore = new FireStore();
+    private FireStoreClass ourFirestore = new FireStoreClass();
     private String selectedDate = "";
     private String selectedTime = "";
 
