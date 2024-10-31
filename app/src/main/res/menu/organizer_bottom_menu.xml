@@ -6,7 +6,7 @@
         android:title="My Events"
         android:icon="@drawable/baseline_format_list_bulleted"/>
     <item
-        android:id="@id/organizerCreateEvent"
+        android:id="@+id/organizerCreateEvent"
         android:title="Create Event"
         android:icon="@drawable/baseline_add"/>
 

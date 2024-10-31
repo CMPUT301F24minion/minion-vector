@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,10 @@ public class SignUpFragment extends Fragment {
     private Button signupButton;
     private CollectionReference usersRef,All_UsersRef,organizersRef;
     private String android_id;
+    private ImageView profileImageView;
+    private Button setImageButton;
+    private TextView userNotRecognized;
+
     // instantiate a fragment and set the arguments passed
     public static  SignUpFragment newInstance(CollectionReference All_UsersRef,String android_id,CollectionReference usersRef,CollectionReference organizersRef){
         SignUpFragment fragment=new SignUpFragment();
@@ -53,12 +59,16 @@ public class SignUpFragment extends Fragment {
 
         nameEditText = view.findViewById(R.id.name);
         emailEditText = view.findViewById(R.id.email);
+        profileImageView = view.findViewById(R.id.profileImageView);
+        setImageButton = view.findViewById(R.id.setImageButton);
+        userNotRecognized = view.findViewById(R.id.userNotRecognized);
         phoneEditText = view.findViewById(R.id.phone_number);
         cityEditText=view.findViewById(R.id.city);
         signupButton = view.findViewById(R.id.signup_button);
         organizerCheckBox=view.findViewById(R.id.organizer_checkbox);
         userCheckBox=view.findViewById(R.id.user_checkbox);
         signupButton.setOnClickListener(v -> signUpUser());
+
 
         return view;
     }
@@ -156,6 +166,11 @@ public class SignUpFragment extends Fragment {
         organizerCheckBox.setVisibility(View.GONE);
         userCheckBox.setVisibility(View.GONE);
         signupButton.setVisibility(View.GONE);
+
+        profileImageView.setVisibility(View.GONE);
+        setImageButton.setVisibility(View.GONE);
+        userNotRecognized.setVisibility(View.GONE);
+
 
         // Show the login buttons
         ((MainActivity) getActivity()).displayButtons(role);

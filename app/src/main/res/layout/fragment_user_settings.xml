@@ -3,18 +3,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-              
     tools:context=".user.UserSettingsFragment"
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center">
+    <!-- Profile Image and Buttons in Row Layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp">
+
+        <!-- Profile ImageView -->
+        <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="116dp"
+            android:layout_height="106dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="User Profile Picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_account_circle_24" />
+
+        <!-- Buttons for Change and Remove in Column -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Change Image Button -->
+            <Button
+                android:id="@+id/changeImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change"
+                android:padding="8dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/round_button"/>
+
+            <!-- Remove Image Button -->
+            <Button
+                android:background="@drawable/round_button"
+                android:id="@+id/removeImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remove"
+                android:textAllCaps="false"
+                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Name"
+        android:hint="...new name?"
         android:paddingBottom="50px" />
 
     <EditText
@@ -22,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Email"
+        android:hint="..what's your new email?"
         android:paddingBottom="50px" />
 
     <EditText
@@ -30,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Phone Number"
+        android:hint="...what's your new phone number"
         android:paddingBottom="50px"
         android:inputType="phone"/>
     <EditText
@@ -38,16 +86,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="City"
+        android:hint="...where'd you move to?"
         android:paddingBottom="50px" />
 
     <CheckBox
         android:id="@+id/role"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="50px"
         android:layout_margin="10px"
-        android:text="Organizer Access"/>
+        android:text="&quot;I am an organizer&quot;"/>
 
 
     <Button
@@ -57,7 +104,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
         android:text="Save"
-
+        android:textAllCaps="false"
         android:textColor="@color/white" />
 
 </LinearLayout>
