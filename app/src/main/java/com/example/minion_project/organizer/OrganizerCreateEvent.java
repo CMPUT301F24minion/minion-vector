@@ -1,5 +1,7 @@
 package com.example.minion_project.organizer;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,60 +9,109 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.minion_project.Event;
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
+import com.google.firebase.firestore.CollectionReference;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrganizerCreateEvent#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Calendar;
+
 public class OrganizerCreateEvent extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public OrganizerCreateEvent() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerCreateEvent.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static OrganizerCreateEvent newInstance(String param1, String param2) {
-        OrganizerCreateEvent fragment = new OrganizerCreateEvent();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private Button selectTime, selectDate, uploadImage, createEventButton;
+    private EditText createEventTitle, createEventDetails, createEventInvitations;
+    private FireStoreClass ourFirestore = new FireStoreClass();
+    private String selectedDate = "";
+    private String selectedTime = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
+
+        // Find views by ID
+        selectTime = view.findViewById(R.id.selectTimeButton);
+        selectDate = view.findViewById(R.id.selectDateButton);
+        uploadImage = view.findViewById(R.id.uploadImageButton);
+        createEventButton = view.findViewById(R.id.createEventButton);
+        createEventTitle = view.findViewById(R.id.createEventTitleEditText);
+        createEventDetails = view.findViewById(R.id.createEventDetailsEditText);
+        createEventInvitations = view.findViewById(R.id.createEventInvitationsEditText);
+
+        // Set listeners for buttons
+        selectTime.setOnClickListener(v -> openTimePickerDialog());
+        selectDate.setOnClickListener(v -> openDatePickerDialog());
+        uploadImage.setOnClickListener(v -> uploadImage());
+        createEventButton.setOnClickListener(v -> createEvent());
+
+        return view;
+    }
+
+    private void openTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                (view, hourOfDay, minuteOfHour) -> {
+                    selectedTime = hourOfDay + ":" + String.format("%02d", minuteOfHour);
+                    Toast.makeText(getContext(), "Selected Time: " + selectedTime, Toast.LENGTH_SHORT).show();
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+    private void openDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
+                    Toast.makeText(getContext(), "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+                }, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void uploadImage() {
+        Toast.makeText(getContext(), "Upload Image clicked!", Toast.LENGTH_SHORT).show();
+        // Placeholder for image upload logic
+    }
+
+    private void createEvent() {
+        String eventTitle = createEventTitle.getText().toString().trim();
+        String eventDetails = createEventDetails.getText().toString().trim();
+        String eventInvitations = createEventInvitations.getText().toString().trim();
+
+        if (eventTitle.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter an event title", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (selectedDate.isEmpty() || selectedTime.isEmpty()) {
+            Toast.makeText(getContext(), "Please select date and time for the event", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Event newEvent = new Event();
+        newEvent.setEventName(eventTitle);
+        newEvent.setEventDetails(eventDetails);
+        newEvent.setEventCapacity(eventInvitations);
+        newEvent.setEventDate(selectedDate);
+        newEvent.setEventTime(selectedTime);
+
+        CollectionReference eventsRef = ourFirestore.getEventsRef();
+        eventsRef.add(newEvent)
+                .addOnSuccessListener(documentReference ->
+                        Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

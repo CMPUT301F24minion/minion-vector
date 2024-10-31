@@ -10,10 +10,12 @@ public class Event {
     private String eventDate;
     private String eventName;
     private String eventDescription;
-    private int eventCapacity;
+    private String eventCapacity;
     private User eventOrganizer;
     private ArrayList<User> eventAttendees;
     private ArrayList<User> eventWaitlist;
+    private String eventDetails;
+    private String eventTime;
 
     // Default constructor
     public Event() {
@@ -21,14 +23,14 @@ public class Event {
         this.eventDate = "";
         this.eventName = "";
         this.eventDescription = "";
-        this.eventCapacity = 0;
+        this.eventCapacity = "";
         this.eventOrganizer = null;
         this.eventAttendees = new ArrayList<>();
         this.eventWaitlist = new ArrayList<>();
     }
 
     // Parameterized constructor
-    public Event(String eventId,String eventDate, String eventName, String eventDescription, int eventCapacity,
+    public Event(String eventId,String eventDate, String eventName, String eventDescription, String eventCapacity,
                  ArrayList<User> waitlist, ArrayList<User> participants, User eventOrganizer) {
         this.eventID = eventId;
         this.eventDate = eventDate;
@@ -42,9 +44,12 @@ public class Event {
         this.eventWaitlist = (waitlist != null) ? waitlist : new ArrayList<>();
     }
 
-    // Getters and setters for each field
     public String getEventID() {
         return eventID;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
     }
 
     public String getEventDate() {
@@ -71,11 +76,51 @@ public class Event {
         this.eventDescription = eventDescription;
     }
 
-    public int getEventCapacity() {
+    public String getEventCapacity() {
         return eventCapacity;
     }
 
-    public void setEventCapacity(int eventCapacity) {
+    public void setEventCapacity(String eventCapacity) {
         this.eventCapacity = eventCapacity;
+    }
+
+    public User getEventOrganizer() {
+        return eventOrganizer;
+    }
+
+    public void setEventOrganizer(User eventOrganizer) {
+        this.eventOrganizer = eventOrganizer;
+    }
+
+    public ArrayList<User> getEventAttendees() {
+        return eventAttendees;
+    }
+
+    public void setEventAttendees(ArrayList<User> eventAttendees) {
+        this.eventAttendees = eventAttendees;
+    }
+
+    public ArrayList<User> getEventWaitlist() {
+        return eventWaitlist;
+    }
+
+    public void setEventWaitlist(ArrayList<User> eventWaitlist) {
+        this.eventWaitlist = eventWaitlist;
+    }
+
+    public String getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(String eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getEventDetails() {
+        return eventDetails;
+    }
+
+    public void setEventDetails(String eventDetails) {
+        this.eventDetails = eventDetails;
     }
 }
