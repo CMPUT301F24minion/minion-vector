@@ -5,13 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".organizer.OrganizerActivity">
     <!-- Root Vertical LinearLayout -->
+
+    <!-- BottomNavigationView at the bottom -->
+
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/header">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-180dp">
 
         <!-- Header Section -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,9 +46,13 @@
                 app:layout_constraintTop_toTopOf="@id/topBar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayoutOrganizer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <!-- BottomNavigationView at the bottom -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/organizerBottomNavigationView"
         android:layout_width="match_parent"
@@ -53,14 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/organizer_bottom_menu"  />
 
-    <!-- FrameLayout for hosting fragments -->
-    <FrameLayout
-        android:id="@+id/frameLayoutOrganizer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/organizerTextView"
-        app:layout_constraintBottom_toTopOf="@id/organizerBottomNavigationView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -122,8 +122,7 @@ public class SignUpFragment extends Fragment {
             organizer.put("Name", name);
             organizer.put("Email", email);
             organizer.put("Phone_number",phone);
-            organizer.put("Location",city);
-            HashMap events=new HashMap<>();
+            ArrayList events=new ArrayList<>();
             organizer.put("Events", events);
             saveDocument(organizersRef,organizer);
 
