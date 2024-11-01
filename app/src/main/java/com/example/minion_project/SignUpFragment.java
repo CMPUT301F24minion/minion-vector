@@ -3,6 +3,7 @@ package com.example.minion_project;
 import static java.lang.Boolean.TRUE;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +40,9 @@ public class SignUpFragment extends Fragment {
     private ImageView profileImageView;
     private Button setImageButton;
     private TextView userNotRecognized;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imageUri;
+
 
     // instantiate a fragment and set the arguments passed
     public static  SignUpFragment newInstance(CollectionReference All_UsersRef,String android_id,CollectionReference usersRef,CollectionReference organizersRef){
@@ -67,13 +72,20 @@ public class SignUpFragment extends Fragment {
         signupButton = view.findViewById(R.id.signup_button);
         organizerCheckBox=view.findViewById(R.id.organizer_checkbox);
         userCheckBox=view.findViewById(R.id.user_checkbox);
-        signupButton.setOnClickListener(v -> signUpUser());
+        profileImageView = view.findViewById(R.id.profileImageView);
+        setImageButton = view.findViewById(R.id.setImageButton);
+
+        setImageButton.setOnClickListener(v -> openFileChooser());
+
+        signupButton.setOnClickListener(v -> {
+            uploadImageToFirebase();
+        });
 
 
         return view;
     }
 
-    private void signUpUser() {
+    private void signUpUser(String imageUrl) {
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String phone = phoneEditText.getText().toString().trim();
@@ -101,6 +113,7 @@ public class SignUpFragment extends Fragment {
         alluser.put("Email", email);
         alluser.put("Phone_number",phone);
         alluser.put("City",city);
+        alluser.put("profileImage", imageUrl);
         alluser.put("Roles",roles);
 
 
@@ -122,6 +135,7 @@ public class SignUpFragment extends Fragment {
             user.put("Email", email);
             user.put("Phone_number",phone);
             user.put("Location",city);
+            user.put("profileImage", imageUrl);
             HashMap events=new HashMap<>();
             user.put("Events", events);
             user.put("AllowNotication",TRUE);
@@ -174,6 +188,39 @@ public class SignUpFragment extends Fragment {
 
         // Show the login buttons
         ((MainActivity) getActivity()).displayButtons(role);
+    }
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK
+                && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            profileImageView.setImageURI(imageUri);  // Display the selected image
+        }
+    }
+
+    private void uploadImageToFirebase() {
+        if (imageUri != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
+
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        signUpUser(imageUrl);  // Save the image URL in Firestore
+                    }))
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

@@ -1,8 +1,10 @@
 package com.example.minion_project.user;
 import com.example.minion_project.MainActivity;
 
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.Gravity;
@@ -11,33 +13,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.provider.Settings.Secure;
 
-import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.provider.Settings.Secure;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.minion_project.organizer.OrganizerActivity;
-import com.example.minion_project.user.UserActivity;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,8 +46,14 @@ public class UserSettingsFragment extends Fragment {
     private CheckBox changeRole;
     public FireStoreClass fire =new FireStoreClass();
 
-    //get the android id of the current user
-    private String android_id;
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    private Uri imageUri;
+
+    private ImageView profileImageView;
+    private Button changeImageButton;
+    private Button removeImageButton;
+
     public static UserSettingsFragment newInstance(String param1, String param2) {
         UserSettingsFragment fragment = new UserSettingsFragment();
         Bundle args = new Bundle();
@@ -76,6 +75,10 @@ public class UserSettingsFragment extends Fragment {
         city = view.findViewById(R.id.city);
         save = view.findViewById(R.id.save);
         changeRole = view.findViewById(R.id.role);
+        profileImageView = view.findViewById(R.id.profileImageView);
+        changeImageButton = view.findViewById(R.id.changeImageButton);
+        removeImageButton = view.findViewById(R.id.removeImageButton);
+
         String androidID = Secure.getString(getActivity().getContentResolver(), Secure.ANDROID_ID);
 
         showExistingData(androidID);
@@ -87,6 +90,9 @@ public class UserSettingsFragment extends Fragment {
             };
 
         });
+        changeImageButton.setOnClickListener(view12 -> openFileChooser()); // Opens the gallery to pick a new image
+
+        removeImageButton.setOnClickListener(view13 -> removeProfileImage(androidID)); // Removes the profile image
 
 
         // Inflate the layout for this fragment
@@ -162,6 +168,7 @@ public class UserSettingsFragment extends Fragment {
                             String phoneValue = document.getString("Phone_number");
                             String cityValue = document.getString("City");
                             Boolean isOrganizer = document.getBoolean("Roles.Organizer");
+                            String profileImageUrl = document.getString("profileImage"); // Get the profile image URL
 
                             // Set the UI elements with retrieved data
                             name.setText(nameValue);
@@ -175,6 +182,14 @@ public class UserSettingsFragment extends Fragment {
                             } else {
                                 changeRole.setChecked(false);
                             }
+
+                            // Load the profile image using Glide
+                            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                Glide.with(getActivity())
+                                        .load(profileImageUrl)
+                                        .into(profileImageView); // Replace with your actual ImageView ID
+                            }
+
                         } else {
                             // Document does not exist
                             Toast.makeText(getActivity(), "User not found", Toast.LENGTH_SHORT).show();
@@ -183,6 +198,85 @@ public class UserSettingsFragment extends Fragment {
                         // Handle errors
                         Toast.makeText(getActivity(), "Error fetching user data", Toast.LENGTH_SHORT).show();
                     }
+                });
+    }
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK
+                && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            profileImageView.setImageURI(imageUri);  // Display the selected image
+
+            // Upload the image to Firebase Storage and update Firestore with the new URL
+            String androidID = Secure.getString(getActivity().getContentResolver(), Secure.ANDROID_ID);
+            uploadImageToFirebase(androidID);
+        }
+    }
+
+    private void removeProfileImage(String androidID) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference("profile_images/" + androidID + ".jpg");
+
+        // Delete the image from Firebase Storage
+        storageRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Remove the profile image URL from getAll_UsersRef
+                    fire.getAll_UsersRef().document(androidID).update("profileImage", null)
+                            .addOnSuccessListener(aVoid1 -> {
+                                profileImageView.setImageResource(R.drawable.baseline_account_circle_24);
+                            });
+
+                    // Remove the profile image URL from getUsersRef
+                    fire.getUsersRef().document(androidID).update("profileImage", null)
+                            .addOnSuccessListener(aVoid2 -> {
+                            });
+                })
+                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to delete image from Storage", Toast.LENGTH_SHORT).show());
+    }
+    private void uploadImageToFirebase(String androidID) {
+        if (imageUri != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference("profile_images/" + androidID + ".jpg");
+
+            // Upload the image file to Firebase Storage
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String downloadUrl = uri.toString();
+
+                        // Save the new profile image URL to Firestore in both references
+                        saveProfileImageUrlToFirestore(androidID, downloadUrl);
+                        Toast.makeText(getActivity(), "Profile image updated successfully!", Toast.LENGTH_SHORT).show();
+                    }))
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveProfileImageUrlToFirestore(String androidID, String downloadUrl) {
+        // Update the profile image URL in getAll_UsersRef
+        fire.getAll_UsersRef().document(androidID)
+                .update("profileImage", downloadUrl)
+                .addOnSuccessListener(aVoid -> {
+                    // Display the new image in the ImageView
+                    Glide.with(getActivity()).load(downloadUrl).into(profileImageView);
+                });
+
+
+        // Update the profile image URL in getUsersRef
+        fire.getUsersRef().document(androidID)
+                .update("profileImage", downloadUrl)
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully updated in both references
                 });
     }
 }
