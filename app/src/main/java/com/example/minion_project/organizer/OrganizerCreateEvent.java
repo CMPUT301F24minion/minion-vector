@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.minion_project.Event;
-import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.FireStore;
+import com.example.minion_project.OrganizerController;
 import com.example.minion_project.R;
 import com.google.firebase.firestore.CollectionReference;
 
@@ -26,14 +28,23 @@ public class OrganizerCreateEvent extends Fragment {
 
     private Button selectTime, selectDate, uploadImage, createEventButton;
     private EditText createEventTitle, createEventDetails, createEventInvitations;
-    private FireStoreClass ourFirestore = new FireStoreClass();
+    private FireStore ourFirestore = new FireStore();
     private String selectedDate = "";
     private String selectedTime = "";
+
+    // contoller
+    private OrganizerController organizerController;
+    //initalize controller
+    public OrganizerCreateEvent(OrganizerController organizercontroller){
+        this.organizerController=organizercontroller;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
+
 
         // Find views by ID
         selectTime = view.findViewById(R.id.selectTimeButton);
@@ -94,11 +105,11 @@ public class OrganizerCreateEvent extends Fragment {
             Toast.makeText(getContext(), "Please enter an event title", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (selectedDate.isEmpty() || selectedTime.isEmpty()) {
-            Toast.makeText(getContext(), "Please select date and time for the event", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//
+//        if (selectedDate.isEmpty() || selectedTime.isEmpty()) {
+//            Toast.makeText(getContext(), "Please select date and time for the event", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         Event newEvent = new Event();
         newEvent.setEventName(eventTitle);
@@ -109,8 +120,16 @@ public class OrganizerCreateEvent extends Fragment {
 
         CollectionReference eventsRef = ourFirestore.getEventsRef();
         eventsRef.add(newEvent)
-                .addOnSuccessListener(documentReference ->
-                        Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(documentReference ->{
+                            String eventId = documentReference.getId();
+
+                            // we pass the event to controller
+                            // the contoller updates both firestore and organizer class
+                            organizerController.addEvent(eventId);
+                            Log.d("OrganizerCreateEvent", "Event ID: " + eventId);
+                            Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+
+                        })
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
