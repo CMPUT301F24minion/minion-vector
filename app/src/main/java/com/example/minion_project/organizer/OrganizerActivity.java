@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.minion_project.FireStore;
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.OrganizerController;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityOrganizerBinding;
@@ -32,7 +32,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
     ActivityOrganizerBinding binding;
     public Organizer organizer;
-    public FireStore Our_Firestore=new FireStore();
+    public FireStoreClass Our_Firestore=new FireStoreClass();
     private String android_id;
     private CollectionReference organizersRef;
 
