@@ -118,6 +118,9 @@ public class OrganizerCreateEvent extends Fragment {
         newEvent.setEventDate(selectedDate);
         newEvent.setEventTime(selectedTime);
 
+        // TODO : ON CLICK WE SHOULD OPEN THE EVENT PAGE WITH THE QR OR REDIRECT TOT MY EVENTS PAGE
+        //         : AND WE MUST CLEAR THE INPUT TEXT
+
         CollectionReference eventsRef = ourFirestore.getEventsRef();
         eventsRef.add(newEvent)
                 .addOnSuccessListener(documentReference ->{
