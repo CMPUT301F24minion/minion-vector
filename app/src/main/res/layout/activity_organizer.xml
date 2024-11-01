@@ -56,8 +56,8 @@
     <!-- FrameLayout for hosting fragments -->
     <FrameLayout
         android:id="@+id/frameLayoutOrganizer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/organizerTextView"
         app:layout_constraintBottom_toTopOf="@id/organizerBottomNavigationView"
         app:layout_constraintStart_toStartOf="parent"
