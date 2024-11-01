@@ -1,4 +1,4 @@
- plugins {
+plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
 }
@@ -37,8 +37,21 @@ android {
 
 dependencies {
     //firestore do not touch
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth)
+
+    // Glide for image loading
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+
+
+
+
+
+
     //
     implementation(libs.appcompat)
     implementation(libs.material)
