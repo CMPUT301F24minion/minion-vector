@@ -1,8 +1,12 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/organizerCreateEvent">
+    android:id="@+id/organizerCreateEvent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    >
 
     <EditText
         android:id="@+id/createEventTitleEditText"
@@ -82,4 +86,4 @@
         android:textColor="@color/white">
     </Button>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

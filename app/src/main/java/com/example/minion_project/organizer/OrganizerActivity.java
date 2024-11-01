@@ -62,7 +62,6 @@ public class OrganizerActivity extends AppCompatActivity {
 
                             String name = (String) data.get("Name");
 
-                            // Todo: need to for loop here and make every event an Event class
                             ArrayList<String> events = (ArrayList<String>)data.get("Events");
 
                             String phoneNumber = (String) data.get("Phone_number");
