@@ -1,0 +1,445 @@
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_10_2024_17_38_[Changes]/shelved.patch	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
++++ /dev/null	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
+@@ -1,37 +0,0 @@
+-Index: .gitignore
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>*.iml\r\n.gradle\r\n/local.properties\r\n/.idea/caches\r\n/.idea/libraries\r\n/.idea/modules.xml\r\n/.idea/workspace.xml\r\n/.idea/navEditor.xml\r\n/.idea/assetWizardSettings.xml\r\n.DS_Store\r\n/build\r\n/captures\r\n.externalNativeBuild\r\n.cxx\r\nlocal.properties\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.gitignore b/.gitignore
+---- a/.gitignore	(revision 969e990338ec9f9b0e112c27b71b65ed4ecc729f)
+-+++ b/.gitignore	(date 1729294598190)
+-@@ -4,7 +4,7 @@
+- /.idea/caches
+- /.idea/libraries
+- /.idea/modules.xml
+--/.idea/workspace.xml
+-+/.idea/workspace.xml pull
+- /.idea/navEditor.xml
+- /.idea/assetWizardSettings.xml
+- .DS_Store
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveExternalAnnotations\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 969e990338ec9f9b0e112c27b71b65ed4ecc729f)
+-+++ b/.idea/gradle.xml	(date 1729294678607)
+-@@ -4,7 +4,6 @@
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+--        <option name="testRunner" value="CHOOSE_PER_TEST" />
+-         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+-         <option name="modules">
+Index: .idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
++++ /dev/null	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
+@@ -1,15 +0,0 @@
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/misc.xml b/.idea/misc.xml
+---- a/.idea/misc.xml	(revision e70cf74b1ead34e215e6f1c801db114da7fe39c5)
+-+++ b/.idea/misc.xml	(date 1729456511483)
+-@@ -1,4 +1,3 @@
+--<?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+Index: .idea/other.xml
+===================================================================
+diff --git a/.idea/other.xml b/.idea/other.xml
+deleted file mode 100644
+--- a/.idea/other.xml	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
++++ /dev/null	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
+@@ -1,340 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="direct_access_persist.xml">
+-    <option name="deviceSelectionList">
+-      <list>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="27" />
+-          <option name="brand" value="DOCOMO" />
+-          <option name="codename" value="F01L" />
+-          <option name="id" value="F01L" />
+-          <option name="manufacturer" value="FUJITSU" />
+-          <option name="name" value="F-01L" />
+-          <option name="screenDensity" value="360" />
+-          <option name="screenX" value="720" />
+-          <option name="screenY" value="1280" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="28" />
+-          <option name="brand" value="DOCOMO" />
+-          <option name="codename" value="SH-01L" />
+-          <option name="id" value="SH-01L" />
+-          <option name="manufacturer" value="SHARP" />
+-          <option name="name" value="AQUOS sense2 SH-01L" />
+-          <option name="screenDensity" value="480" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2160" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="Lenovo" />
+-          <option name="codename" value="TB370FU" />
+-          <option name="id" value="TB370FU" />
+-          <option name="manufacturer" value="Lenovo" />
+-          <option name="name" value="Tab P12" />
+-          <option name="screenDensity" value="340" />
+-          <option name="screenX" value="1840" />
+-          <option name="screenY" value="2944" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="31" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="a51" />
+-          <option name="id" value="a51" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy A51" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="akita" />
+-          <option name="id" value="akita" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 8a" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="b0q" />
+-          <option name="id" value="b0q" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy S22 Ultra" />
+-          <option name="screenDensity" value="600" />
+-          <option name="screenX" value="1440" />
+-          <option name="screenY" value="3088" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="32" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="bluejay" />
+-          <option name="id" value="bluejay" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 6a" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="caiman" />
+-          <option name="id" value="caiman" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 9 Pro" />
+-          <option name="screenDensity" value="360" />
+-          <option name="screenX" value="960" />
+-          <option name="screenY" value="2142" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="comet" />
+-          <option name="id" value="comet" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 9 Pro Fold" />
+-          <option name="screenDensity" value="390" />
+-          <option name="screenX" value="2076" />
+-          <option name="screenY" value="2152" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="29" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="crownqlteue" />
+-          <option name="id" value="crownqlteue" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy Note9" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="2220" />
+-          <option name="screenY" value="1080" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="dm3q" />
+-          <option name="id" value="dm3q" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy S23 Ultra" />
+-          <option name="screenDensity" value="600" />
+-          <option name="screenX" value="1440" />
+-          <option name="screenY" value="3088" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="e1q" />
+-          <option name="id" value="e1q" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy S24" />
+-          <option name="screenDensity" value="480" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2340" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="felix" />
+-          <option name="id" value="felix" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel Fold" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="2208" />
+-          <option name="screenY" value="1840" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="felix" />
+-          <option name="id" value="felix" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel Fold" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="2208" />
+-          <option name="screenY" value="1840" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="felix_camera" />
+-          <option name="id" value="felix_camera" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel Fold (Camera-enabled)" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="2208" />
+-          <option name="screenY" value="1840" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="gts8uwifi" />
+-          <option name="id" value="gts8uwifi" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy Tab S8 Ultra" />
+-          <option name="screenDensity" value="320" />
+-          <option name="screenX" value="1848" />
+-          <option name="screenY" value="2960" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="husky" />
+-          <option name="id" value="husky" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 8 Pro" />
+-          <option name="screenDensity" value="390" />
+-          <option name="screenX" value="1008" />
+-          <option name="screenY" value="2244" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="30" />
+-          <option name="brand" value="motorola" />
+-          <option name="codename" value="java" />
+-          <option name="id" value="java" />
+-          <option name="manufacturer" value="Motorola" />
+-          <option name="name" value="G20" />
+-          <option name="screenDensity" value="280" />
+-          <option name="screenX" value="720" />
+-          <option name="screenY" value="1600" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="komodo" />
+-          <option name="id" value="komodo" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 9 Pro XL" />
+-          <option name="screenDensity" value="360" />
+-          <option name="screenX" value="1008" />
+-          <option name="screenY" value="2244" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="lynx" />
+-          <option name="id" value="lynx" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 7a" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="31" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="oriole" />
+-          <option name="id" value="oriole" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 6" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="panther" />
+-          <option name="id" value="panther" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 7" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="q5q" />
+-          <option name="id" value="q5q" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy Z Fold5" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1812" />
+-          <option name="screenY" value="2176" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="q6q" />
+-          <option name="id" value="q6q" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="SM-F956B" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1856" />
+-          <option name="screenY" value="2160" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="30" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="r11" />
+-          <option name="id" value="r11" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel Watch" />
+-          <option name="screenDensity" value="320" />
+-          <option name="screenX" value="384" />
+-          <option name="screenY" value="384" />
+-          <option name="type" value="WEAR_OS" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="30" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="redfin" />
+-          <option name="id" value="redfin" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 5" />
+-          <option name="screenDensity" value="440" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2340" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="shiba" />
+-          <option name="id" value="shiba" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 8" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2400" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="33" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="tangorpro" />
+-          <option name="id" value="tangorpro" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel Tablet" />
+-          <option name="screenDensity" value="320" />
+-          <option name="screenX" value="1600" />
+-          <option name="screenY" value="2560" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="34" />
+-          <option name="brand" value="google" />
+-          <option name="codename" value="tokay" />
+-          <option name="id" value="tokay" />
+-          <option name="manufacturer" value="Google" />
+-          <option name="name" value="Pixel 9" />
+-          <option name="screenDensity" value="420" />
+-          <option name="screenX" value="1080" />
+-          <option name="screenY" value="2424" />
+-        </PersistentDeviceSelectionData>
+-        <PersistentDeviceSelectionData>
+-          <option name="api" value="29" />
+-          <option name="brand" value="samsung" />
+-          <option name="codename" value="x1q" />
+-          <option name="id" value="x1q" />
+-          <option name="manufacturer" value="Samsung" />
+-          <option name="name" value="Galaxy S20" />
+-          <option name="screenDensity" value="480" />
+-          <option name="screenX" value="1440" />
+-          <option name="screenY" value="3200" />
+-        </PersistentDeviceSelectionData>
+-      </list>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+> plugins {\n    alias(libs.plugins.android.application)\n    id(\"com.google.gms.google-services\")\n}\n\nandroid {\n    namespace = \"com.example.minion_project\"\n    compileSdk = 34\n\n    defaultConfig {\n        applicationId = \"com.example.minion_project\"\n        minSdk = 24\n        targetSdk = 34\n        versionCode = 1\n        versionName = \"1.0\"\n\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            isMinifyEnabled = false\n            proguardFiles(\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n                \"proguard-rules.pro\"\n            )\n        }\n    }\n    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_1_8\n        targetCompatibility = JavaVersion.VERSION_1_8\n    }\n    buildFeatures {\n        viewBinding = true\n    }\n}\n\ndependencies {\n    //firestore do not touch\n    implementation(platform(\"com.google.firebase:firebase-bom:33.4.0\"))\n    implementation(\"com.google.firebase:firebase-firestore\")\n    //\n    implementation(libs.appcompat)\n    implementation(libs.material)\n    implementation(libs.activity)\n    implementation(libs.constraintlayout)\n    implementation(libs.lifecycle.livedata.ktx)\n    implementation(libs.lifecycle.viewmodel.ktx)\n    implementation(libs.navigation.fragment)\n    implementation(libs.navigation.ui)\n    testImplementation(libs.junit)\n    androidTestImplementation(libs.ext.junit)\n    androidTestImplementation(libs.espresso.core)\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
++++ b/app/build.gradle.kts	(date 1730340818271)
+@@ -1,4 +1,4 @@
+- plugins {
++plugins {
+     alias(libs.plugins.android.application)
+     id("com.google.gms.google-services")
+ }
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>*.iml\n.gradle\n/local.properties\n/.idea/caches\n/.idea/libraries\n/.idea/modules.xml\n/.idea/workspace.xml\n/.idea/navEditor.xml\n/.idea/assetWizardSettings.xml\n.DS_Store\n/build\n/captures\n.externalNativeBuild\n.cxx\nlocal.properties\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	(revision d2e800fd0546d5eb65d744dc07c4dbe448af2225)
++++ b/.gitignore	(date 1730340823434)
+@@ -13,3 +13,4 @@
+ .externalNativeBuild
+ .cxx
+ local.properties
++.idea/other.xml

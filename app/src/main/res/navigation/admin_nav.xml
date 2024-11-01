@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/admin_nav"
+    app:startDestination="@id/adminEvents">
+
+    <fragment
+        android:id="@+id/adminEvents"
+        android:name="com.example.minion_project.admin.AdminEvents"
+        android:label="fragment_admin_events"
+        tools:layout="@layout/fragment_admin_events" />
+    <fragment
+        android:id="@+id/adminProfiles"
+        android:name="com.example.minion_project.admin.AdminProfiles"
+        android:label="fragment_admin_profiles"
+        tools:layout="@layout/fragment_admin_profiles" />
+    <fragment
+        android:id="@+id/adminImages"
+        android:name="com.example.minion_project.admin.AdminImages"
+        android:label="fragment_admin_images"
+        tools:layout="@layout/fragment_admin_images" />
+</navigation>

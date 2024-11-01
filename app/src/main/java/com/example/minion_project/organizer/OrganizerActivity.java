@@ -82,10 +82,10 @@ public class OrganizerActivity extends AppCompatActivity {
         binding.organizerBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the item ID
 
-            if (itemId == R.id.organizerEvents) {
+            if (itemId == R.id.menu_organizer_events) {
                 replaceFragment(new OrganizerEvents());
                 binding.organizerTextView.setText("My Events");
-            } else if (itemId == R.id.organizerCreateEvent) {
+            } else if (itemId == R.id.menu_organizer_create_event) {
                 // nb we now pass organizerController to each fragment
                 replaceFragment(new OrganizerCreateEvent(organizerController));
                 binding.organizerTextView.setText("Create Event");

@@ -6,28 +6,28 @@
     app:startDestination="@id/user_attending">
 
     <fragment
-        android:id="@+id/user_settings"
+        android:id="@+id/userSettings"
         android:name="com.example.minion_project.user.UserAttendingFragment"
         android:label="fragment_user_attending"
         tools:layout="@layout/fragment_user_settings" />
 
     <fragment
-        android:id="@+id/user_attending"
+        android:id="@+id/userAttending"
         android:name="com.example.minion_project.user.UserAttendingFragment"
         android:label="fragment_user_attending"
         tools:layout="@layout/fragment_user_attending" />
     <fragment
-        android:id="@+id/user_waitlisted"
+        android:id="@+id/userWaitlisted"
         android:name="com.example.minion_project.user.UserWaitlistedFragment"
         android:label="fragment_user_waitlisted"
         tools:layout="@layout/fragment_user_waitlisted" />
     <fragment
-        android:id="@+id/user_updates"
+        android:id="@+id/userUpdates"
         android:name="com.example.minion_project.user.UserUpdatesFragment"
         android:label="fragment_user_updates"
         tools:layout="@layout/fragment_user_updates" />
     <fragment
-        android:id="@+id/user_scanQR"
+        android:id="@+id/userScanQR"
         android:name="com.example.minion_project.user.UserScanFragment"
         android:label="fragment_user_scan_q_r"
         tools:layout="@layout/fragment_user_scan_q_r" />

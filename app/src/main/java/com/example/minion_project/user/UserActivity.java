@@ -81,19 +81,19 @@ public class UserActivity extends AppCompatActivity {
         binding.userBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the item ID
 
-            if (itemId == R.id.user_attending) {
+            if (itemId == R.id.menu_user_attending) {
                 replaceFragment(new UserAttendingFragment());
                 binding.textView.setText("What's Popping");
-            } else if (itemId == R.id.user_settings) {
+            } else if (itemId == R.id.menu_user_settings) {
                 replaceFragment(new UserSettingsFragment());
                 binding.textView.setText("Settings");
-            } else if (itemId == R.id.user_waitlisted) {
+            } else if (itemId == R.id.menu_user_waitlisted) {
                 replaceFragment(new UserWaitlistedFragment());
                 binding.textView.setText("Waitlists");
-            } else if (itemId == R.id.user_updates) {
+            } else if (itemId == R.id.menu_user_updates) {
                 replaceFragment(new UserUpdatesFragment());
                 binding.textView.setText("Notifications");
-            } else if (itemId == R.id.user_scan_qr) {
+            } else if (itemId == R.id.menu_user_scan_qr) {
                 replaceFragment(new UserScanFragment());
                 binding.textView.setText("Scan QR");
             }

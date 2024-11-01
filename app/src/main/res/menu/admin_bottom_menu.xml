@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_admin_events"
+        android:title="Events"
+        android:icon="@drawable/baseline_folder"/>
+    <item
+        android:id="@+id/menu_admin_profiles"
+        android:title="Profiles"
+        android:icon="@drawable/baseline_account_circle_24"/>
+    <item
+        android:id="@+id/menu_admin_images"
+        android:title="Images"
+        android:icon="@drawable/baseline_image_24"/>
+</menu>
