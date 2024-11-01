@@ -23,6 +23,9 @@ public class AdminActivity extends AppCompatActivity {
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        replaceFragment(new AdminEvents());
+        binding.adminTextView.setText("Admin Events");
+
         binding.adminBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the item ID
 
