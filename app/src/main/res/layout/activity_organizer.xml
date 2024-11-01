@@ -63,6 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/organizer_bottom_menu"  />
 
-    <!-- FrameLayout for hosting fragments -->
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
