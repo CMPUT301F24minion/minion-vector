@@ -17,7 +17,7 @@
         android:id="@+id/userNotRecognized"
         android:fontFamily="sans-serif-light"
         android:textColor="@color/white"
-        android:textSize="60sp"
+        android:textSize="40sp"
         >
     </TextView>
 
