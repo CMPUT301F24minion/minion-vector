@@ -1,0 +1,31 @@
+Index: app/src/main/java/com/example/minion_project/organizer/OrganizerCreateEvent.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.minion_project.organizer;\n\nimport android.app.DatePickerDialog;\nimport android.app.TimePickerDialog;\nimport android.os.Bundle;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.Button;\nimport android.widget.DatePicker;\nimport android.widget.TimePicker;\nimport android.widget.Toast;\n\nimport androidx.fragment.app.Fragment;\n\nimport com.example.minion_project.R;\n\nimport java.util.Calendar;\n\n/**\n * A simple {@link Fragment} subclass.\n * Use the {@link OrganizerCreateEvent#newInstance} factory method to\n * create an instance of this fragment.\n */\npublic class OrganizerCreateEvent extends Fragment {\n\n    private Button selectTime;\n    private Button selectDate;\n    private Button uploadImage;\n\n    public OrganizerCreateEvent() {\n        // Required empty public constructor\n    }\n\n    public static OrganizerCreateEvent newInstance(String param1, String param2) {\n        OrganizerCreateEvent fragment = new OrganizerCreateEvent();\n        Bundle args = new Bundle();\n        args.putString(\"param1\", param1);\n        args.putString(\"param2\", param2);\n        fragment.setArguments(args);\n        return fragment;\n    }\n\n    @Override\n    public void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n    }\n\n    @Override\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\n                             Bundle savedInstanceState) {\n        // Inflate the layout for this fragment\n        View view = inflater.inflate(R.layout.fragment_organizer_create_event, container, false);\n\n        // Find views by their IDs\n        selectTime = view.findViewById(R.id.selectTimeButton);\n        selectDate = view.findViewById(R.id.selectDateButton);\n        uploadImage = view.findViewById(R.id.uploadImageButton);\n\n        // Set click listener for the Select Time button\n        selectTime.setOnClickListener(v -> openTimePickerDialog());\n\n        // You can also set listeners for the other buttons here\n        selectDate.setOnClickListener(v -> openDatePickerDialog());\n        uploadImage.setOnClickListener(v -> uploadImage());\n\n        return view;\n    }\n\n    // Method to open the TimePickerDialog\n    public void openTimePickerDialog() {\n        // Get the current time to set as default in the TimePickerDialog\n        Calendar calendar = Calendar.getInstance();\n        int hour = calendar.get(Calendar.HOUR_OF_DAY);\n        int minute = calendar.get(Calendar.MINUTE);\n\n        // Create a new TimePickerDialog\n        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),\n                (TimePicker view, int hourOfDay, int minuteOfHour) -> {\n                    // Format the selected time and show it in a Toast message or update your UI\n                    String selectedTime = hourOfDay + \":\" + String.format(\"%02d\", minuteOfHour);\n                    Toast.makeText(getContext(), \"Selected Time: \" + selectedTime, Toast.LENGTH_SHORT).show();\n                    // You can update the button text or store the selected time here\n                }, hour, minute, true);  // Set true for 24-hour format\n\n        timePickerDialog.show();  // Show the dialog\n    }\n\n    // Method to open the DatePickerDialog (you can implement this similarly to TimePickerDialog)\n    // Method to open the DatePickerDialog\n    public void openDatePickerDialog() {\n        // Get the current date to show in the picker by default\n        final Calendar calendar = Calendar.getInstance();\n        int year = calendar.get(Calendar.YEAR);\n        int month = calendar.get(Calendar.MONTH);\n        int day = calendar.get(Calendar.DAY_OF_MONTH);\n\n        // Create a DatePickerDialog\n        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext());\n\n        datePickerDialog.show();\n    }\n\n\n    // Method to handle image upload (just a placeholder for now)\n    public void uploadImage() {\n        // You can implement the logic for uploading an image, maybe using an intent to open the gallery\n        Toast.makeText(getContext(), \"Upload Image clicked!\", Toast.LENGTH_SHORT).show();\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/minion_project/organizer/OrganizerCreateEvent.java b/app/src/main/java/com/example/minion_project/organizer/OrganizerCreateEvent.java
+--- a/app/src/main/java/com/example/minion_project/organizer/OrganizerCreateEvent.java	
++++ b/app/src/main/java/com/example/minion_project/organizer/OrganizerCreateEvent.java	
+@@ -14,6 +14,7 @@
+ import androidx.fragment.app.Fragment;
+ 
+ import com.example.minion_project.R;
++import com.google.firebase.firestore.FirebaseFirestore;
+ 
+ import java.util.Calendar;
+ 
+@@ -24,10 +25,12 @@
+  */
+ public class OrganizerCreateEvent extends Fragment {
+ 
++    private FirebaseFirestore db;
+     private Button selectTime;
+     private Button selectDate;
+     private Button uploadImage;
+ 
++
+     public OrganizerCreateEvent() {
+         // Required empty public constructor
+     }

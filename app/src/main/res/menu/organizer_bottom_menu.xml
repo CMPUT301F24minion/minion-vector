@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/organizerEvents"
+        android:id="@+id/menu_organizer_events"
         android:title="My Events"
         android:icon="@drawable/baseline_format_list_bulleted"/>
     <item
-        android:id="@+id/organizerCreateEvent"
+        android:id="@+id/menu_organizer_create_event"
         android:title="Create Event"
         android:icon="@drawable/baseline_add"/>
 

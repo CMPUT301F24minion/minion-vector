@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.minion_project.admin.AdminActivity;
 import com.example.minion_project.organizer.OrganizerActivity;
 import com.example.minion_project.user.UserActivity;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         adminBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(MainActivity.this, AdminActivity.class));
+                startActivity(new Intent(MainActivity.this, AdminActivity.class));
             }
         });
 
