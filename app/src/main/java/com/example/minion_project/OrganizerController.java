@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FieldValue;
 
 public class OrganizerController {
     public Organizer organizer;
-    public FireStore Our_Firestore=new FireStore();
+    public FireStoreClass Our_Firestore=new FireStoreClass();
     private CollectionReference organizersRef;
 
     public OrganizerController(Organizer organizer) {
