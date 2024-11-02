@@ -2,19 +2,28 @@ package com.example.minion_project.organizer;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 
 import com.example.minion_project.Event;
 import com.example.minion_project.FireStoreClass;
@@ -31,9 +40,14 @@ public class OrganizerCreateEvent extends Fragment {
     private FireStoreClass ourFirestore = new FireStoreClass();
     private String selectedDate = "";
     private String selectedTime = "";
+    private ImageView eventImageView;
 
     // contoller
     private OrganizerController organizerController;
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    private Uri imageUri;
     //initalize controller
     public OrganizerCreateEvent(OrganizerController organizercontroller){
         this.organizerController=organizercontroller;
@@ -54,12 +68,13 @@ public class OrganizerCreateEvent extends Fragment {
         createEventTitle = view.findViewById(R.id.createEventTitleEditText);
         createEventDetails = view.findViewById(R.id.createEventDetailsEditText);
         createEventInvitations = view.findViewById(R.id.createEventInvitationsEditText);
+        eventImageView = view.findViewById(R.id.eventImageView);
 
         // Set listeners for buttons
         selectTime.setOnClickListener(v -> openTimePickerDialog());
         selectDate.setOnClickListener(v -> openDatePickerDialog());
         uploadImage.setOnClickListener(v -> uploadImage());
-        createEventButton.setOnClickListener(v -> createEvent());
+        createEventButton.setOnClickListener(v -> uploadImageToFirebaseAndCreateEvent());
 
         return view;
     }
@@ -94,9 +109,11 @@ public class OrganizerCreateEvent extends Fragment {
     private void uploadImage() {
         Toast.makeText(getContext(), "Upload Image clicked!", Toast.LENGTH_SHORT).show();
         // Placeholder for image upload logic
+
+        openFileChooser();
     }
 
-    private void createEvent() {
+    private void createEvent(String imageUrl) {
         String eventTitle = createEventTitle.getText().toString().trim();
         String eventDetails = createEventDetails.getText().toString().trim();
         String eventInvitations = createEventInvitations.getText().toString().trim();
@@ -117,6 +134,8 @@ public class OrganizerCreateEvent extends Fragment {
         newEvent.setEventCapacity(eventInvitations);
         newEvent.setEventDate(selectedDate);
         newEvent.setEventTime(selectedTime);
+        newEvent.setEventImage(imageUrl);
+        newEvent.setEventOrganizer(Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
 
         // TODO : ON CLICK WE SHOULD OPEN THE EVENT PAGE WITH THE QR OR REDIRECT TOT MY EVENTS PAGE
         //         : AND WE MUST CLEAR THE INPUT TEXT
@@ -124,16 +143,69 @@ public class OrganizerCreateEvent extends Fragment {
         CollectionReference eventsRef = ourFirestore.getEventsRef();
         eventsRef.add(newEvent)
                 .addOnSuccessListener(documentReference ->{
-                            String eventId = documentReference.getId();
+                    String eventId = documentReference.getId();
 
-                            // we pass the event to controller
-                            // the contoller updates both firestore and organizer class
-                            organizerController.addEvent(eventId);
-                            Log.d("OrganizerCreateEvent", "Event ID: " + eventId);
-                            Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+                    // we pass the event to controller
+                    // the contoller updates both firestore and organizer class
+                    organizerController.addEvent(eventId);
+                    Log.d("OrganizerCreateEvent", "Event ID: " + eventId);
+                    Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
-                        })
+                    clearInputs();
+
+                })
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select event Poster"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK
+                && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            eventImageView.setImageURI(imageUri);  // Display the selected image
+        }
+    }
+
+    private void uploadImageToFirebaseAndCreateEvent() {
+        if (imageUri != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+            // Use a unique file name for each event image to avoid overwriting files
+            String imageFileName = "event_images/" + System.currentTimeMillis() + ".jpg";
+            StorageReference storageRef = storage.getReference(imageFileName);
+
+            // Upload the image file to Firebase Storage
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Retrieve the download URL
+                        String downloadUrl = uri.toString();
+
+                        // Call the method to create an event and pass the download URL
+                        createEvent(downloadUrl);
+
+                    }))
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void clearInputs() {
+        createEventTitle.setText("");
+        createEventDetails.setText("");
+        createEventInvitations.setText("");
+        eventImageView.setImageURI(null);  // Clear the image preview
+        selectedDate = "";
+        selectedTime = "";
+    }
+
 }
