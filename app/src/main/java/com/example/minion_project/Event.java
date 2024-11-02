@@ -11,7 +11,7 @@ public class Event {
     private String eventName;
     private String eventDescription;
     private String eventCapacity;
-    private Organizer eventOrganizer;
+    private String eventOrganizer;
     private ArrayList<User> eventAttendees;
     private ArrayList<User> eventWaitlist;
     private ArrayList<User> eventInvited;
@@ -19,6 +19,7 @@ public class Event {
     private String eventDetails;
     private String eventTime;
     private String eventLocation;
+    private String eventImage;
 
     public Event() {
         this.eventID = "";
@@ -26,18 +27,23 @@ public class Event {
         this.eventName = "";
         this.eventDescription = "";
         this.eventCapacity = "";
-        this.eventOrganizer = null;
+        this.eventOrganizer = "";
         this.eventAttendees = new ArrayList<>();
         this.eventWaitlist = new ArrayList<>();
         this.eventInvited = new ArrayList<>();
         this.eventCanceled = new ArrayList<>();
         this.eventLocation = "";
+        this.eventImage = "";
     }
 
     public String getEventID() {
         return eventID;
     }
+    public String getEventImage() {return this.eventImage;}
 
+    public void setEventImage(String eventImage) {
+        this.eventImage = eventImage;
+    }
     public void setEventID(String eventID) {
         this.eventID = eventID;
     }
@@ -74,11 +80,11 @@ public class Event {
         this.eventCapacity = eventCapacity;
     }
 
-    public Organizer getEventOrganizer() {
+    public String getEventOrganizer() {
         return eventOrganizer;
     }
 
-    public void setEventOrganizer(Organizer eventOrganizer) {
+    public void setEventOrganizer(String eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
     }
 
