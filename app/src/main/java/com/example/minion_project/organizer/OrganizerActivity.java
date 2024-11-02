@@ -1,3 +1,14 @@
+/**
+ * OrganizerActivity.java
+ *
+ * Main activity for the organizer interface
+ * Includes organizer navigation which my events, and create event
+ *
+ * Outstanding Issues:
+ * - None
+ */
+
+
 package com.example.minion_project.organizer;
 
 import android.os.Bundle;
@@ -25,10 +36,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * OrganizerActivity class manages the main UI components for the organizer role
+ * Sets up the fragment navigation and binding the view with the corresponding data
+ */
 public class OrganizerActivity extends AppCompatActivity {
-    // a basic activity
-    // TODO: IMPLEMENT the bottom naviagtion for organizer
-
 
     ActivityOrganizerBinding binding;
     public Organizer organizer;
@@ -38,6 +50,12 @@ public class OrganizerActivity extends AppCompatActivity {
 
     public OrganizerController organizerController;
 
+    /**
+     * Initializes the binding, sets up the content view, and configures the initial fragment as
+     * well as the bottom navigation actions
+     *
+     * @param savedInstanceState the activity's previously saved state if it exists
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +65,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
         //get android id
         android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        // Default fragment when the organizer activity starts
         replaceFragment(new OrganizerEvents());
         organizersRef = Our_Firestore.getOrganizersRef();
 
@@ -79,6 +98,7 @@ public class OrganizerActivity extends AppCompatActivity {
             }
         });
 
+        // Organizer bottom navigation
         binding.organizerBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId(); // Get the item ID
 
@@ -98,6 +118,11 @@ public class OrganizerActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Replaces the current fragment
+     *
+     * @param fragment the Fragment to be displayed
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
