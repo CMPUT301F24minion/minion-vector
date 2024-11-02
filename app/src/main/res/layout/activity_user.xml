@@ -48,7 +48,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/topBar"
                 app:layout_constraintEnd_toEndOf="@id/topBar"
                 app:layout_constraintLeft_toRightOf="@id/textView"
-                app:layout_constraintTop_toTopOf="@id/topBar" />
+                app:layout_constraintTop_toTopOf="@id/topBar"
+                android:clickable="true"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
