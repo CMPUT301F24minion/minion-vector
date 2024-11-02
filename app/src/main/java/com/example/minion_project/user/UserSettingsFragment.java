@@ -187,6 +187,7 @@ public class UserSettingsFragment extends Fragment {
                             if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                                 Glide.with(getActivity())
                                         .load(profileImageUrl)
+                                        .circleCrop()
                                         .into(profileImageView); // Replace with your actual ImageView ID
                             }
 

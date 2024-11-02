@@ -2,6 +2,8 @@ package com.example.minion_project.user;
 
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 public class UserActivity extends AppCompatActivity {
     // a basic activity
@@ -34,7 +38,7 @@ public class UserActivity extends AppCompatActivity {
     public User user;
     public FireStoreClass Our_Firestore=new FireStoreClass();
     private String android_id;
-    private TextView text;
+    private ImageView headerImage;
 
     private CollectionReference usersRef,eventsRef;
     @Override
@@ -42,6 +46,7 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        headerImage = findViewById(R.id.headerImage);
         replaceFragment(new UserAttendingFragment());
         usersRef = Our_Firestore.getUsersRef();
         eventsRef= Our_Firestore.getEventsRef();
@@ -59,6 +64,16 @@ public class UserActivity extends AppCompatActivity {
                         if (data!=null) {
 
                             String name = (String) data.get("Name");
+                            String profileImageUrl = (String) data.get("profileImage");
+
+                            // Load the profile image using Glide
+                            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                Glide.with(UserActivity.this)
+                                        .load(profileImageUrl)
+                                        .apply(new RequestOptions()
+                                                .placeholder(R.drawable.baseline_account_circle_24).circleCrop()) // Add a placeholder while loading// Add an error image if loading fails
+                                        .into(headerImage);
+                            }
 
                             // Todo: need to for loop here and make every event an Event class
                             HashMap <String,String> events = (HashMap<String, String>)data.get("Events");
@@ -70,8 +85,11 @@ public class UserActivity extends AppCompatActivity {
 
                             // Create the User object
                             User user = new User(android_id,name, email, phoneNumber,events, Location, Notification);
+
+
                         }
                     }
+
                 } else {
                     Toast.makeText(UserActivity.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
                 }
