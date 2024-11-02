@@ -1,21 +1,3 @@
-/**
- * OrganizerCreateEvent.java
- *
- * Allows organizers to create new events
- * Provides a user interface for specifying event details, including the
- * title, description, date, time, and capacity, as well as an option to upload an event
- * image. This fragment integrates with Firebase Firestore for event storage and utilizes
- * an OrganizerController to manage organizer-related actions.
- *
- * Design Pattern: This class follows a Model-View-Controller (MVC) pattern, where it
- * represents the "View" component, interacting with the OrganizerController (the "Controller")
- * and Event (the "Model") for data handling and business logic.
- *
- * Outstanding Issues:
- * - The image upload functionality is currently a placeholder and needs to be implemented.
- * - The event creation process lacks input validation for certain fields (e.g., date and time).
- */
-
 package com.example.minion_project.organizer;
 
 import android.app.DatePickerDialog;

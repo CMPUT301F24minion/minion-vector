@@ -7,11 +7,6 @@ import com.example.minion_project.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-/**
- * Organizer class includes organizer details, list of events,
- * It provides getters/setters to access and modify the organizer's details and manage their events.
- */
 public class Organizer {
     private String deviceID;
     private String name;
@@ -19,15 +14,6 @@ public class Organizer {
     private String phoneNumber;
     private ArrayList<String> allEvents;
 
-    /**
-     * Organizer constructor
-     *
-     * @param allEvents list of all Organizer's events
-     * @param phoneNumber Organizer's phone number
-     * @param email Organizer's email
-     * @param name Organizer's name
-     * @param deviceID Organizer's deviceID
-     */
     public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID) {
         this.allEvents = allEvents;
         this.phoneNumber = phoneNumber;
