@@ -31,15 +31,6 @@ public class UserAttendingFragment extends Fragment {
         attendeeRecyclerView = view.findViewById(R.id.attendeeEventsRecyclerView);
         attendeeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Create sample data for testing (replace with actual data source as needed)
-        eventList = new ArrayList<>();
-        eventList.add(new Event("1", "2024-11-01", "Tech Conference", "An engaging tech conference", "100",
-                new ArrayList<>(), new ArrayList<>(), null));
-        eventList.add(new Event("2", "2024-11-15", "Music Festival", "Enjoy live performances by top artists", "500",
-                new ArrayList<>(), new ArrayList<>(), null));
-        eventList.add(new Event("3", "2024-12-05", "Art Exhibition", "Showcasing local talent", "50",
-                new ArrayList<>(), new ArrayList<>(), null));
-
         // Initialize the adapter with the sample event list
         eventsAdapter = new EventsAdapter(getContext(), eventList);
         attendeeRecyclerView.setAdapter(eventsAdapter);
