@@ -37,21 +37,17 @@ android {
 
 dependencies {
     //firestore do not touch
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
+    implementation(libs.core)
+    implementation(libs.javase)
 
     // Glide for image loading
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
-
-
-
-
-
-
     //
     implementation(libs.appcompat)
     implementation(libs.material)

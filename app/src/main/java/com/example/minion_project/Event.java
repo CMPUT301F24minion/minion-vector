@@ -14,13 +14,14 @@ public class Event {
     private String eventName;
     private String eventDescription;
     private String eventCapacity;
-    private User eventOrganizer;
+    private String eventOrganizer;
     private ArrayList<User> eventAttendees;
     private ArrayList<User> eventWaitlist;
     private ArrayList<User> eventInvited;
     private ArrayList<User> eventCanceled;
     private String eventDetails;
     private String eventTime;
+    private String eventImage;
 
     public ArrayList<User> getEventInvited() {
         return eventInvited;
@@ -54,18 +55,20 @@ public class Event {
         this.eventWaitlist = new ArrayList<>();
         this.eventInvited = new ArrayList<>();
         this.eventCanceled = new ArrayList<>();
+        this.eventImage = "";
 
     }
 
     // Parameterized constructor
     public Event(String eventId,String eventDate, String eventName, String eventDescription, String eventCapacity,
-                 ArrayList<User> waitlist, ArrayList<User> participants, User eventOrganizer) {
+                 ArrayList<User> waitlist, ArrayList<User> participants, String eventOrganizer, String eventImage) {
         this.eventID = eventId;
         this.eventDate = eventDate;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventCapacity = eventCapacity;
         this.eventOrganizer = eventOrganizer;
+        this.eventImage = eventImage;
 
         // If participants and waitlist are null, initialize them to empty lists
         this.eventAttendees = (participants != null) ? participants : new ArrayList<>();
@@ -74,6 +77,10 @@ public class Event {
 
     public String getEventID() {
         return eventID;
+    }
+    public String getEventImage() { return eventImage;}
+    public void setEventImage(String eventImage){
+        this.eventImage = eventImage;
     }
 
     public void setEventID(String eventID) {
@@ -112,11 +119,11 @@ public class Event {
         this.eventCapacity = eventCapacity;
     }
 
-    public User getEventOrganizer() {
+    public String getEventOrganizer() {
         return eventOrganizer;
     }
 
-    public void setEventOrganizer(User eventOrganizer) {
+    public void setEventOrganizer(String eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
     }
 
