@@ -13,7 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minion_project.Event;
 import com.example.minion_project.EventsAdapter;
+import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.OrganizerController;
 import com.example.minion_project.R;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -21,36 +26,44 @@ public class OrganizerEvents extends Fragment {
     private RecyclerView organizerEventsRecyclerView;
     private EventsAdapter eventsAdapter;
     private ArrayList<Event> eventList;
+    private FireStoreClass ourFirestore;
+    private OrganizerController organizerController;
+
+    public OrganizerEvents(OrganizerController organizerController) {
+        this.organizerController = organizerController;
+        this.ourFirestore = new FireStoreClass();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the fragment layout
         View view = inflater.inflate(R.layout.fragment_organizer_events, container, false);
 
-        // Initialize the RecyclerView
         organizerEventsRecyclerView = view.findViewById(R.id.organizerEventsRecyclerView);
         organizerEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Create sample data for testing (replace with actual data source as needed)
         eventList = new ArrayList<>();
-        eventList.add(new Event("1", "2024-11-01", "Tech Conference", "An engaging tech conference", "100",
-                new ArrayList<>(), new ArrayList<>(), null));
-        eventList.add(new Event("2", "2024-11-15", "Music Festival", "Enjoy live performances by top artists", "500",
-                new ArrayList<>(), new ArrayList<>(), null));
-        eventList.add(new Event("3", "2024-12-05", "Art Exhibition", "Showcasing local talent", "50",
-                new ArrayList<>(), new ArrayList<>(), null));
-
-        // Initialize the adapter with the sample event list
         eventsAdapter = new EventsAdapter(getContext(), eventList);
         organizerEventsRecyclerView.setAdapter(eventsAdapter);
+
+        fetchEvents();
 
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void fetchEvents() {
+        ArrayList<String> eventIds = organizerController.getOrganizer().getAllEvents();
+        FirebaseFirestore db = ourFirestore.getFirestore();
 
-        // Additional setup can go here if needed
+        for (String eventId : eventIds) {
+            db.collection("Events").document(eventId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Event event = document.toObject(Event.class);
+                        eventList.add(event);
+                        eventsAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
     }
 }

@@ -44,5 +44,7 @@ public class OrganizerController {
     }
 
 
-
+    public Organizer getOrganizer() {
+        return this.organizer;
+    }
 }
