@@ -1,56 +1,66 @@
 package com.example.minion_project.organizer;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.minion_project.Event;
-import com.example.minion_project.EventsAdapter;
 import com.example.minion_project.R;
 
-import java.util.ArrayList;
-
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link OrganizerEvents#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class OrganizerEvents extends Fragment {
-    private RecyclerView organizerEventsRecyclerView;
-    private EventsAdapter eventsAdapter;
-    private ArrayList<Event> eventList;
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the fragment layout
-        View view = inflater.inflate(R.layout.fragment_organizer_events, container, false);
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-        // Initialize the RecyclerView
-        organizerEventsRecyclerView = view.findViewById(R.id.organizerEventsRecyclerView);
-        organizerEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
-        // Create sample data for testing (replace with actual data source as needed)
-        eventList = new ArrayList<>();
-        eventList.add(new Event("1", "2024-11-01", "Tech Conference", "An engaging tech conference", "100",
-                new ArrayList<>(), new ArrayList<>(), null));
-        eventList.add(new Event("2", "2024-11-15", "Music Festival", "Enjoy live performances by top artists", "500",
-                new ArrayList<>(), new ArrayList<>(), null));
-        eventList.add(new Event("3", "2024-12-05", "Art Exhibition", "Showcasing local talent", "50",
-                new ArrayList<>(), new ArrayList<>(), null));
+    public OrganizerEvents() {
+        // Required empty public constructor
+    }
 
-        // Initialize the adapter with the sample event list
-        eventsAdapter = new EventsAdapter(getContext(), eventList);
-        organizerEventsRecyclerView.setAdapter(eventsAdapter);
-
-        return view;
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment OrganizerEvents.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static OrganizerEvents newInstance(String param1, String param2) {
+        OrganizerEvents fragment = new OrganizerEvents();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
-        // Additional setup can go here if needed
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_organizer_events, container, false);
     }
 }
