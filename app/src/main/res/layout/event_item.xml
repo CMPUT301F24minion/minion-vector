@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Placeholder for Event Image -->
+    <ImageView
+        android:id="@+id/eventImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        />
+
+    <!-- Text fields for event details -->
+    <TextView
+        android:id="@+id/eventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingTop="8dp"
+        android:textSize="25sp"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light" />
+
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/eventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/eventLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/eventDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/eventCapacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Capacity"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/eventOrganizer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-light"
+        android:text="Organizer"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="4dp" />
+</LinearLayout>
