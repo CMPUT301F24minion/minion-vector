@@ -3,7 +3,6 @@ package com.example.minion_project.user;
 import static java.lang.Boolean.TRUE;
 
 import android.app.Notification;
-import android.location.Location;
 
 import com.example.minion_project.Event;
 

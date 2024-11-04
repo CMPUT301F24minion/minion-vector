@@ -2,9 +2,7 @@ package com.example.minion_project.user;
 
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
