@@ -53,6 +53,7 @@ dependencies {
 
 
     //
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
