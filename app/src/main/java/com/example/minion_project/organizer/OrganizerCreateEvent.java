@@ -3,6 +3,7 @@ package com.example.minion_project.organizer;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.minion_project.databinding.ActivityMainBinding;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -30,10 +32,17 @@ import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.OrganizerController;
 import com.example.minion_project.R;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
+
 public class OrganizerCreateEvent extends Fragment {
+    private static final String TAG = "OrganizerCreateEvent";
+    private static final int QR_SIZE = 100;
 
     private Button selectTime, selectDate, uploadImage, createEventButton;
     private EditText createEventTitle, createEventDetails, createEventInvitations;
@@ -69,7 +78,6 @@ public class OrganizerCreateEvent extends Fragment {
         createEventDetails = view.findViewById(R.id.createEventDetailsEditText);
         createEventInvitations = view.findViewById(R.id.createEventInvitationsEditText);
         eventImageView = view.findViewById(R.id.eventImageView);
-
         // Set listeners for buttons
         selectTime.setOnClickListener(v -> openTimePickerDialog());
         selectDate.setOnClickListener(v -> openDatePickerDialog());
@@ -113,7 +121,7 @@ public class OrganizerCreateEvent extends Fragment {
         openFileChooser();
     }
 
-    private void createEvent(String imageUrl) {
+    private void createEvent(String imageUrl, String qrCodeUrl) {
         String eventTitle = createEventTitle.getText().toString().trim();
         String eventDetails = createEventDetails.getText().toString().trim();
         String eventInvitations = createEventInvitations.getText().toString().trim();
@@ -135,6 +143,7 @@ public class OrganizerCreateEvent extends Fragment {
         newEvent.setEventDate(selectedDate);
         newEvent.setEventTime(selectedTime);
         newEvent.setEventImage(imageUrl);
+        newEvent.setEventQrCode(qrCodeUrl);
         newEvent.setEventOrganizer(Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
 
         // TODO : ON CLICK WE SHOULD OPEN THE EVENT PAGE WITH THE QR OR REDIRECT TOT MY EVENTS PAGE
@@ -158,6 +167,32 @@ public class OrganizerCreateEvent extends Fragment {
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    private void generateAndUploadQRCode(String qrContent, String eventImageUrl) {
+        try {
+            BarcodeEncoder encoder = new BarcodeEncoder();
+            Bitmap bitmap = encoder.encodeBitmap(qrContent, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
+
+            // Convert bitmap to a Firebase-friendly format and upload
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            // Save QR code with a unique filename
+            StorageReference qrCodeRef = FirebaseStorage.getInstance().getReference("qr_codes/" + System.currentTimeMillis() + ".png");
+            qrCodeRef.putBytes(data)
+                    .addOnSuccessListener(taskSnapshot -> qrCodeRef.getDownloadUrl().addOnSuccessListener(qrUri -> {
+                        String qrCodeUrl = qrUri.toString();
+
+                        // Now call createEvent with both the event image and QR code URLs
+                        createEvent(eventImageUrl, qrCodeUrl);
+                    }))
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to upload QR code: " + e.getMessage()));
+        } catch (WriterException e) {
+            Log.e(TAG, "Error generating QR code: " + e.getMessage());
+        }
+    }
+
+
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -178,20 +213,16 @@ public class OrganizerCreateEvent extends Fragment {
     private void uploadImageToFirebaseAndCreateEvent() {
         if (imageUri != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
-
-            // Use a unique file name for each event image to avoid overwriting files
             String imageFileName = "event_images/" + System.currentTimeMillis() + ".jpg";
             StorageReference storageRef = storage.getReference(imageFileName);
 
-            // Upload the image file to Firebase Storage
             storageRef.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        // Retrieve the download URL
-                        String downloadUrl = uri.toString();
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(imageUri -> {
+                        String downloadUrl = imageUri.toString();
 
-                        // Call the method to create an event and pass the download URL
-                        createEvent(downloadUrl);
-
+                        // Now generate and upload QR code
+                        String qrCodeContent = createEventTitle.getText().toString();
+                        generateAndUploadQRCode(qrCodeContent, downloadUrl);
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
