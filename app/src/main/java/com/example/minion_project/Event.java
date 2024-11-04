@@ -20,6 +20,7 @@ public class Event {
     private String eventTime;
     private String eventLocation;
     private String eventImage;
+    private String eventQrCode;
 
     public Event() {
         this.eventID = "";
@@ -34,10 +35,15 @@ public class Event {
         this.eventCanceled = new ArrayList<>();
         this.eventLocation = "";
         this.eventImage = "";
+        this.eventQrCode = "";
     }
 
     public String getEventID() {
         return eventID;
+    }
+    public String getEventQrCode() { return eventQrCode;}
+    public void setEventQrCode(String eventQrCode) {
+        this.eventQrCode = eventQrCode;
     }
     public String getEventImage() {return this.eventImage;}
 

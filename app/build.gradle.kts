@@ -49,7 +49,7 @@ dependencies {
 
 
 
-
+    implementation (libs.qrGenerator)
 
 
     //
