@@ -52,6 +52,7 @@
                 android:clickable="true"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
     <!-- BottomNavigationView at the bottom -->

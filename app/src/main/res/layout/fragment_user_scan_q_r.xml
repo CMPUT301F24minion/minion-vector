@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/user_attending"
@@ -7,47 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".user.UserScanFragment">
 
+    <FrameLayout
+        android:id="@+id/user_event"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
+    <!-- Centered Scan Button -->
+    <Button
+        android:id="@+id/QrBtn"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Scan QR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.5" /> <!-- This centers the button vertically -->
 
-
-            <!-- Text in the Middle -->
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Scan Qr"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@id/topBar"
-                app:layout_constraintRight_toRightOf="@id/topBar"
-                app:layout_constraintBottom_toBottomOf="@id/topBar"
-                app:layout_constraintTop_toTopOf="@id/topBar"
-                android:textColor="@android:color/black" />
-
-
-        <TextView
-            android:id="@+id/QRvalue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="Scanned Value : "
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/QrBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="Scan QR"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

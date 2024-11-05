@@ -13,16 +13,26 @@ public class EventController {
     }
 
     // get an event
-    public Event getEvent(String eventId){
+    public Event getEvent(String eventId, final EventCallback callback){
        eventsRef.document(eventId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     this.event = document.toObject(Event.class);
+                    callback.onEventFetched(event);
 
+                }else{
+                    callback.onError("Event not found");
                 }
+            }else{
+                callback.onError("Failed to fetch");
             }
         });
        return this.event;
+    }
+    // Define an interface for the callback, this allows async fetch calls to only display after fetched
+    public interface EventCallback {
+        void onEventFetched(Event event);
+        void onError(String errorMessage);
     }
 }

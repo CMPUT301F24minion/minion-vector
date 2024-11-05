@@ -76,6 +76,8 @@ public class UserScanFragment extends Fragment {
 
         // Bundle data to pass to the fragment
         Bundle bundle = new Bundle();
+//        bundle.putString("scanned_value", scannedValue);
+
         bundle.putString("scanned_value", "2gmP7IgKGHLZnMMMP9GS");
         userEventFragment.setArguments(bundle);
 
