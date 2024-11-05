@@ -1,9 +1,9 @@
 package com.example.minion_project;
 
-import com.example.minion_project.organizer.Organizer;
 import com.example.minion_project.user.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Event {
     private String eventID;
@@ -29,10 +29,10 @@ public class Event {
         this.eventDescription = "";
         this.eventCapacity = "";
         this.eventOrganizer = "";
-        this.eventAttendees = new ArrayList<>();
-        this.eventWaitlist = new ArrayList<>();
-        this.eventInvited = new ArrayList<>();
-        this.eventCanceled = new ArrayList<>();
+        this.eventAttendees = new ArrayList<>(); // Users picked by lottery and accepted the invitation
+        this.eventWaitlist = new ArrayList<>(); // All users go here before lottery system
+        this.eventInvited = new ArrayList<>();  // Users who have been selected by lottery system waiting for them to accept
+        this.eventCanceled = new ArrayList<>(); // Users who did not get accepted into the event
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
@@ -132,5 +132,31 @@ public class Event {
 
     public void setEventLocation(String eventLocation) {
         this.eventLocation = eventLocation;
+    }
+
+    /**
+     * runLotterySelection uses a lottery system to select users from the waitlist and
+     * add them to the eventInvited list
+     * @return ArrayList<User> selectedUsers
+     */
+    public ArrayList<User> runLotterySelection() {
+        // Create a copy of the waitlist to avoid modifying the original list
+        ArrayList<User> copyOfEventWaitlist = new ArrayList<>(this.eventWaitlist);
+
+        // Shuffle the copy to randomize the selection
+        Collections.shuffle(copyOfEventWaitlist);
+
+        // Determine the number of users to select, ensuring it does not exceed the list size
+        int numToSelect = Math.min(Integer.parseInt(this.eventCapacity), copyOfEventWaitlist.size());
+
+        // Add each selected user to the eventInvited list
+        ArrayList<User> selectedUsers = new ArrayList<>(copyOfEventWaitlist.subList(0, numToSelect));
+        this.eventInvited.addAll(selectedUsers);
+
+        return selectedUsers;
+    }
+
+    public ArrayList<User> getEventInvited() {
+        return eventInvited;
     }
 }

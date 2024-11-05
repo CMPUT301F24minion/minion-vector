@@ -57,6 +57,8 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.city = city;
+        this.attendingEvents = new ArrayList<>();
+
     }
 
 

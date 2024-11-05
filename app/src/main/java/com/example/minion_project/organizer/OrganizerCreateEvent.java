@@ -192,7 +192,6 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
-
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
