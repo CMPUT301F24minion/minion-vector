@@ -15,42 +15,31 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.minion_project.R;
+import com.example.minion_project.events.EventController;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 public class UserScanFragment extends Fragment {
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private Button scanQrBtn;
     private TextView scanQrText;
-
-    private String mParam1;
-    private String mParam2;
-
+    private EventController eventController=new EventController();
     public UserScanFragment() {
         // Required empty public constructor
     }
 
     public static UserScanFragment newInstance(String param1, String param2) {
         UserScanFragment fragment = new UserScanFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Nullable
@@ -60,7 +49,6 @@ public class UserScanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_scan_q_r, container, false);
 
         scanQrBtn = view.findViewById(R.id.QrBtn);
-        scanQrText = view.findViewById(R.id.QRvalue);
 
         scanQrBtn.setOnClickListener(v->{
             scanQr();
@@ -69,25 +57,32 @@ public class UserScanFragment extends Fragment {
     }
 
     private void scanQr(){
-        ScanOptions options=new ScanOptions();
-        options.setCaptureActivity(CaptureAct.class);
-        barLaucher.launch(options);
+        launchUserEventFragment("scannedValue");
+
+//        ScanOptions options=new ScanOptions();
+//        options.setCaptureActivity(CaptureAct.class);
+//        barLaucher.launch(options);
     }
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result->
     {
-        if(result.getContents() !=null)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    dialogInterface.dismiss();
-                }
-            }).show();
-        }
+        String scannedValue = result.getContents();
+        launchUserEventFragment(scannedValue);
     });
+
+    // launch user event fragment
+    private void launchUserEventFragment(String scannedValue) {
+        // Create a new instance of UserEventFragment
+        UserEventFragment userEventFragment = new UserEventFragment(eventController);
+
+        // Bundle data to pass to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString("scanned_value", "2gmP7IgKGHLZnMMMP9GS");
+        userEventFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.user_event, userEventFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 }
