@@ -1,4 +1,4 @@
-plugins {
+ plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
 }
@@ -53,6 +53,12 @@ dependencies {
 
 
     //
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     implementation(libs.appcompat)
     implementation(libs.material)
