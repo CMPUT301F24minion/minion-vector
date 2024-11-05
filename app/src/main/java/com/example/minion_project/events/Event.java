@@ -1,6 +1,5 @@
-package com.example.minion_project;
+package com.example.minion_project.events;
 
-import com.example.minion_project.organizer.Organizer;
 import com.example.minion_project.user.User;
 
 import java.util.ArrayList;

@@ -1,11 +1,6 @@
 package com.example.minion_project.organizer;
 
-import android.app.Notification;
-
-import com.example.minion_project.Event;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Organizer {
     private String deviceID;

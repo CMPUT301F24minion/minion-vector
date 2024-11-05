@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.minion_project.Event;
-import com.example.minion_project.EventsAdapter;
+import com.example.minion_project.events.Event;
+import com.example.minion_project.events.EventsAdapter;
 import com.example.minion_project.R;
 
 import java.util.ArrayList;
