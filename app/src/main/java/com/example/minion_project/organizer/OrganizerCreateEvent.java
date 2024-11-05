@@ -10,8 +10,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
-
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,14 +20,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.minion_project.databinding.ActivityMainBinding;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 
-import com.example.minion_project.Event;
+import com.example.minion_project.events.Event;
 import com.example.minion_project.FireStoreClass;
-import com.example.minion_project.OrganizerController;
 import com.example.minion_project.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.zxing.BarcodeFormat;

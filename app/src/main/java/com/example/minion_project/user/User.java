@@ -4,7 +4,7 @@ import static java.lang.Boolean.TRUE;
 
 import android.app.Notification;
 
-import com.example.minion_project.Event;
+import com.example.minion_project.events.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;

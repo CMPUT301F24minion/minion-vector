@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.minion_project.FireStoreClass;
-import com.example.minion_project.OrganizerController;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityOrganizerBinding;
 import com.google.android.gms.tasks.OnCompleteListener;

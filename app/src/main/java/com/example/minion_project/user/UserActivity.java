@@ -11,13 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.minion_project.Event;
 import com.example.minion_project.FireStoreClass;
-import com.example.minion_project.FireStoreClass;
-import com.example.minion_project.MainActivity;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityUserBinding;
-import com.example.minion_project.organizer.OrganizerEvents;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
