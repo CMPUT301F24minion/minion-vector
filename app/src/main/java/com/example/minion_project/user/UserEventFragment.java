@@ -65,6 +65,7 @@ public class UserEventFragment extends Fragment {
             @Override
             public void onEventFetched(Event event) {
                 if (event != null) {
+                    //todo: add more fields and display all info
                     eventNameTextView.setText(event.getEventName());
                     eventDescriptionTextView.setText(event.getEventDescription());
                     eventLocationTextView.setText(event.getEventLocation());
