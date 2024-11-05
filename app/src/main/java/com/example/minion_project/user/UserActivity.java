@@ -33,7 +33,7 @@ public class UserActivity extends AppCompatActivity {
     public FireStoreClass Our_Firestore=new FireStoreClass();
     private String android_id;
     private ImageView headerImage;
-
+    private UserController userController;
     private CollectionReference usersRef,eventsRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class UserActivity extends AppCompatActivity {
         // set up the user class
         android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        // controller
         // Check if user exists
         usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -79,6 +80,7 @@ public class UserActivity extends AppCompatActivity {
 
                             // Create the User object
                             User user = new User(android_id,name, email, phoneNumber,events, Location, Notification);
+                            userController=new UserController(user);
 
 
                         }
@@ -106,7 +108,7 @@ public class UserActivity extends AppCompatActivity {
                 replaceFragment(new UserUpdatesFragment());
                 binding.textView.setText("Notifications");
             } else if (itemId == R.id.menu_user_scan_qr) {
-                replaceFragment(new UserScanFragment());
+                replaceFragment(new UserScanFragment(userController));
                 binding.textView.setText("Scan QR");
             }
             return true;

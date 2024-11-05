@@ -26,12 +26,14 @@ public class UserScanFragment extends Fragment {
     private Button scanQrBtn;
     private TextView scanQrText;
     private EventController eventController=new EventController();
-    public UserScanFragment() {
-        // Required empty public constructor
+    private UserController userController;
+    public UserScanFragment(UserController userController) {
+        this.userController=userController;
+
     }
 
-    public static UserScanFragment newInstance(String param1, String param2) {
-        UserScanFragment fragment = new UserScanFragment();
+    public static UserScanFragment newInstance(UserController userController) {
+        UserScanFragment fragment = new UserScanFragment(userController);
 
         return fragment;
     }
@@ -59,9 +61,9 @@ public class UserScanFragment extends Fragment {
     private void scanQr(){
         launchUserEventFragment("scannedValue");
 
-//        ScanOptions options=new ScanOptions();
-//        options.setCaptureActivity(CaptureAct.class);
-//        barLaucher.launch(options);
+        ScanOptions options=new ScanOptions();
+        options.setCaptureActivity(CaptureAct.class);
+        barLaucher.launch(options);
     }
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result->
     {
@@ -72,13 +74,13 @@ public class UserScanFragment extends Fragment {
     // launch user event fragment
     private void launchUserEventFragment(String scannedValue) {
         // Create a new instance of UserEventFragment
-        UserEventFragment userEventFragment = new UserEventFragment(eventController);
+        UserEventFragment userEventFragment = new UserEventFragment(eventController,userController);
 
         // Bundle data to pass to the fragment
         Bundle bundle = new Bundle();
-//        bundle.putString("scanned_value", scannedValue);
-
-        bundle.putString("scanned_value", "2gmP7IgKGHLZnMMMP9GS");
+        bundle.putString("scanned_value", scannedValue);
+        // uncomment this to test out
+        //bundle.putString("scanned_value", "2gmP7IgKGHLZnMMMP9GS");
         userEventFragment.setArguments(bundle);
 
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

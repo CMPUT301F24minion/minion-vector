@@ -19,6 +19,7 @@ public class EventController {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     this.event = document.toObject(Event.class);
+                    this.event.setEventID(eventId);
                     callback.onEventFetched(event);
 
                 }else{

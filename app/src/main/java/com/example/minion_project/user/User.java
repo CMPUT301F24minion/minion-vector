@@ -51,6 +51,11 @@ public class User {
         this.city = city;
         this.notifcations = notification;
     }
+
+    public HashMap<String, String> getAllEvents() {
+        return allEvents;
+    }
+
     public User(String deviceID, String name, String email, String phoneNumber, String city) {
         this.deviceID = deviceID;
         this.name = name;
@@ -134,6 +139,13 @@ public class User {
 
     public void setNotifcations(HashMap<String, ArrayList> notifcations) {
         notifcations = notifcations;
+    }
+
+    /*
+    add an event with status
+     */
+    public void addEvent(Event event,String status){
+        this.allEvents.put(event.getEventID(),status);
     }
 
     public void setNotificationsArrayList(ArrayList<Notification> notificationsArrayList) {
