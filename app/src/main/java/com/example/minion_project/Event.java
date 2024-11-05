@@ -156,6 +156,7 @@ public class Event {
         return selectedUsers;
     }
 
+    // Merge
     public ArrayList<User> getEventInvited() {
         return eventInvited;
     }
