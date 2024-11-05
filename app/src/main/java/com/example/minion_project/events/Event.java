@@ -3,6 +3,7 @@ package com.example.minion_project.events;
 import com.example.minion_project.user.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Event {
     private String eventID;
@@ -132,4 +133,32 @@ public class Event {
     public void setEventLocation(String eventLocation) {
         this.eventLocation = eventLocation;
     }
+
+    /**
+     * runLotterySelection uses a lottery system to select users from the waitlist and
+     * add them to the eventInvited list
+     * @return ArrayList<User> selectedUsers
+     */
+    public ArrayList<User> runLotterySelection() {
+        // Create a copy of the waitlist to avoid modifying the original list
+        ArrayList<User> copyOfEventWaitlist = new ArrayList<>(this.eventWaitlist);
+
+        // Shuffle the copy to randomize the selection
+        Collections.shuffle(copyOfEventWaitlist);
+
+        // Determine the number of users to select, ensuring it does not exceed the list size
+        int numToSelect = Math.min(Integer.parseInt(this.eventCapacity), copyOfEventWaitlist.size());
+
+        // Add each selected user to the eventInvited list
+        ArrayList<User> selectedUsers = new ArrayList<>(copyOfEventWaitlist.subList(0, numToSelect));
+        this.eventInvited.addAll(selectedUsers);
+
+        return selectedUsers;
+    }
+
+    // Merge
+    public ArrayList<User> getEventInvited() {
+        return eventInvited;
+    }
+
 }
