@@ -2,11 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="userNavBar">#48ABD9</color>
-    <color name="organizerNavBar">#F8594D</color>
-    <color name="adminNavBar">#673AB7</color>
-    <color name="top_margin">#96C4D9</color>
-    <color name="lilac">#A192E4</color>
+    <color name="userNavBar">#A192E4</color>
+    <color name="organizerNavBar">#A192E4</color>
+    <color name="adminNavBar">#A192E4</color>
+    <color name="top_margin">#D6D0E9</color>
+    <color name="lilac">#C4BEE2</color>
     <color name="pink">#FFBB86FC</color>
     <color name="purple">#FF6200EE</color>
     <color name="royalPurple">#FF3700B3</color>

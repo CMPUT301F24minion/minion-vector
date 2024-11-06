@@ -24,7 +24,7 @@
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="49dp"
-            android:background="#F9C4BF"
+            android:background="@color/top_margin"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
