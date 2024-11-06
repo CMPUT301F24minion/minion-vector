@@ -1,49 +1,45 @@
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
+import com.example.minion_project.events.Event;
+import com.example.minion_project.events.EventsAdapter;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminEvents#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class AdminEvents extends Fragment {
+import java.util.ArrayList;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class AdminEvents extends Fragment implements EventsAdapter.OnEventDeleteListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView adminEventsRecyclerView;
+    private EventsAdapter eventsAdapter;
+    private ArrayList<Event> eventList;
+    private FireStoreClass ourFirestore;
+    private CollectionReference eventsRef;
+
+    private static final String TAG = "AdminEvents";
 
     public AdminEvents() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminEvents.
-     */
-    // TODO: Rename and change types and number of parameters
+    // Factory method if needed
     public static AdminEvents newInstance(String param1, String param2) {
         AdminEvents fragment = new AdminEvents();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,16 +47,69 @@ public class AdminEvents extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        ourFirestore = new FireStoreClass();
+        eventsRef = ourFirestore.getEventsRef();
+        eventList = new ArrayList<>();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_events, container, false);
+
+        adminEventsRecyclerView = view.findViewById(R.id.adminEventsRecyclerView);
+        adminEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventsAdapter = new EventsAdapter(getContext(), eventList, this);
+        adminEventsRecyclerView.setAdapter(eventsAdapter);
+
+        fetchEvents();
+
+        return view;
+    }
+
+    /**
+     * Fetch all events from Firestore and populate the RecyclerView
+     */
+    private void fetchEvents() {
+        eventsRef.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    eventList.clear();
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        Event event = document.toObject(Event.class);
+                        if (event != null) {
+                            event.setEventID(document.getId());
+                            eventList.add(event);
+                        }
+                    }
+                    eventsAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching events: " + e.getMessage());
+                    Toast.makeText(getContext(), "Failed to fetch events.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     * Handle event deletion
+     *
+     * @param event The event to be deleted
+     */
+    @Override
+    public void onEventDelete(Event event) {
+        // Confirm deletion (optional)
+        // For simplicity, we'll proceed to delete
+
+        eventsRef.document(event.getEventID())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Event deleted successfully.", Toast.LENGTH_SHORT).show();
+                    // Remove the event from the list and notify adapter
+                    eventList.remove(event);
+                    eventsAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting event: " + e.getMessage());
+                    Toast.makeText(getContext(), "Failed to delete event.", Toast.LENGTH_SHORT).show();
+                });
     }
 }
