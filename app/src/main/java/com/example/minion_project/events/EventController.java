@@ -36,7 +36,7 @@ public class EventController {
        return this.event;
     }
 
-    public void runLotterySystem(Event event) {
+    public void capacityLotto(Event event) {
         // Avoid modifying the original waitlist directly
         ArrayList<User> copyOfWaitlist = new ArrayList<>(event.getEventWaitlist());
 
@@ -69,6 +69,28 @@ public class EventController {
                 .addOnFailureListener(e -> {
                     System.err.println("Error updating eventInvited field in Firestore: " + e.getMessage());
                 });
+    }
+
+    public void declinedLottoSurveyOne(Event event) {
+        ArrayList<User> waitList = new ArrayList<>(event.getEventWaitlist());
+        Collections.shuffle(waitList);
+        User selected = waitList.get(0);
+        event.getEventInvited().add(selected.getDeviceID()); // Assuming User has a getDeviceID() method
+
+        eventsRef.document(event.getEventID())
+                .update("eventInvited", selected.getDeviceID())
+                .addOnSuccessListener(aVoid -> {
+                    System.out.println("eventInvited field updated successfully in Firestore");
+                    // Notify users NEED TO IMPLEMENT THIS
+                    //notifySelectedUsers(selectedUsers);
+                    //notifyUnselectedUsers(event.getEventWaitlist(), selectedUsers);
+                })
+                .addOnFailureListener(e -> {
+                    System.err.println("Error updating eventInvited field in Firestore: " + e.getMessage());
+                });
+
+
+
     }
 
 
