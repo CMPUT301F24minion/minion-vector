@@ -11,12 +11,21 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 
 
-
+/**
+ * OrganizerController: provides methods for adding events to the organizer's list of events and
+ * interacting with Firestore to update data.
+ */
 public class OrganizerController {
     public Organizer organizer;
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference organizersRef;
 
+    /**
+     * Constructs an OrganizerController for a specific organizer.
+     * Initializes Firestore references needed to manage organizer data.
+     *
+     * @param organizer organizer instance to be managed by OrganizerController
+     */
     public OrganizerController(Organizer organizer) {
         this.organizer = organizer;
         this.organizersRef = Our_Firestore.getOrganizersRef();

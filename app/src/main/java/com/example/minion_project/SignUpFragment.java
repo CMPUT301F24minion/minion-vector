@@ -38,6 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * In the event a user is not recognized by the user authentication system (device identifer has not previously been logged)
+ * we must fetch personal information from them using objects defined in the associated layout file. Input constraints are enforced.
+ * The new individual is then logged in the database in whatever collections they request permissions from.
+ */
 public class SignUpFragment extends Fragment {
 
     private EditText nameEditText, emailEditText, phoneEditText, cityEditText;

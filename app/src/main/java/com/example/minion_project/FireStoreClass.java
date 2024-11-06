@@ -3,6 +3,11 @@ package com.example.minion_project;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Handler for database communications.
+ * Is able to return a distinct database reference, and establishes cleaner and more concise means to query and store
+ * data within the collections.
+ */
 public class FireStoreClass {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference usersRef = db.collection("Users");
@@ -25,7 +30,7 @@ public class FireStoreClass {
         return usersRef;
     }
     /**
-     * method to get all)usersRef
+     * method to get allUsersRef
      * @return all_useresref
      */
     public CollectionReference getAll_UsersRef() {

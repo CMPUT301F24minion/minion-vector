@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+
+/**
+ * Represents user objects, who are associated with their personal attributes and have permissions to attend events.
+ */
 public class User {
     private String deviceID;
     private String name;

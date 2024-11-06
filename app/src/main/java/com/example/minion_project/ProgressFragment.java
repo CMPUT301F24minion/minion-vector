@@ -9,6 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * basic tool fragment used to display data loading to application users when we are awaiting data
+ * to be returned by a query.
+ */
 public class ProgressFragment extends Fragment {
 
     @Nullable

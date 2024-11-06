@@ -1,3 +1,10 @@
+/**
+ * Fragment handles the display of one of the organizer functions (generating an event)
+ * Displays the create event layout and maintains all input handling features and
+ * communication (via storing) with the database (text upload, image upload, data selection)
+ * Has connectings to the users, organizers, events collections
+ */
+
 package com.example.minion_project.organizer;
 
 import android.app.DatePickerDialog;
@@ -20,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.minion_project.organizer.OrganizerController;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 

@@ -19,6 +19,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * One of two functionalities for organizer.
+ * Organizers are able to schedule events, and are able to view their scheduled events here.
+ * Handles displaying a recyclyer view for an organizers events (held within and associated with a unique organizer
+ * within the database)
+ */
 public class OrganizerEvents extends Fragment {
     private RecyclerView organizerEventsRecyclerView;
     private EventsAdapter eventsAdapter;
