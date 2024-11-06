@@ -227,7 +227,7 @@ public class SignUpFragment extends Fragment {
 
     private void uploadImageToFirebase() {
         if (imageUri != null) {
-            // Existing code to upload image using imageUri
+            // upload image using imageUri
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
 
@@ -238,7 +238,7 @@ public class SignUpFragment extends Fragment {
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
-            // New code to handle drawable image when imageUri is null
+            // handle drawable image when imageUri is null
             Drawable drawable = profileImageView.getDrawable();
             if (drawable != null) {
                 Bitmap bitmap;
