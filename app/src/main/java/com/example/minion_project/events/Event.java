@@ -14,7 +14,7 @@ public class Event {
     private String eventOrganizer;
     private ArrayList<User> eventAttendees;
     private ArrayList<User> eventWaitlist;
-    private ArrayList<User> eventInvited;
+    private ArrayList<String> eventInvited;
     private ArrayList<User> eventCanceled;
     private String eventDetails;
     private String eventTime;
@@ -134,8 +134,13 @@ public class Event {
         this.eventLocation = eventLocation;
     }
 
-    public ArrayList<User> getEventInvited() {
+    public ArrayList<String> getEventInvited() {
         return eventInvited;
     }
 
+    public void setEventInvited(ArrayList<String> invitedDeviceIds) {
+        this.eventInvited.addAll(invitedDeviceIds);
+    }
 }
+
+

@@ -48,17 +48,18 @@ public class EventController {
 
         // Select the users and add them to the invited list in the Event object
         ArrayList<User> selectedUsers = new ArrayList<>(copyOfWaitlist.subList(0, numToSelect));
-        event.getEventInvited().addAll(selectedUsers);
+        ArrayList<String> invitedUserIds = new ArrayList<>();
 
         // Prepare a list of user IDs or other necessary info to store in Firestore
-        ArrayList<String> invitedUserIDs = new ArrayList<>();
         for (User user : selectedUsers) {
-            invitedUserIDs.add(user.getDeviceID()); // Assuming User has a getDeviceID() method
+            invitedUserIds.add(user.getDeviceID()); // Assuming User has a getDeviceID() method
         }
+
+        event.setEventInvited(invitedUserIds);
 
         // Update Firestore with the modified invited list
         eventsRef.document(event.getEventID())
-                .update("eventInvited", invitedUserIDs)
+                .update("eventInvited", invitedUserIds)
                 .addOnSuccessListener(aVoid -> {
                     System.out.println("eventInvited field updated successfully in Firestore");
                     // Notify users NEED TO IMPLEMENT THIS
