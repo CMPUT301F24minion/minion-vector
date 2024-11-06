@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -38,7 +39,7 @@ public class OrganizerEvents extends Fragment {
         organizerEventsRecyclerView = view.findViewById(R.id.organizerEventsRecyclerView);
         organizerEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventList = new ArrayList<>();
-        eventsAdapter = new EventsAdapter(getContext(), eventList);
+        eventsAdapter = new EventsAdapter(getContext(), eventList); // Using two-parameter constructor
         organizerEventsRecyclerView.setAdapter(eventsAdapter);
 
         fetchEvents();
@@ -47,7 +48,7 @@ public class OrganizerEvents extends Fragment {
     }
 
     /**
-     * fetch all organizer events
+     * Fetch all organizer events
      */
     private void fetchEvents() {
         ArrayList<String> eventIds = organizerController.getOrganizer().getAllEvents();
@@ -59,9 +60,14 @@ public class OrganizerEvents extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Event event = document.toObject(Event.class);
-                        eventList.add(event);
-                        eventsAdapter.notifyDataSetChanged();
+                        if (event != null) {
+                            event.setEventID(document.getId());
+                            eventList.add(event);
+                            eventsAdapter.notifyItemInserted(eventList.size() - 1);
+                        }
                     }
+                } else {
+                    Toast.makeText(getContext(), "Failed to fetch event: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
