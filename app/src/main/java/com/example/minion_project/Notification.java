@@ -4,6 +4,10 @@ import com.example.minion_project.user.User;
 
 import java.util.Date;
 
+
+/**
+ *
+ */
 public class Notification {
     private String notificationType;
     private String notificationMessage;

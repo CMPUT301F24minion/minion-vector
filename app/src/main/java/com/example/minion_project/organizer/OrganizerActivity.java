@@ -1,3 +1,13 @@
+/**
+ * OrganizerActivity.java
+ *
+ * Main activity for the organizer interface
+ * Includes organizer navigation which includes create events, my events fragments
+ *
+ * Outstanding Issues:
+ * - None
+ */
+
 package com.example.minion_project.organizer;
 
 import android.os.Bundle;

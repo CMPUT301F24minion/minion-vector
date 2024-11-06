@@ -1,6 +1,13 @@
+/**
+ * Class that represents an organizer
+ * The Organizer class holds information about an organizer, including their ID, name, email, phone number,
+ * and the events they are associated with.
+ */
+
 package com.example.minion_project.organizer;
 
 import java.util.ArrayList;
+
 
 public class Organizer {
     private String deviceID;
@@ -9,6 +16,14 @@ public class Organizer {
     private String phoneNumber;
     private ArrayList<String> allEvents;
 
+    /**
+     * Constructor for Organizer class
+     * @param allEvents list of events the organizer is associated with
+     * @param phoneNumber organizer's phone number
+     * @param email organizer's email
+     * @param name organizer's name
+     * @param deviceID organizer's device ID
+     */
     public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID) {
         this.allEvents = allEvents;
         this.phoneNumber = phoneNumber;
