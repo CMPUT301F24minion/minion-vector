@@ -23,7 +23,9 @@ public class User {
     private HashMap<String,String> allEvents;
     private HashMap<String,ArrayList> notifcations;
 
-    // Default Constructor
+    /**
+     * Default constructor for User()'s with null fields for communication with the Firebase.
+     */
     public User() {
         this.deviceID = "";
         this.name = "";
@@ -38,8 +40,18 @@ public class User {
         this.notificationsArrayList = new ArrayList<>();
     }
 
-    // Constructor with parameters
-    // all events is a a hashmap where we have {event_id: status} then we need to populate the waitlist and attending dep on status
+
+    /**
+     * Sets all fields for a new User().
+     * all events is a a hashmap where we have {event_id: status} then we need to populate the waitlist and attending dep on status
+     * @param deviceID indexes User
+     * @param name
+     * @param email
+     * @param phoneNumber
+     * @param allEvents
+     * @param city
+     * @param notification
+     */
     public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents , String city, HashMap<String,ArrayList> notification) {
         this.deviceID = deviceID;
         this.name = name;
@@ -53,10 +65,21 @@ public class User {
         this.notifcations = notification;
     }
 
+    /**
+     * @return allEvents
+     */
     public HashMap<String, String> getAllEvents() {
         return allEvents;
     }
 
+    /**
+     * Another constructor for some case specific calls where only certain user information is accessible.
+     * @param deviceID indexes user
+     * @param name
+     * @param email
+     * @param phoneNumber
+     * @param city
+     */
     public User(String deviceID, String name, String email, String phoneNumber, String city) {
         this.deviceID = deviceID;
         this.name = name;
@@ -65,34 +88,56 @@ public class User {
         this.city = city;
     }
 
-
+    /**
+     * @return this users unique device id
+     */
     public String getDeviceID() {
         return deviceID;
     }
 
+    /**
+     *
+     * @param deviceID set User() deviceID to this requested deviceID
+     */
     public void setDeviceID(String deviceID) {
         this.deviceID = deviceID;
     }
 
+    /**
+     * @return this User()'s name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name set User()'s name to this requested name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return this User()'s email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * @param email set User()'s email to this requested email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * @return User()'s phone number
+     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
