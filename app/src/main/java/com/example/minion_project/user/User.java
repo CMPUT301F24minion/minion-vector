@@ -7,6 +7,7 @@ import android.app.Notification;
 import com.example.minion_project.events.Event;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class User {
@@ -138,7 +139,7 @@ public class User {
     }
 
     public void setNotifcations(HashMap<String, ArrayList> notifcations) {
-        notifcations = notifcations;
+        this.notifcations = notifcations;
     }
 
     /*
@@ -151,4 +152,9 @@ public class User {
     public void setNotificationsArrayList(ArrayList<Notification> notificationsArrayList) {
         this.notificationsArrayList = notificationsArrayList;
     }
+
+    public Boolean getAllowNotification() {
+        return AllowNotication;
+    }
+
 }

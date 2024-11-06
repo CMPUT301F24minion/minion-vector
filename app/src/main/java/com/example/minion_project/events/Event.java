@@ -3,6 +3,7 @@ package com.example.minion_project.events;
 import com.example.minion_project.user.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Event {
     private String eventID;
@@ -13,7 +14,7 @@ public class Event {
     private String eventOrganizer;
     private ArrayList<User> eventAttendees;
     private ArrayList<User> eventWaitlist;
-    private ArrayList<User> eventInvited;
+    private ArrayList<String> eventInvited;
     private ArrayList<User> eventCanceled;
     private String eventDetails;
     private String eventTime;
@@ -132,4 +133,14 @@ public class Event {
     public void setEventLocation(String eventLocation) {
         this.eventLocation = eventLocation;
     }
+
+    public ArrayList<String> getEventInvited() {
+        return eventInvited;
+    }
+
+    public void setEventInvited(ArrayList<String> invitedDeviceIds) {
+        this.eventInvited.addAll(invitedDeviceIds); // ashdhads
+    }
 }
+
+
