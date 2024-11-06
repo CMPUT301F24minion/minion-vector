@@ -139,8 +139,9 @@ public class Event {
     }
 
     public void setEventInvited(ArrayList<String> invitedDeviceIds) {
-        this.eventInvited.addAll(invitedDeviceIds); // ashdhads
+        this.eventInvited.addAll(invitedDeviceIds);
     }
+
 }
 
 
