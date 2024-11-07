@@ -13,11 +13,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Device Not Recognized!"
+        android:text="Hey! Have We Met?"
         android:id="@+id/userNotRecognized"
         android:fontFamily="sans-serif-light"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:textSize="40sp"
         >
     </TextView>
@@ -54,7 +53,7 @@
                 android:background="@drawable/round_button"
                 android:fontFamily="sans-serif-light"
                 android:padding="8dp"
-                android:text="Set Image"
+                android:text="Set Profile Picture"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
@@ -69,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Enter Name:"
+        android:hint="My name is..."
         android:paddingBottom="50px" />
 
     <EditText
@@ -78,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
-        android:hint="Enter Email:"
+        android:hint="My email is..."
         android:paddingBottom="50px" />
 
     <EditText
@@ -87,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
-        android:hint="Enter Phone Number:"
+        android:hint="My phone number is..."
         android:paddingBottom="50px"
         android:inputType="phone"/>
     <EditText
@@ -96,7 +95,7 @@
         android:fontFamily="sans-serif-light"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Enter Location:"
+        android:hint="I'm located in..."
         android:paddingBottom="50px" />
 
     <CheckBox
@@ -106,7 +105,7 @@
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
         android:minHeight="48dp"
-        android:text="&quot;Register as Organizer&quot;" />
+        android:text="&quot;I'm an Organizer&quot;" />
 
     <CheckBox
         android:id="@+id/user_checkbox"
@@ -115,7 +114,8 @@
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
         android:minHeight="48dp"
-        android:text="&quot;Register as Attendee&quot;" />
+        android:text="&quot;I'm an Attendee&quot;"
+        />
 
 
     <Button

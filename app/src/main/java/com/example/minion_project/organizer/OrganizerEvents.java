@@ -57,9 +57,23 @@ public class OrganizerEvents extends Fragment {
      * Fetch all organizer events
      */
     private void fetchEvents() {
+        // Get event IDs from the organizerController and ensure it's not null
         ArrayList<String> eventIds = organizerController.getOrganizer().getAllEvents();
+
+        // If eventIds is null, initialize it as an empty list
+        if (eventIds == null) {
+            eventIds = new ArrayList<>();
+        }
+
+        // If the event list is empty, show a message indicating there are no events
+        if (eventIds.isEmpty()) {
+            Toast.makeText(getContext(), "No events found for this organizer.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         FirebaseFirestore db = ourFirestore.getFirestore();
 
+        // Loop through the event IDs and fetch each event
         for (String eventId : eventIds) {
             db.collection("Events").document(eventId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {

@@ -30,7 +30,7 @@ public class UserActivity extends AppCompatActivity {
 
     ActivityUserBinding binding;
     public User user;
-    public FireStoreClass Our_Firestore=new FireStoreClass();
+    public FireStoreClass Our_Firestore = new FireStoreClass();
     private String android_id;
     private ImageView headerImage;
     private UserController userController;
