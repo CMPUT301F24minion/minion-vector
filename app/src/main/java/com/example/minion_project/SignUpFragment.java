@@ -250,7 +250,7 @@ public class SignUpFragment extends Fragment {
                 if (drawable instanceof BitmapDrawable) {
                     bitmap = ((BitmapDrawable) drawable).getBitmap();
                 } else {
-                    // For other drawable types (e.g., VectorDrawable), convert drawable to bitmap
+                    // convert drawable to bitmap
                     bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                             drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
                     Canvas canvas = new Canvas(bitmap);
