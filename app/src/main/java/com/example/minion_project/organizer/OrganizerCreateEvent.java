@@ -87,7 +87,7 @@ public class OrganizerCreateEvent extends Fragment {
         selectTime.setOnClickListener(v -> openTimePickerDialog());
         selectDate.setOnClickListener(v -> openDatePickerDialog());
         uploadImage.setOnClickListener(v -> uploadImage());
-        createEventButton.setOnClickListener(v -> createEvent());
+        createEventButton.setOnClickListener(v -> uploadImageToFirebaseAndCreateEvent());
 
         return view;
     }
@@ -131,7 +131,7 @@ public class OrganizerCreateEvent extends Fragment {
      *@param None
      *
      */
-    private void createEvent() {
+    private void createEvent(String imageUrl, String qrCodeUrl) {
         String eventTitle = createEventTitle.getText().toString().trim();
         String eventDetails = createEventDetails.getText().toString().trim();
         String eventInvitations = createEventInvitations.getText().toString().trim();
@@ -148,6 +148,8 @@ public class OrganizerCreateEvent extends Fragment {
         newEvent.setEventDate(selectedDate);
         newEvent.setEventTime(selectedTime);
         newEvent.setEventOrganizer(Organizer.getDeviceID());
+        newEvent.setEventImage(imageUrl);
+        newEvent.setEventQrCode(qrCodeUrl);
 
 
         CollectionReference eventsRef = ourFirestore.getEventsRef();
@@ -159,7 +161,6 @@ public class OrganizerCreateEvent extends Fragment {
                     // the controller updates both firestore and organizer class
                     organizerController.addEvent(eventId);
                     Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-                    uploadImageToFirebaseAndCreateEvent(eventId);
                     clearInputs();
 
                 })
@@ -182,6 +183,7 @@ public class OrganizerCreateEvent extends Fragment {
             qrCodeRef.putBytes(data)
                     .addOnSuccessListener(taskSnapshot -> qrCodeRef.getDownloadUrl().addOnSuccessListener(qrUri -> {
                         String qrCodeUrl = qrUri.toString();
+                        createEvent(eventImageUrl, qrCodeUrl);
 
                         // Now call createEvent with both the event image and QR code URLs
                     }))
@@ -209,7 +211,7 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
-    private void uploadImageToFirebaseAndCreateEvent(String eventId) {
+    private void uploadImageToFirebaseAndCreateEvent() {
         if (imageUri != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             String imageFileName = "event_images/" + System.currentTimeMillis() + ".jpg";
@@ -220,7 +222,8 @@ public class OrganizerCreateEvent extends Fragment {
                         String downloadUrl = imageUri.toString();
 
                         // Now generate and upload QR code
-                        generateAndUploadQRCode(eventId, downloadUrl);
+                        String qrCodeContent = createEventTitle.getText().toString();
+                        generateAndUploadQRCode(qrCodeContent, downloadUrl);
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
@@ -235,6 +238,15 @@ public class OrganizerCreateEvent extends Fragment {
         eventImageView.setImageURI(null);  // Clear the image preview
         selectedDate = "";
         selectedTime = "";
+    }
+
+    private void saveQrCodeUrlToFirestore(String eventId, String qrCodeUrl) {
+        CollectionReference eventsRef = ourFirestore.getEventsRef();
+
+        // Update the event document with the qrCodeUrl
+        eventsRef.document(eventId).update("qrCodeUrl", qrCodeUrl)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "QR code URL saved to Firestore successfully."))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to save QR code URL to Firestore: " + e.getMessage()));
     }
 
 }
