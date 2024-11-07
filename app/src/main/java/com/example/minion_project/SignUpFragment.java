@@ -1,7 +1,5 @@
 package com.example.minion_project;
 
-import static java.lang.Boolean.TRUE;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,51 +25,39 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * In the event a user is not recognized by the user authentication system (device identifer has not previously been logged)
- * we must fetch personal information from them using objects defined in the associated layout file. Input constraints are enforced.
- * The new individual is then logged in the database in whatever collections they request permissions from.
- */
 public class SignUpFragment extends Fragment {
 
     private EditText nameEditText, emailEditText, phoneEditText, cityEditText;
     private CheckBox organizerCheckBox, userCheckBox;
-    private Button signupButton;
-    private CollectionReference usersRef, All_UsersRef, organizersRef;
-    private String android_id;
+    private Button signupButton, setImageButton;
+    private CollectionReference usersRef, allUsersRef, organizersRef;
     private ImageView profileImageView;
-    private Button setImageButton;
     private TextView userNotRecognized;
-    private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private String androidId;
 
-    // New additions for randomization feature
     private static final int[] COLORS = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA};
-    private static final int[] PROFILE_DRAWABLES = {
-            R.drawable.baseline_account_circle_24,  // Replace these with actual drawable resources
+    private static final int[] PROFILE_DRAWABLES = { R.drawable.baseline_account_circle_24 };
 
-    };
-
-    // instantiate a fragment and set the arguments passed
-    public static SignUpFragment newInstance(CollectionReference All_UsersRef, String android_id, CollectionReference usersRef, CollectionReference organizersRef) {
+    public static SignUpFragment newInstance(String allUsersRefPath, String androidId,
+                                             String usersRefPath, String organizersRefPath) {
         SignUpFragment fragment = new SignUpFragment();
         Bundle args = new Bundle();
+        args.putString("allUsersRefPath", allUsersRefPath); // Storing reference path as a string
+        args.putString("usersRefPath", usersRefPath);       // Storing reference path as a string
+        args.putString("organizersRefPath", organizersRefPath); // Storing reference path as a string
+        args.putString("androidId", androidId);
         fragment.setArguments(args);
-        fragment.usersRef = usersRef;
-        fragment.android_id = android_id;
-        fragment.All_UsersRef = All_UsersRef;
-        fragment.organizersRef = organizersRef;
-
         return fragment;
     }
 
@@ -80,7 +65,29 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        initializeViews(view);
 
+        // Get Firestore reference paths from arguments
+        Bundle args = getArguments();
+        if (args != null) {
+            String allUsersRefPath = args.getString("allUsersRefPath");
+            String usersRefPath = args.getString("usersRefPath");
+            String organizersRefPath = args.getString("organizersRefPath");
+            androidId = args.getString("androidId");
+
+            // Reconstructing CollectionReferences from paths
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            allUsersRef = db.collection(allUsersRefPath);
+            usersRef = db.collection(usersRefPath);
+            organizersRef = db.collection(organizersRefPath);
+        }
+
+        setImageButton.setOnClickListener(v -> openFileChooser());
+        signupButton.setOnClickListener(v -> handleSignUp());
+        return view;
+    }
+
+    private void initializeViews(View view) {
         nameEditText = view.findViewById(R.id.name);
         emailEditText = view.findViewById(R.id.email);
         profileImageView = view.findViewById(R.id.profileImageView);
@@ -91,29 +98,20 @@ public class SignUpFragment extends Fragment {
         signupButton = view.findViewById(R.id.signup_button);
         organizerCheckBox = view.findViewById(R.id.organizer_checkbox);
         userCheckBox = view.findViewById(R.id.user_checkbox);
+    }
 
-
-
-        setImageButton.setOnClickListener(v -> openFileChooser());
-
-        signupButton.setOnClickListener(v -> {
-            uploadImageToFirebase();
-            randomizeProfile();
-        });
-
-        return view;
+    private void handleSignUp() {
+        uploadImageToFirebase();
+        randomizeProfile();
     }
 
     private void randomizeProfile() {
-        Random random = new Random();
-
-        // Assign a random background color
-        int color = COLORS[random.nextInt(COLORS.length)];
-        profileImageView.setBackgroundColor(color);
-
-        // Assign a random profile image from the drawable resources
-        int drawable = PROFILE_DRAWABLES[random.nextInt(PROFILE_DRAWABLES.length)];
-        profileImageView.setImageResource(drawable);
+        // Randomize profile only if no image is selected
+        if (imageUri == null) {
+            Random random = new Random();
+            profileImageView.setBackgroundColor(COLORS[random.nextInt(COLORS.length)]);
+            profileImageView.setImageResource(PROFILE_DRAWABLES[random.nextInt(PROFILE_DRAWABLES.length)]);
+        }
     }
 
     private void signUpUser(String imageUrl) {
@@ -121,160 +119,112 @@ public class SignUpFragment extends Fragment {
         String email = emailEditText.getText().toString().trim();
         String phone = phoneEditText.getText().toString().trim();
         String city = cityEditText.getText().toString().trim();
-
-        Boolean organizerSelected = organizerCheckBox.isChecked();
-        Boolean userSelected = userCheckBox.isChecked();
+        boolean organizerSelected = organizerCheckBox.isChecked();
+        boolean userSelected = userCheckBox.isChecked();
 
         if (name.isEmpty()) {
             Toast.makeText(getActivity(), "Please, enter your name!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!(organizerSelected || userSelected)) {
-            Toast.makeText(getActivity(), "You forgot to select your role!", Toast.LENGTH_SHORT).show();
-        }
 
-        Map<String, Boolean> roles = new HashMap<>();
-        roles.put("Admin", Boolean.FALSE);
-        roles.put("Organizer", organizerSelected);
-        roles.put("User", userSelected);
+        // Prepare user data
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("name", name);
+        userData.put("email", email);
+        userData.put("phone", phone);
+        userData.put("city", city);
+        userData.put("roles", createRolesMap(organizerSelected, userSelected));
+        userData.put("imageUrl", imageUrl);
+        userData.put("userId", androidId);
 
-        Map<String, Object> alluser = new HashMap<>();
-        alluser.put("Name", name);
-        alluser.put("Email", email);
-        alluser.put("Phone_number", phone);
-        alluser.put("City", city);
-        alluser.put("profileImage", imageUrl);
-        alluser.put("Roles", roles);
-
-        if (organizerSelected) {
-            Map<String, Object> organizer = new HashMap<>();
-            organizer.put("Name", name);
-            organizer.put("Email", email);
-            organizer.put("Phone_number", phone);
-            ArrayList events = new ArrayList<>();
-            organizer.put("Events", events);
-            saveDocument(organizersRef, organizer);
-        }
-        if (userSelected) {
-            Map<String, Object> user = new HashMap<>();
-            user.put("Name", name);
-            user.put("Email", email);
-            user.put("Phone_number", phone);
-            user.put("Location", city);
-            user.put("profileImage", imageUrl);
-            HashMap events = new HashMap<>();
-            user.put("Events", events);
-            user.put("AllowNotication", TRUE);
-
-            HashMap<String, ArrayList> notifications = new HashMap<>();
-            ArrayList<String> temp = new ArrayList<>();
-            notifications.put("join_event_notification", temp);
-            notifications.put("not_selected_notification", temp);
-            user.put("Notification", notifications);
-
-            saveDocument(usersRef, user);
-        }
-
-        All_UsersRef.document(android_id)
-                .set(alluser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        showLoginButtons(roles);
+        // Add to Users Collection
+        usersRef.document(androidId).set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    // Add to Organizers Collection if selected
+                    if (organizerSelected) {
+                        organizersRef.document(androidId).set(userData)
+                                .addOnSuccessListener(aVoid1 -> {
+                                    // Add to All_Users Collection regardless of role
+                                    allUsersRef.document(androidId).set(userData)
+                                            .addOnSuccessListener(aVoid2 -> {
+                                                Toast.makeText(getActivity(), "Sign-up successful!", Toast.LENGTH_SHORT).show();
+                                                navigateToRoleSelection();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(getActivity(), "Failed to add to All_Users collection", Toast.LENGTH_SHORT).show();
+                                            });
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getActivity(), "Failed to add to Organizers collection", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        // If not an organizer, still add to All_Users
+                        allUsersRef.document(androidId).set(userData)
+                                .addOnSuccessListener(aVoid2 -> {
+                                    Toast.makeText(getActivity(), "Sign-up successful!", Toast.LENGTH_SHORT).show();
+                                    navigateToRoleSelection();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getActivity(), "Failed to add to All_Users collection", Toast.LENGTH_SHORT).show();
+                                });
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firestore", "Error writing document", e);
-                    }
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getActivity(), "Sign-up failed.", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void saveDocument(CollectionReference collectionRef, Map<String, Object> data) {
-        collectionRef.document(android_id).set(data)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Document successfully written!"))
-                .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
+    private void navigateToRoleSelection() {
+        // Redirect to the Role Selection Fragment
+        if (getActivity() != null) {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.showRoleSelectionFragment();
+        }
     }
 
-    private void showLoginButtons(Map<String, Boolean> role) {
-        nameEditText.setVisibility(View.GONE);
-        emailEditText.setVisibility(View.GONE);
-        phoneEditText.setVisibility(View.GONE);
-        cityEditText.setVisibility(View.GONE);
-        organizerCheckBox.setVisibility(View.GONE);
-        userCheckBox.setVisibility(View.GONE);
-        signupButton.setVisibility(View.GONE);
+    private Map<String, Boolean> createRolesMap(boolean organizer, boolean user) {
+        Map<String, Boolean> roles = new HashMap<>();
+        if (organizer) roles.put("Organizer", true);
+        if (user) roles.put("User", true);
+        return roles;
+    }
 
-        profileImageView.setVisibility(View.GONE);
-        setImageButton.setVisibility(View.GONE);
-        userNotRecognized.setVisibility(View.GONE);
-
-        ((MainActivity) getActivity()).displayButtons(role);
+    private void uploadImageToFirebase() {
+        if (imageUri != null) {
+            // Upload the image to Firebase Storage
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("profiles/" + androidId + ".jpg");
+            storageReference.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Get the download URL after successful upload
+                        storageReference.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    signUpUser(uri.toString());
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getActivity(), "Failed to retrieve image URL.", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getActivity(), "Image upload failed.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            signUpUser(null);  // No image uploaded
+        }
     }
 
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-            profileImageView.setImageURI(imageUri);  // Display the selected image
-        }
-    }
-
-    private void uploadImageToFirebase() {
-        if (imageUri != null) {
-            // upload image using imageUri
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
-
-            storageRef.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String imageUrl = uri.toString();
-                        signUpUser(imageUrl);  // Save the image URL in Firestore
-                    }))
-                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
-        } else {
-            // handle drawable image when imageUri is null
-            Drawable drawable = profileImageView.getDrawable();
-            if (drawable != null) {
-                Bitmap bitmap;
-                if (drawable instanceof BitmapDrawable) {
-                    bitmap = ((BitmapDrawable) drawable).getBitmap();
-                } else {
-                    // convert drawable to bitmap
-                    bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                            drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(bitmap);
-                    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                    drawable.draw(canvas);
-                }
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
-
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
-
-                UploadTask uploadTask = storageRef.putBytes(data);
-                uploadTask.addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            String imageUrl = uri.toString();
-                            signUpUser(imageUrl);  // Save the image URL in Firestore
-                        }))
-                        .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
-            } else {
-                Toast.makeText(getActivity(), "Please upload an image", Toast.LENGTH_SHORT).show();
-            }
+            profileImageView.setImageURI(imageUri);
         }
     }
 }
-
