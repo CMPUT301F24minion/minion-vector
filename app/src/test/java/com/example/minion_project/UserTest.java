@@ -53,4 +53,21 @@ public class UserTest {
         // test random id not in keys
         assertFalse(u1.getAllEvents().containsKey("23423423"), "Event should not be in the allEvents map");
     }
+    @Test
+    void userUnjoinEventTest() {
+        // create a new user
+        User u1 = new User("testid", "Albert");
+
+
+        Event event = new Event("eventID1", "Sample Event"); // Replace with actual Event constructor
+        u1.addEvent(event, "attending");
+        assertTrue(u1.getAllEvents().containsKey("eventID1"), "Event should be in the allEvents map");
+        assertEquals("attending", u1.getAllEvents().get("eventID1"), "Event status should be 'attending'");
+
+        // remove the event
+        u1.removeEvent(event);
+
+        // verify that the event was removed
+        assertFalse(u1.getAllEvents().containsKey("eventID1"), "Event should be removed from the allEvents map");
+    }
 }
