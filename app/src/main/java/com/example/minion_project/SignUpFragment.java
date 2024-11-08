@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +38,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * In the event a user is not recognized by the user authentication system (device identifer has not previously been logged)
+ * In the event a user is not recognized by the user authentication system (device identifier has not previously been logged)
  * we must fetch personal information from them using objects defined in the associated layout file. Input constraints are enforced.
  * The new individual is then logged in the database in whatever collections they request permissions from.
  */
@@ -59,11 +58,12 @@ public class SignUpFragment extends Fragment {
     // New additions for randomization feature
     private static final int[] COLORS = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA};
     private static final int[] PROFILE_DRAWABLES = {
-            R.drawable.baseline_account_circle_24,  // Replace these with actual drawable resources
-
+            R.drawable.baseline_add,
+            R.drawable.baseline_adjust_24,
+            R.drawable.baseline_tag_faces,
     };
 
-    // instantiate a fragment and set the arguments passed
+    // Instantiate a fragment and set the arguments passed
     public static SignUpFragment newInstance(CollectionReference All_UsersRef, String android_id, CollectionReference usersRef, CollectionReference organizersRef) {
         SignUpFragment fragment = new SignUpFragment();
         Bundle args = new Bundle();
@@ -78,7 +78,8 @@ public class SignUpFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         nameEditText = view.findViewById(R.id.name);
@@ -92,13 +93,11 @@ public class SignUpFragment extends Fragment {
         organizerCheckBox = view.findViewById(R.id.organizer_checkbox);
         userCheckBox = view.findViewById(R.id.user_checkbox);
 
-
-
         setImageButton.setOnClickListener(v -> openFileChooser());
 
         signupButton.setOnClickListener(v -> {
-            uploadImageToFirebase();
             randomizeProfile();
+            uploadImageToFirebase();
         });
 
         return view;
@@ -131,6 +130,7 @@ public class SignUpFragment extends Fragment {
         }
         if (!(organizerSelected || userSelected)) {
             Toast.makeText(getActivity(), "You forgot to select your role!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Map<String, Boolean> roles = new HashMap<>();
@@ -151,7 +151,7 @@ public class SignUpFragment extends Fragment {
             organizer.put("Name", name);
             organizer.put("Email", email);
             organizer.put("Phone_number", phone);
-            ArrayList events = new ArrayList<>();
+            ArrayList<String> events = new ArrayList<>();
             organizer.put("Events", events);
             saveDocument(organizersRef, organizer);
         }
@@ -162,11 +162,11 @@ public class SignUpFragment extends Fragment {
             user.put("Phone_number", phone);
             user.put("Location", city);
             user.put("profileImage", imageUrl);
-            HashMap events = new HashMap<>();
+            HashMap<String, String> events = new HashMap<>();
             user.put("Events", events);
             user.put("AllowNotication", TRUE);
 
-            HashMap<String, ArrayList> notifications = new HashMap<>();
+            HashMap<String, ArrayList<String>> notifications = new HashMap<>();
             ArrayList<String> temp = new ArrayList<>();
             notifications.put("join_event_notification", temp);
             notifications.put("not_selected_notification", temp);
@@ -177,18 +177,8 @@ public class SignUpFragment extends Fragment {
 
         All_UsersRef.document(android_id)
                 .set(alluser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        showLoginButtons(roles);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firestore", "Error writing document", e);
-                    }
-                });
+                .addOnSuccessListener(result -> showLoginButtons(roles))
+                .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
     }
 
     private void saveDocument(CollectionReference collectionRef, Map<String, Object> data) {
@@ -221,7 +211,8 @@ public class SignUpFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode,
+                                 @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK
                 && data != null && data.getData() != null) {
@@ -232,7 +223,7 @@ public class SignUpFragment extends Fragment {
 
     private void uploadImageToFirebase() {
         if (imageUri != null) {
-            // upload image using imageUri
+            // Upload image using imageUri
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
 
@@ -243,38 +234,24 @@ public class SignUpFragment extends Fragment {
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
-            // handle drawable image when imageUri is null
-            Drawable drawable = profileImageView.getDrawable();
-            if (drawable != null) {
-                Bitmap bitmap;
-                if (drawable instanceof BitmapDrawable) {
-                    bitmap = ((BitmapDrawable) drawable).getBitmap();
-                } else {
-                    // convert drawable to bitmap
-                    bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                            drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(bitmap);
-                    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                    drawable.draw(canvas);
-                }
+            // Handle case when no image is selected
+            Bitmap bitmap = Bitmap.createBitmap(profileImageView.getWidth(), profileImageView.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            profileImageView.draw(canvas);
 
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
 
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
 
-                UploadTask uploadTask = storageRef.putBytes(data);
-                uploadTask.addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            String imageUrl = uri.toString();
-                            signUpUser(imageUrl);  // Save the image URL in Firestore
-                        }))
-                        .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
-            } else {
-                Toast.makeText(getActivity(), "Please upload an image", Toast.LENGTH_SHORT).show();
-            }
+            UploadTask uploadTask = storageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        signUpUser(imageUrl);  // Save the image URL in Firestore
+                    }))
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         }
     }
 }
-
