@@ -21,6 +21,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * A {@link Fragment} subclass: responsible for managing and displaying events in the admin view.
+ * This fragment fetches events from Firestore, displays them in a RecyclerView,
+ * and allows event deletion.
+ */
 public class AdminEvents extends Fragment implements EventsAdapter.OnEventDeleteListener {
 
     private RecyclerView adminEventsRecyclerView;
@@ -31,8 +36,18 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
 
     private static final String TAG = "AdminEvents";
 
+    /**
+     * Default constructor
+     */
     public AdminEvents() {
     }
+
+    /**
+     * Factory method to create a new instance of this fragment
+     * @param param1
+     * @param param2
+     * @return fragment A new instance of fragment AdminEvents.
+     */
     public static AdminEvents newInstance(String param1, String param2) {
         AdminEvents fragment = new AdminEvents();
         Bundle args = new Bundle();
@@ -40,6 +55,11 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         return fragment;
     }
 
+    /**
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +68,18 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         eventList = new ArrayList<>();
     }
 
+    /**
+     * Inflate the layout for this fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
