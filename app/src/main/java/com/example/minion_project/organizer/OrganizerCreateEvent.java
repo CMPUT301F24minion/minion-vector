@@ -60,29 +60,13 @@ public class OrganizerCreateEvent extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private Uri imageUri;
-
-    /**
-     * Constructor for OrganizerCreateEvent
-     * @param organizercontroller the organizer controller for managing organizer actions
-     */
+    //initalize controller
     public OrganizerCreateEvent(OrganizerController organizercontroller){
         this.organizerController=organizercontroller;
         this.Organizer=organizercontroller.getOrganizer();
     }
 
 
-    /**
-     * Inflates the fragment layout and sets up view components
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,9 +91,6 @@ public class OrganizerCreateEvent extends Fragment {
         return view;
     }
 
-    /**
-     * Opens the time picker dialog
-     */
     private void openTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -123,9 +104,6 @@ public class OrganizerCreateEvent extends Fragment {
         timePickerDialog.show();
     }
 
-    /**
-     * Opens the date picker dialog
-     */
     private void openDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -140,15 +118,14 @@ public class OrganizerCreateEvent extends Fragment {
         datePickerDialog.show();
     }
 
-    /**
-     * Opens the file chooser for image selection
-     */
     private void uploadImage() {
         openFileChooser();
     }
 
     /**
-     * Creates an event based on user input
+     * Creates an event
+     *@param None
+     *
      */
     private void createEvent() {
         String eventTitle = createEventTitle.getText().toString().trim();
@@ -169,11 +146,12 @@ public class OrganizerCreateEvent extends Fragment {
         newEvent.setEventOrganizer(Organizer.getDeviceID());
 
 
+
         CollectionReference eventsRef = ourFirestore.getEventsRef();
         eventsRef.add(newEvent)
                 .addOnSuccessListener(documentReference ->{
                     String eventId = documentReference.getId();
-
+                    newEvent.setEventID(eventId);
                     // we pass the event to controller
                     // the controller updates both firestore and organizer class
                     organizerController.addEvent(eventId);
@@ -184,12 +162,10 @@ public class OrganizerCreateEvent extends Fragment {
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+
     }
 
-    /**
-     * Generates and uploads a QR code for the event
-     * @param qrContent content for the QR code
-     */
     private void generateAndUploadQRCode(String qrContent) {
         // qrcontent is the eventID
         try {
@@ -202,7 +178,7 @@ public class OrganizerCreateEvent extends Fragment {
             byte[] data = baos.toByteArray();
 
             // Save QR code with a unique filename
-            StorageReference qrCodeRef = FirebaseStorage.getInstance().getReference("qr_codes/" + System.currentTimeMillis() + ".png");
+            StorageReference qrCodeRef = FirebaseStorage.getInstance().getReference("qr_codes/" + qrContent + ".png");
             qrCodeRef.putBytes(data)
                     .addOnSuccessListener(taskSnapshot -> qrCodeRef.getDownloadUrl().addOnSuccessListener(qrUri -> {
                         String qrCodeUrl = qrUri.toString();
@@ -215,9 +191,7 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
-    /**
-     * Opens the file chooser for image selection
-     */
+
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -225,17 +199,6 @@ public class OrganizerCreateEvent extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select event Poster"), PICK_IMAGE_REQUEST);
     }
 
-    /**
-     * Handles the result of the image selection
-     * @param requestCode The integer request code originally supplied to
-     *                    startActivityForResult(), allowing you to identify who this
-     *                    result came from.
-     * @param resultCode The integer result code returned by the child activity
-     *                   through its setResult().
-     * @param data An Intent, which can return result data to the caller
-     *               (various data can be attached to Intent "extras").
-     *
-     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -246,14 +209,10 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
-    /**
-     * Uploads the image to Firebase Storage and creates the event
-     * @param eventId the event ID
-     */
     private void uploadImageToFirebaseAndCreateEvent(String eventId) {
         if (imageUri != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            String imageFileName = "event_images/" + System.currentTimeMillis() + ".jpg";
+            String imageFileName = "event_images/" + eventId + ".jpg";
             StorageReference storageRef = storage.getReference(imageFileName);
 
             storageRef.putFile(imageUri)
@@ -269,13 +228,6 @@ public class OrganizerCreateEvent extends Fragment {
 
         }
     }
-
-    /**
-     * Saves the URL to Firestore
-     * @param key
-     * @param eventId
-     * @param Url
-     */
     private void saveToFirestore(String key,String eventId, String Url) {
         CollectionReference eventsRef = ourFirestore.getEventsRef();
 
@@ -283,11 +235,8 @@ public class OrganizerCreateEvent extends Fragment {
         eventsRef.document(eventId).update(key, Url)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, " saved to Firestore successfully."))
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to save URL to Firestore: " + e.getMessage()));
+        eventsRef.document(eventId).update("eventID", eventId);
     }
-
-    /**
-     * Clears the input fields
-     */
     private void clearInputs() {
         createEventTitle.setText("");
         createEventDetails.setText("");

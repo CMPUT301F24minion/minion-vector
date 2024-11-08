@@ -1,4 +1,4 @@
- plugins {
+plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
 }
@@ -52,7 +52,19 @@ dependencies {
 
     annotationProcessor(libs.compiler)
 
+    testImplementation(libs.junit)
 
+    // Android Instrumented Testing
+
+    testImplementation(libs.junit)
+    testImplementation("org.mockito:mockito-core:4.11.0")
+    testImplementation("org.mockito:mockito-inline:4.11.0")
+
+    // AndroidX Test (optional, for instrumentation tests)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // Mockito for Android Instrumented Tests
 
     implementation (libs.qrGenerator)
 
