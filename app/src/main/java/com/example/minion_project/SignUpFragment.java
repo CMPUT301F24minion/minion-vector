@@ -234,7 +234,7 @@ public class SignUpFragment extends Fragment {
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
-            // Handle case when no image is selected; capture the ImageView including background and drawable
+            // Handle case when no image is selected
             Bitmap bitmap = Bitmap.createBitmap(profileImageView.getWidth(), profileImageView.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             profileImageView.draw(canvas);
