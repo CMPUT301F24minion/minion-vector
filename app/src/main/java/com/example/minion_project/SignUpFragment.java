@@ -115,8 +115,14 @@ public class SignUpFragment extends Fragment {
         setImageButton.setOnClickListener(v -> openFileChooser());
 
         signupButton.setOnClickListener(v -> {
-            randomizeProfile();
-            uploadImageToFirebase();
+            if (imageUri == null) {
+                randomizeProfile();
+                uploadImageToFirebase();
+
+            }
+            else {
+                uploadImageToFirebase();
+            }
         });
 
         return view;
