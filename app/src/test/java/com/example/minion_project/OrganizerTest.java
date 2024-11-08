@@ -59,14 +59,12 @@ public class OrganizerTest {
         // creating an organizer with an empty events list
         Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123");
 
-        // adding a event
         organizer.addEvent("New Event");
 
         // verifying that the event was added to the list
         assertEquals(1, organizer.getAllEvents().size(), "Event list should have one event");
         assertTrue(organizer.getAllEvents().contains("New Event"), "Event list should contain 'New Event'");
 
-        // adding another event
         organizer.addEvent("Another Event");
 
         // verifying that the second event was added
@@ -85,7 +83,6 @@ public class OrganizerTest {
         assertEquals("", organizer.getEmail(), "Email should be an empty string");
         assertEquals("", organizer.getPhoneNumber(), "Phone number should be an empty string");
 
-        // verifying that adding an event still works with an empty list
         organizer.addEvent("Empty Event Test");
         assertTrue(organizer.getAllEvents().contains("Empty Event Test"), "Event list should contain 'Empty Event Test'");
     }
