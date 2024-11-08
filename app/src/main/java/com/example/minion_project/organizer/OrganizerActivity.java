@@ -40,6 +40,12 @@ public class OrganizerActivity extends AppCompatActivity {
 
     public OrganizerController organizerController;
 
+    /**
+     * Initializes the activity, sets up the binding, and fetches the organizer data from Firestore.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the most recent data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +94,10 @@ public class OrganizerActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Replaces the current fragment with a new fragment
+     * @param fragment the fragment to be displayed
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
