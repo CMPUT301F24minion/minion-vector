@@ -1,104 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:elevation="8dp"
+    android:background="@android:color/white"
+    app:cardCornerRadius="12dp">
 
-    <!-- Placeholder for Event Image -->
-    <ImageView
-        android:id="@+id/eventImage"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        />
-
-    <!-- Text fields for event details -->
-    <TextView
-        android:id="@+id/eventName"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:paddingTop="8dp"
-        android:textSize="25sp"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light" />
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/eventDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="4dp" />
+        <ImageView
+            android:id="@+id/event_image"
+            android:layout_width="76dp"
+            android:layout_height="77dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_right_corners" />
 
-    <TextView
-        android:id="@+id/eventTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Time"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="4dp" />
+        <!-- Text Layout to the left of the image -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/event_image"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingEnd="16dp">
 
-    <TextView
-        android:id="@+id/eventLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="4dp" />
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Title"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/eventDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="4dp" />
+            <TextView
+                android:id="@+id/event_Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/eventCapacity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Capacity"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="4dp" />
-
-    <TextView
-        android:id="@+id/eventOrganizer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-light"
-        android:text="Organizer"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="4dp" />
-
-    <!-- Delete Button ("X") -->
-    <TextView
-        android:id="@+id/deleteEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="X"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:layout_gravity="end"
-        android:contentDescription="Delete Event"
-        android:clickable="true"
-        android:focusable="true" />
-</LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
