@@ -98,6 +98,8 @@ public class SignUpFragment extends Fragment {
         signupButton.setOnClickListener(v -> {
             if (imageUri == null) {
                 randomizeProfile();
+                uploadImageToFirebase();
+
             }
             else {
                 uploadImageToFirebase();
