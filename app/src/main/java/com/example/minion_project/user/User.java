@@ -217,6 +217,14 @@ public class User {
     public void addEvent(Event event,String status){
         this.allEvents.put(event.getEventID(),status);
     }
+    /*
+        Remove an event
+    */
+    public void removeEvent(Event event) {
+        if ( this.allEvents.containsKey(event.getEventID())) {
+            this.allEvents.remove(event.getEventID());  // Remove event from the local map
+        }
+    }
 
     public void setNotificationsArrayList(ArrayList<Notification> notificationsArrayList) {
         this.notificationsArrayList = notificationsArrayList;

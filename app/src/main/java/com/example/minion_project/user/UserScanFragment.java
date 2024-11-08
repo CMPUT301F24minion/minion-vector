@@ -80,7 +80,7 @@ public class UserScanFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("scanned_value", scannedValue);
         // uncomment this to test out
-        //bundle.putString("scanned_value", "2gmP7IgKGHLZnMMMP9GS");
+        // bundle.putString("scanned_value", "NoV1RN1bTBltx0DLFw4y");
         userEventFragment.setArguments(bundle);
 
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

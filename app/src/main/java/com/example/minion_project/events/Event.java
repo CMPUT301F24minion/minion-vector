@@ -12,10 +12,10 @@ public class Event {
     private String eventDescription;
     private String eventCapacity;
     private String eventOrganizer;
-    private ArrayList<User> eventAttendees;
-    private ArrayList<User> eventWaitlist;
+    private ArrayList<String> eventAttendees;
+    private ArrayList<String> eventWaitlist;
     private ArrayList<String> eventInvited;
-    private ArrayList<User> eventCanceled;
+    private ArrayList<String> eventCanceled;
     private String eventDetails;
     private String eventTime;
     private String eventLocation;
@@ -109,19 +109,19 @@ public class Event {
         this.eventOrganizer = eventOrganizer;
     }
 
-    public ArrayList<User> getEventAttendees() {
+    public ArrayList<String> getEventAttendees() {
         return eventAttendees;
     }
 
-    public void setEventAttendees(ArrayList<User> eventAttendees) {
+    public void setEventAttendees(ArrayList<String> eventAttendees) {
         this.eventAttendees = eventAttendees;
     }
 
-    public ArrayList<User> getEventWaitlist() {
+    public ArrayList<String> getEventWaitlist() {
         return eventWaitlist;
     }
 
-    public void setEventWaitlist(ArrayList<User> eventWaitlist) {
+    public void setEventWaitlist(ArrayList<String> eventWaitlist) {
         this.eventWaitlist = eventWaitlist;
     }
 
