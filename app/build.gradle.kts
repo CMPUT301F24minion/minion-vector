@@ -49,6 +49,7 @@ dependencies {
 
     // Glide for image loading
     implementation(libs.glide)
+
     annotationProcessor(libs.compiler)
 
 

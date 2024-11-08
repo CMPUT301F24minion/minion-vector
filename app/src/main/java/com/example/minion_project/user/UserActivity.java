@@ -70,14 +70,12 @@ public class UserActivity extends AppCompatActivity {
                                         .into(headerImage);
                             }
 
-                            // Todo: need to for loop here and make every event an Event class
                             HashMap <String,String> events = (HashMap<String, String>)data.get("Events");
 
                             String phoneNumber = (String) data.get("Phone_number");
                             String email = (String) data.get("Email");
                             String Location = (String) data.get("Location");
                             HashMap <String,ArrayList> Notification = (HashMap<String, ArrayList>) data.get("Notfication");
-
                             // Create the User object
                             User user = new User(android_id,name, email, phoneNumber,events, Location, Notification);
                             userController=new UserController(user);
