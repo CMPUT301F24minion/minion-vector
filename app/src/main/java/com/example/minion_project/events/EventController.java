@@ -1,3 +1,8 @@
+/**
+ * EventController: handles various operations related to events
+ * such as fetching event details, adding users to the event waitlist, and removing users from the waitlist.
+ */
+
 package com.example.minion_project.events;
 
 import android.util.Log;
@@ -15,12 +20,19 @@ public class EventController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference eventsRef;
     private Event event;
+
+    /**
+     * Constructor for EventController class
+     */
     public EventController() {
         this.eventsRef=Our_Firestore.getEventsRef();
     }
 
-    /* get an event with a callback
-        so you can wait until the event is fetch is finished before executing next
+    /**
+     * getEvent: fetches an event from Firestore based on the provided event ID and calls the callback
+     * @param eventId
+     * @param callback callback to be executed once event is fetched
+     * @return the fetched event
      */
     public Event getEvent(String eventId, final EventCallback callback){
        eventsRef.document(eventId).get().addOnCompleteListener(task -> {
@@ -40,6 +52,12 @@ public class EventController {
         });
        return this.event;
     }
+
+    /**
+     * Adds a user to a waitlist of a event
+     * @param event event that user will be added to
+     * @param UserId userID that will be added to event
+     */
     public void addEventToWaitlist(Event event,String UserId){
 
         eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
@@ -67,6 +85,12 @@ public class EventController {
         });
 
     }
+
+    /**
+     * Removes a user from a waitlist of a event
+     * @param event event that user will be removed from
+     * @param UserID userID that will be removed from event
+     */
     public void removeUserFromWaitlist(Event event,String UserID){
         eventsRef.document(event.getEventID()).update("eventWaitlist", FieldValue.arrayRemove(UserID))
                 .addOnSuccessListener(aVoid -> {
@@ -136,9 +160,20 @@ public class EventController {
 //    }
 //
 
-    // Define an interface for the callback, this allows async fetch calls to only display after fetched
+    /**
+     * EventCallback interface for handling event-related callbacks
+     */
     public interface EventCallback {
+        /**
+         * Called when an event is successfully fetched
+         * @param event
+         */
         void onEventFetched(Event event);
+
+        /**
+         * Called when an error occurs during event fetching
+         * @param errorMessage
+         */
         void onError(String errorMessage);
     }
 }

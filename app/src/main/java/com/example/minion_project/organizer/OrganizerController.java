@@ -56,7 +56,10 @@ public class OrganizerController {
 
     }
 
-
+    /**
+     * Getter for organizer
+     * @return organizer
+     */
     public Organizer getOrganizer() {
         return this.organizer;
     }

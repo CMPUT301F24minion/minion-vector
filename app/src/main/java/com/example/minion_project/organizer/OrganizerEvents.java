@@ -33,11 +33,27 @@ public class OrganizerEvents extends Fragment {
     private FireStoreClass ourFirestore;
     private OrganizerController organizerController;
 
+    /**
+     * Constructor for OrganizerEvents
+     * @param organizerController the organizer controller for managing organizer actions
+     */
     public OrganizerEvents(OrganizerController organizerController) {
         this.organizerController = organizerController;
         this.ourFirestore = new FireStoreClass();
     }
 
+    /**
+     * Inflates the fragment layout and sets up view components
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizer_events, container, false);

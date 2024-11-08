@@ -1,3 +1,7 @@
+/**
+ * EventsAdapter: Adapter class for displaying a list of events in a RecyclerView
+ */
+
 package com.example.minion_project.events;
 
 import android.content.Context;
@@ -20,23 +24,42 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private ArrayList<Event> eventList;
     private OnEventDeleteListener deleteListener;
 
-    // Listener Interface
+    /**
+     * Interface for handling event deletion
+     */
     public interface OnEventDeleteListener {
         void onEventDelete(Event event);
     }
 
-    // Constructor with OnEventDeleteListener
+    /**
+     * Constructor for EventsAdapter
+     * @param context
+     * @param eventList list of events to be displayed
+     * @param deleteListener listener for handling event deletion
+     */
     public EventsAdapter(Context context, ArrayList<Event> eventList, OnEventDeleteListener deleteListener) {
         this.context = context;
         this.eventList = eventList;
         this.deleteListener = deleteListener;
     }
 
-    // Overloaded Constructor without OnEventDeleteListener
+    /**
+     * Constructor for EventsAdapter without a delete listener
+     * @param context
+     * @param eventList list of events to be displayed
+     */
     public EventsAdapter(Context context, ArrayList<Event> eventList) {
         this(context, eventList, null);
     }
 
+    /**
+     * Called when the ViewHolder is created
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +67,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         return new EventViewHolder(view);
     }
 
+    /**
+     * Binds event data to the ViewHolder
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
@@ -60,16 +89,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         // Glide.with(context).load(event.getEventImage()).into(holder.eventImage);
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return The total number of items in this adapter.
+     */
     @Override
     public int getItemCount() {
         return eventList.size();
     }
 
-    // ViewHolder Class
+    /**
+     * ViewHolder class for holding the views for each event item
+     */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView eventName, eventDate, eventTime, eventLocation, eventDescription, eventCapacity, eventOrganizer;
         ImageView eventImage;
 
+        /**
+         * Constructor for EventViewHolder
+         * @param itemView The View that represents the item in the RecyclerView
+         */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             eventName = itemView.findViewById(R.id.event_name);
