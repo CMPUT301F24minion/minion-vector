@@ -101,6 +101,9 @@ public class UserActivity extends AppCompatActivity {
             } else if (itemId == R.id.menu_user_settings) {
                 replaceFragment(new UserSettingsFragment());
                 binding.textView.setText("Settings");
+            } else if (itemId == R.id.menu_user_waitlisted) {
+                replaceFragment(new UserWaitlistedFragment());
+                binding.textView.setText("Waitlists");
             } else if (itemId == R.id.menu_user_updates) {
                 replaceFragment(new UserUpdatesFragment());
                 binding.textView.setText("Notifications");
