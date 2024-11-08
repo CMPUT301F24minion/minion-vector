@@ -1,3 +1,8 @@
+/**
+ * UserActivity: manages the main user interactions within the application,
+ * displaying attending events, updating user settings, and scanning QR codes.
+ */
+
 package com.example.minion_project.user;
 
 import android.os.Bundle;
@@ -14,6 +19,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityUserBinding;
+import com.example.minion_project.user.UserAttendingFragment;
+import com.example.minion_project.user.UserController;
+import com.example.minion_project.user.UserScanFragment;
+import com.example.minion_project.user.UserSettingsFragment;
+import com.example.minion_project.user.UserUpdatesFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,6 +45,11 @@ public class UserActivity extends AppCompatActivity {
     private ImageView headerImage;
     private UserController userController;
     private CollectionReference usersRef,eventsRef;
+
+    /**
+     * onCreate method for the UserActivity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +65,11 @@ public class UserActivity extends AppCompatActivity {
         // controller
         // Check if user exists
         usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            /**
+             * onComplete method for fetching user data
+             * @param task
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -114,6 +134,10 @@ public class UserActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * loadUserProfileImage method to load the user's profile image
+     */
     private void loadUserProfileImage() {
         usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -138,6 +162,11 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * replaceFragment method to replace the current fragment with a new one
+     * @param fragment fragment to be displayed
+     */
     void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

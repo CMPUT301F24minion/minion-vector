@@ -16,11 +16,27 @@ import com.example.minion_project.R;
 
 import java.util.ArrayList;
 
+
+/**
+ * Fragment representing the User's attending events.
+ */
 public class UserAttendingFragment extends Fragment {
     private RecyclerView attendeeRecyclerView;
     private EventsAdapter eventsAdapter;
     private ArrayList<Event> eventList;
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the fragment layout
@@ -38,6 +54,12 @@ public class UserAttendingFragment extends Fragment {
         return view;
     }
 
+    /**
+     *
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

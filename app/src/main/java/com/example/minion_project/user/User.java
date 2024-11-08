@@ -162,74 +162,133 @@ public class User {
         return phoneNumber;
     }
 
-
+    /**
+     * set User()'s phone number to this requested phone number
+     * @param phoneNumber
+     */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * get User()'s attending events
+     * @return
+     */
     public ArrayList<Event> getAttendingEvents() {
         return attendingEvents;
     }
 
+    /**
+     * set User()'s attending events to this requested attending events
+     * @param attendingEvents
+     */
     public void setAttendingEvents(ArrayList<Event> attendingEvents) {
         this.attendingEvents = attendingEvents;
     }
 
+    /**
+     * get User()'s waitlisted events
+     * @return user's waitlisted events
+     */
     public ArrayList<Event> getWaitlistedEvents() {
         return waitlistedEvents;
     }
 
+    /**
+     * set User()'s waitlisted events to this requested waitlisted events
+     * @param waitlistedEvents
+     */
     public void setWaitlistedEvents(ArrayList<Event> waitlistedEvents) {
         this.waitlistedEvents = waitlistedEvents;
     }
 
+    /**
+     * get User()'s notifications
+     * @return users notifications
+     */
     public ArrayList<Notification> getNotificationsArrayList() {
         return notificationsArrayList;
     }
 
+    /**
+     * get User()'s location
+     * @return city
+     */
     public String getLocation() {
         return city;
     }
 
+    /**
+     * set User()'s location to this requested location
+     * @param city
+     */
     public void setLocation(String city) {
         this.city = city;
     }
 
+    /**
+     * get User()'s notification status configuration
+     * @return
+     */
     public Boolean getAllowNotication() {
         return AllowNotication;
     }
 
+    /**
+     * set User()'s notification status configuration to this requested configuration
+     * @param allowNotication
+     */
     public void setAllowNotication(Boolean allowNotication) {
         AllowNotication = allowNotication;
     }
 
+    /**
+     * get User()'s notifications
+     * @return
+     */
     public HashMap<String, ArrayList> getNotifcations() {
         return notifcations;
     }
 
+    /**
+     * set User()'s notifications to this requested notifications
+     * @param notifcations
+     */
     public void setNotifcations(HashMap<String, ArrayList> notifcations) {
         this.notifcations = notifcations;
     }
 
-    /*
-    add an event with status
+    /**
+     * Add an event to user's allEvents list
+     * @param event
+     * @param status
      */
     public void addEvent(Event event,String status){
         this.allEvents.put(event.getEventID(),status);
     }
-    /*
-        Remove an event
-    */
+
+    /**
+     * Remove an event from user's allEvents list
+     * @param event
+     */
     public void removeEvent(Event event) {
         if ( this.allEvents.containsKey(event.getEventID())) {
             this.allEvents.remove(event.getEventID());  // Remove event from the local map
         }
     }
 
+    /**
+     * set User()'s notifications to this notifications array list
+     * @param notificationsArrayList
+     */
     public void setNotificationsArrayList(ArrayList<Notification> notificationsArrayList) {
         this.notificationsArrayList = notificationsArrayList;
     }
 
+    /**
+     * get User()'s notification status configuration
+     * @return Users's notification configuration
+     */
     public Boolean getAllowNotification() {
         return AllowNotication;
     }

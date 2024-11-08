@@ -1,3 +1,7 @@
+/**
+ * Controller class for managing user interactions with events and Firestore.
+ */
+
 package com.example.minion_project.user;
 
 import static java.lang.Boolean.FALSE;
@@ -23,14 +27,21 @@ public class UserController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference usersRef;
     private EventController eventController;
+
+    /**
+     * Constructor for UserController.
+     * @param user The User object associated with this controller.
+     */
     public UserController(User user) {
         this.user = user;
         this.usersRef = Our_Firestore.getUsersRef();
         this.eventController=new EventController();
     }
 
-    /*
-    get the status of an event
+    /**
+     * Gets the status of a user's event.
+     * @param eventId
+     * @return The status of the user's event as a string if it exists if not return null
      */
     public String getUserEventStatus(String eventId){
         Map<String,String> events=user.getAllEvents();
@@ -40,8 +51,11 @@ public class UserController {
        return null;
 
     }
-    /* returns True if joined else false
 
+    /**
+     * Attempts to join an event.
+     * @param event event to be joined
+     * @return True if joined successfully false if already joined or did not join
      */
     public Boolean join_event(Event event) {
         // Check if the event is already in the user's list of events
@@ -72,10 +86,12 @@ public class UserController {
             }
         }
     }
-    /*
-    Only remove users with status "joined" all other users remain
-    This removes them from the waitlist for that event so
-    only use for that scenrario
+
+    /**
+     * Removes the user from an event if their status is "joined".
+     * This also removes the user from the event's waitlist.
+     *
+     * @param event The event to be unjoined.
      */
     public void unjoin_event(Event event){
 

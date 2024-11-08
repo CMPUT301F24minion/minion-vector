@@ -63,7 +63,14 @@ public class SignUpFragment extends Fragment {
             R.drawable.baseline_tag_faces,
     };
 
-    // Instantiate a fragment and set the arguments passed
+    /**
+     * Factory method to create a new instance of this fragment.
+     * @param All_UsersRef  reference to all_users collection in Firestore
+     * @param android_id device identifier
+     * @param usersRef reference to users collection in Firestore
+     * @param organizersRef reference to organizers collection in Firestore
+     * @return
+     */
     public static SignUpFragment newInstance(CollectionReference All_UsersRef, String android_id, CollectionReference usersRef, CollectionReference organizersRef) {
         SignUpFragment fragment = new SignUpFragment();
         Bundle args = new Bundle();
@@ -76,6 +83,18 @@ public class SignUpFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return A new instance of SignUpFragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -103,6 +122,9 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Randomizes the profile image and background color.
+     */
     private void randomizeProfile() {
         Random random = new Random();
 
@@ -115,6 +137,10 @@ public class SignUpFragment extends Fragment {
         profileImageView.setImageResource(drawable);
     }
 
+    /**
+     * Signs up a new user in the database.
+     * @param imageUrl URL of the user's profile image
+     */
     private void signUpUser(String imageUrl) {
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
@@ -181,12 +207,21 @@ public class SignUpFragment extends Fragment {
                 .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
     }
 
+    /**
+     * Saves a document to a Firestore collection
+     * @param collectionRef reference to the collection
+     * @param data data to be saved
+     */
     private void saveDocument(CollectionReference collectionRef, Map<String, Object> data) {
         collectionRef.document(android_id).set(data)
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "Document successfully written!"))
                 .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
     }
 
+    /**
+     * Displays login buttons to user for recognized roles
+     * @param role
+     */
     private void showLoginButtons(Map<String, Boolean> role) {
         nameEditText.setVisibility(View.GONE);
         emailEditText.setVisibility(View.GONE);
@@ -203,6 +238,9 @@ public class SignUpFragment extends Fragment {
         ((MainActivity) getActivity()).displayButtons(role);
     }
 
+    /**
+     * Opens a file chooser to allow the user to select an image.
+     */
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -210,6 +248,18 @@ public class SignUpFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Handles the result from a child activity that was started for a result
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  @Nullable Intent data) {
@@ -221,6 +271,9 @@ public class SignUpFragment extends Fragment {
         }
     }
 
+    /**
+     * Uploads the selected image to Firebase Storage.
+     */
     private void uploadImageToFirebase() {
         if (imageUri != null) {
             // Upload image using imageUri
