@@ -15,11 +15,9 @@ Dynamic Fragments: Organizer activities are fragmented to improve user experienc
 
 # Technologies
 
-Android SDK for Mobile App Development
-Firebase provides backend and notification services.
-ConstraintLayout allows for responsive and adaptable UI design.
 
-#Usage
+
+# Usage
 Launch the app and log in as an organizer or user.
 
 Organizers can create and manage events from the Organizer section.

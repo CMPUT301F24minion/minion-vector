@@ -1,3 +1,7 @@
+/**
+ * Fragment class for managing and displaying user profiles in the admin view
+ */
+
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
@@ -26,6 +30,9 @@ public class AdminProfiles extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Default constructor
+     */
     public AdminProfiles() {
         // Required empty public constructor
     }
@@ -48,6 +55,11 @@ public class AdminProfiles extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called when the fragment is first created.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +69,18 @@ public class AdminProfiles extends Fragment {
         }
     }
 
+    /**
+     * Inflate the layout for this fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

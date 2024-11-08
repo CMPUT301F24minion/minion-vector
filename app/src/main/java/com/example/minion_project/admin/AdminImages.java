@@ -1,3 +1,8 @@
+/**
+ * Fragment class for displaying event and profile images in the admin view.
+ * This class fetches image URLs from Firebase Storage and displays them in a RecyclerView.
+ */
+
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
@@ -26,12 +31,30 @@ public class AdminImages extends Fragment {
     private AdminImagesAdapter adapter;
     private List<String> imageUrls;
 
+    /**
+     * Called to inflate the layout for this fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_admin_images, container, false);
     }
 
+    /**
+     * Called immediately after {@link #onCreateView} has returned, but before any saved state has been restored.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -46,6 +69,9 @@ public class AdminImages extends Fragment {
         loadImagesFromFirebaseStorage();
     }
 
+    /**
+     * Load event and profile images from Firebase Storage and update the RecyclerView.
+     */
     private void loadImagesFromFirebaseStorage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
