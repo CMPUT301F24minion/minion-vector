@@ -1,3 +1,7 @@
+/**
+ * Fragment class to handle user interactions with events
+ */
+
 package com.example.minion_project.user;
 
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
+import com.example.minion_project.user.UserController;
 
 
 public class UserEventFragment extends Fragment {
@@ -28,6 +33,12 @@ public class UserEventFragment extends Fragment {
 
 
     private EventController eventController; // to talk to db and model
+
+    /**
+     * Constructor for UserEventFragment.
+     * @param eventController The event controller for fetching event data.
+     * @param userController The user controller for managing user interactions with events.
+     */
     public UserEventFragment(EventController eventController,UserController userController) {
         this.eventController=eventController;
         this.userController=userController;
@@ -36,6 +47,20 @@ public class UserEventFragment extends Fragment {
     private Event event;
 
     private String userStatusforEvent;
+
+    /**
+     * Inflates the layout and initializes the views for the fragment.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +84,10 @@ public class UserEventFragment extends Fragment {
 
         return view;
     }
+
+    /**
+     * Sets the visibility of the join and unjoin buttons based on the user's event status.
+     */
 private void ButtonVisibility(){
     if ("joined".equals(userStatusforEvent)) {
         eventUnJoinButton.setVisibility(View.VISIBLE);
@@ -68,6 +97,10 @@ private void ButtonVisibility(){
         eventJoinButton.setVisibility(View.VISIBLE);
     }
 }
+
+    /**
+     * Unjoins the user from the event.
+     */
     private  void unJoinEvent(){
         if (event!=null){
             userController.unjoin_event(this.event);
@@ -80,6 +113,10 @@ private void ButtonVisibility(){
             Toast.makeText(getContext(), "Event data is still loading. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Joins the user to the event.
+     */
     private void joinEvent(){
         if (event != null) {
             // Make sure event is loaded before trying to join
@@ -94,6 +131,11 @@ private void ButtonVisibility(){
             Toast.makeText(getContext(), "Event data is still loading. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Fetches event data based on the provided event ID.
+     * @param eventID
+     */
     private  void fetchEventData(String eventID){
         eventController.getEvent(eventID, new EventController.EventCallback() {
             @Override
@@ -115,6 +157,10 @@ private void ButtonVisibility(){
                 }
             }
 
+            /**
+             * Handles errors during event fetching.
+             * @param errorMessage
+             */
             @Override
             public void onError(String errorMessage) {
                 Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
