@@ -47,7 +47,7 @@ public class UserActivity extends AppCompatActivity {
     private CollectionReference usersRef,eventsRef;
 
     /**
-     *
+     * onCreate method for the UserActivity
      * @param savedInstanceState
      */
     @Override
@@ -65,6 +65,11 @@ public class UserActivity extends AppCompatActivity {
         // controller
         // Check if user exists
         usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            /**
+             * onComplete method for fetching user data
+             * @param task
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -129,6 +134,10 @@ public class UserActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * loadUserProfileImage method to load the user's profile image
+     */
     private void loadUserProfileImage() {
         usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -153,6 +162,11 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * replaceFragment method to replace the current fragment with a new one
+     * @param fragment fragment to be displayed
+     */
     void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
