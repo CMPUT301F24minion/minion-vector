@@ -53,8 +53,8 @@ public class Admin {
         removeUserImageFromStorage(user);
     }
     public void removeUserImageFromStorage(User user) {
-        // Assuming the image path is based on user device ID (adjust if necessary)
-        String imagePath = "user_images/" + user.getDeviceID() + ".jpg"; // Modify path as needed
+        // Assuming the image path is based on user device ID
+        String imagePath = "user_images/" + user.getDeviceID() + ".jpg";
         StorageReference imageRef = storage.getReference().child(imagePath);
 
         imageRef.delete();
