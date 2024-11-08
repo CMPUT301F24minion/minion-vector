@@ -49,7 +49,6 @@ dependencies {
 
     // Glide for image loading
     implementation(libs.glide)
-    testImplementation(libs.junit.junit)
     annotationProcessor(libs.compiler)
 
 

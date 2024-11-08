@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.minion_project.R;
 
 import java.util.ArrayList;
@@ -47,19 +49,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         Event event = eventList.get(position);
         holder.eventName.setText(event.getEventName());
         holder.eventDate.setText("Date: " + event.getEventDate());
-        holder.eventTime.setText("Time: " + event.getEventTime());
-        holder.eventLocation.setText("Location: " + event.getEventLocation());
-        holder.eventDescription.setText("Description: " + event.getEventDescription());
-        holder.eventCapacity.setText("Capacity: " + event.getEventCapacity());
-        holder.eventOrganizer.setText("Organizer: " + event.getEventOrganizer());
-
-        // Set up delete button click if listener is provided
-        if (deleteListener != null) {
-            holder.deleteButton.setVisibility(View.VISIBLE);
-            holder.deleteButton.setOnClickListener(v -> deleteListener.onEventDelete(event));
-        } else {
-            holder.deleteButton.setVisibility(View.GONE);
-        }
+        String imageUrl = event.getEventImage();
+        Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.baseline_add) // Optional placeholder image
+                .into(holder.eventImage);
 
         // Optionally, load event image using a library like Glide or Picasso
         // For example, using Glide:
@@ -75,19 +69,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView eventName, eventDate, eventTime, eventLocation, eventDescription, eventCapacity, eventOrganizer;
         ImageView eventImage;
-        TextView deleteButton; // Changed from ImageButton to TextView
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            eventImage = itemView.findViewById(R.id.eventImage);
-            eventName = itemView.findViewById(R.id.eventName);
-            eventDate = itemView.findViewById(R.id.eventDate);
-            eventTime = itemView.findViewById(R.id.eventTime);
-            eventLocation = itemView.findViewById(R.id.eventLocation);
-            eventDescription = itemView.findViewById(R.id.eventDescription);
-            eventCapacity = itemView.findViewById(R.id.eventCapacity);
-            eventOrganizer = itemView.findViewById(R.id.eventOrganizer);
-            deleteButton = itemView.findViewById(R.id.deleteEventButton);
+            eventName = itemView.findViewById(R.id.event_name);
+            eventDate = itemView.findViewById(R.id.event_Date);
+            eventImage = itemView.findViewById(R.id.event_image);
         }
     }
 }
