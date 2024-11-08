@@ -37,7 +37,22 @@ public class Event {
         this.eventImage = "";
         this.eventQrCode = "";
     }
+    public Event(String Id,String name){
+        this.eventName=name;
+        this.eventID=Id;
+        this.eventDate = "";
+        this.eventDescription = "";
+        this.eventCapacity = "";
+        this.eventOrganizer = "";
+        this.eventAttendees = new ArrayList<>();
+        this.eventWaitlist = new ArrayList<>();
+        this.eventInvited = new ArrayList<>();
+        this.eventCanceled = new ArrayList<>();
+        this.eventLocation = "";
+        this.eventImage = "";
+        this.eventQrCode = "";
 
+    }
     public String getEventID() {
         return eventID;
     }

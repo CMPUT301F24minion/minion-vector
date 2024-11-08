@@ -43,7 +43,27 @@ public class User {
         this.waitlistedEvents = new ArrayList<>();
         this.notificationsArrayList = new ArrayList<>();
     }
-
+    /**
+     * Constructor that accepts only name and deviceID.
+     * Other fields will be initialized to their default values (e.g., empty strings, null, or empty collections).
+     * This constructor can be used when only basic user information is available.
+     *
+     * @param deviceID Unique identifier for the user.
+     * @param name     Name of the user.
+     */
+    public User(String deviceID, String name) {
+        this.deviceID = deviceID;
+        this.name = name;
+        this.email = "";
+        this.phoneNumber = "";
+        this.city = "";
+        this.AllowNotication = TRUE;
+        this.notifcations = new HashMap<>();
+        this.attendingEvents = new ArrayList<>();
+        this.waitlistedEvents = new ArrayList<>();
+        this.allEvents = new HashMap<>();
+        this.notificationsArrayList = new ArrayList<>();
+    }
 
     /**
      * Sets all fields for a new User().
