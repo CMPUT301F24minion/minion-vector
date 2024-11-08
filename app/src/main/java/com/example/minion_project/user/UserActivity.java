@@ -96,22 +96,47 @@ public class UserActivity extends AppCompatActivity {
             if (itemId == R.id.menu_user_attending) {
                 replaceFragment(new UserAttendingFragment());
                 binding.textView.setText("What's Popping");
+                loadUserProfileImage();
             } else if (itemId == R.id.menu_user_settings) {
                 replaceFragment(new UserSettingsFragment());
                 binding.textView.setText("Settings");
-            } else if (itemId == R.id.menu_user_waitlisted) {
-                replaceFragment(new UserWaitlistedFragment());
-                binding.textView.setText("Waitlists");
+                loadUserProfileImage();
             } else if (itemId == R.id.menu_user_updates) {
                 replaceFragment(new UserUpdatesFragment());
                 binding.textView.setText("Notifications");
+                loadUserProfileImage();
             } else if (itemId == R.id.menu_user_scan_qr) {
                 replaceFragment(new UserScanFragment(userController));
                 binding.textView.setText("Scan QR");
+                loadUserProfileImage();
             }
             return true;
         });
 
+    }
+    private void loadUserProfileImage() {
+        usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        String profileImageUrl = document.getString("profileImage");
+
+                        // Load the profile image using Glide
+                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                            Glide.with(UserActivity.this)
+                                    .load(profileImageUrl)
+                                    .apply(new RequestOptions()
+                                            .placeholder(R.drawable.baseline_account_circle_24).circleCrop())
+                                    .into(headerImage);
+                        } else {
+                            headerImage.setImageResource(R.drawable.baseline_account_circle_24);
+                        }
+                    }
+                }
+            }
+        });
     }
     void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

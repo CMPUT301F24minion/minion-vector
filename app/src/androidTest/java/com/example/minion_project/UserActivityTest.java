@@ -33,13 +33,6 @@ public class UserActivityTest {
         onView(withId(R.id.textView))
                 .check(matches(withText("What's Popping")));
 
-        // Click on the 'Waitlisted' menu item
-        onView(withId(R.id.menu_user_waitlisted)).perform(click());
-
-        // Check that the textView displays "Waitlists"
-        onView(withId(R.id.textView))
-                .check(matches(withText("Waitlists")));
-
         // Click on the 'Updates' menu item
         onView(withId(R.id.menu_user_updates)).perform(click());
 
