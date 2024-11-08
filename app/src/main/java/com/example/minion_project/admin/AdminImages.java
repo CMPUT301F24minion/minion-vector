@@ -1,66 +1,84 @@
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minion_project.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminImages#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdminImages extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AdminImages() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminImages.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminImages newInstance(String param1, String param2) {
-        AdminImages fragment = new AdminImages();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private RecyclerView recyclerView;
+    private AdminImagesAdapter adapter;
+    private List<String> imageUrls;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_admin_images, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.recyclerViewAdminImages);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        imageUrls = new ArrayList<>();
+        adapter = new AdminImagesAdapter(getContext(), imageUrls);
+        recyclerView.setAdapter(adapter);
+
+        loadImagesFromFirebaseStorage();
+    }
+
+    private void loadImagesFromFirebaseStorage() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        // Load event images
+        StorageReference eventImagesRef = storage.getReference().child("event_images");
+        eventImagesRef.listAll()
+                .addOnSuccessListener(listResult -> {
+                    for (StorageReference fileRef : listResult.getItems()) {
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            imageUrls.add(uri.toString());
+                            adapter.notifyDataSetChanged();
+                        }).addOnFailureListener(e -> Log.e("AdminImages", "Error getting event image URL", e));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AdminImages", "Failed to list event images", e);
+                    Toast.makeText(getContext(), "Failed to load event images", Toast.LENGTH_SHORT).show();
+                });
+
+        // Load profile images
+        StorageReference profileImagesRef = storage.getReference().child("profile_images");
+        profileImagesRef.listAll()
+                .addOnSuccessListener(listResult -> {
+                    for (StorageReference fileRef : listResult.getItems()) {
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            imageUrls.add(uri.toString());
+                            adapter.notifyDataSetChanged();
+                        }).addOnFailureListener(e -> Log.e("AdminImages", "Error getting profile image URL", e));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AdminImages", "Failed to list profile images", e);
+                    Toast.makeText(getContext(), "Failed to load profile images", Toast.LENGTH_SHORT).show();
+                });
     }
 }

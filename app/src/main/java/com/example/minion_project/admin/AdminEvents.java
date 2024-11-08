@@ -18,7 +18,6 @@ import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventsAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -33,10 +32,7 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
     private static final String TAG = "AdminEvents";
 
     public AdminEvents() {
-        // Required empty public constructor
     }
-
-    // Factory method if needed
     public static AdminEvents newInstance(String param1, String param2) {
         AdminEvents fragment = new AdminEvents();
         Bundle args = new Bundle();
@@ -81,6 +77,15 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                             eventList.add(event);
                         }
                     }
+
+                    if (eventList.isEmpty()) {
+                        adminEventsRecyclerView.setVisibility(View.GONE);
+                        getView().findViewById(R.id.noEventsTextView).setVisibility(View.VISIBLE);
+                    } else {
+                        adminEventsRecyclerView.setVisibility(View.VISIBLE);
+                        getView().findViewById(R.id.noEventsTextView).setVisibility(View.GONE);
+                    }
+
                     eventsAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
@@ -89,6 +94,7 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 });
     }
 
+
     /**
      * Handle event deletion
      *
@@ -96,14 +102,12 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
      */
     @Override
     public void onEventDelete(Event event) {
-        // Confirm deletion (optional)
-        // For simplicity, we'll proceed to delete
 
         eventsRef.document(event.getEventID())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Event deleted successfully.", Toast.LENGTH_SHORT).show();
-                    // Remove the event from the list and notify adapter
+
                     eventList.remove(event);
                     eventsAdapter.notifyDataSetChanged();
                 })
