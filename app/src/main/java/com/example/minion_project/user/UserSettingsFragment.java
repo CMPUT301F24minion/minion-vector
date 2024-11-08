@@ -33,9 +33,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserSettingsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Manages user settings, profile updates and role changes
  */
 public class UserSettingsFragment extends Fragment {
     private TextView name;
@@ -54,17 +52,41 @@ public class UserSettingsFragment extends Fragment {
     private Button changeImageButton;
     private Button removeImageButton;
 
+    /**
+     * Create a new instance of UserSettingsFragment
+     * @param param1
+     * @param param2
+     * @return new instance of UserSettingsFragment
+     */
     public static UserSettingsFragment newInstance(String param1, String param2) {
         UserSettingsFragment fragment = new UserSettingsFragment();
         Bundle args = new Bundle();
         return fragment;
     }
 
+    /**
+     * Called when fragment created
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Inflates the layout and initializes the views for the fragment.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return view for fragments UI
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,6 +121,10 @@ public class UserSettingsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Updates user info in firebase
+     * @param androidID the unique devide ID of a user
+     */
     private void updateUserInfo(String androidID) {
         // Retrieve the current values from the UI
         String nameV = name.getText().toString().trim();
@@ -155,6 +181,10 @@ public class UserSettingsFragment extends Fragment {
     }
 
 
+    /**
+     * Gets existing data from Firestore and updates the UI to display
+     * @param androidID the unique devide ID of a user
+     */
     private void showExistingData(String androidID) {
         // Fetch the user document from Firestore using the Android ID
         fire.getAll_UsersRef().document(androidID).get()
@@ -202,6 +232,9 @@ public class UserSettingsFragment extends Fragment {
                 });
     }
 
+    /**
+     * Gallery opener to pick a new image
+     */
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -209,6 +242,18 @@ public class UserSettingsFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Handles the result of the file chooser, uploads the selected image to Firebase
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -223,6 +268,10 @@ public class UserSettingsFragment extends Fragment {
         }
     }
 
+    /**
+     * Removes the profile image from Firebase Storage and Firestore
+     * @param androidID the unique devide ID of a user
+     */
     private void removeProfileImage(String androidID) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference("profile_images/" + androidID + ".jpg");
@@ -243,6 +292,11 @@ public class UserSettingsFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to delete image from Storage", Toast.LENGTH_SHORT).show());
     }
+
+    /**
+     * Uploads the selected image to Firebase Storage and updates Firestore with the new URL
+     * @param androidID the unique devide ID of a user
+     */
     private void uploadImageToFirebase(String androidID) {
         if (imageUri != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
