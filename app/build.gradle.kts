@@ -26,6 +26,10 @@ android {
             )
         }
     }
+    tasks.withType<Test>{
+        useJUnitPlatform()
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -45,18 +49,16 @@ dependencies {
 
     // Glide for image loading
     implementation(libs.glide)
+    testImplementation(libs.junit.junit)
     annotationProcessor(libs.compiler)
 
 
 
     implementation (libs.qrGenerator)
 
-
     //
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
@@ -71,10 +73,8 @@ dependencies {
     testImplementation(libs.junit)
 
     // Used for EventControllerTest
-    testImplementation("org.mockito:mockito-core:4.3.1")
-    testImplementation("org.mockito:mockito-inline:4.3.1")
-
-
+    testImplementation ("org.junit.jupiter:junit-jupiter-api:5.8.2")  // JUnit 5 for tests
+    testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.8.2")  // JUnit 5 engine
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
