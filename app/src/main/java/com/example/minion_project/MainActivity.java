@@ -1,3 +1,6 @@
+/**
+ * Main activity: handles user login, role verification, and navigation to different activities
+ */
 package com.example.minion_project;
 
 import android.content.Intent;
@@ -27,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
     public FireStoreClass Our_Firestore=new FireStoreClass();
     Button loginBtn,userBtn,organizerBtn,adminBtn;
     TextView choosePageText;
+
+    /**
+     * Called when the activity is starting
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         organizersRef=Our_Firestore.getOrganizersRef();
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when a view has been clicked.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 // Get device id
@@ -48,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
 
                 // Check if user exists
                 All_UsersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    /**
+                     * Called when a task completes.
+                     * @param task
+                     */
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -73,18 +89,30 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+        /**
+         * navigates to user activity when user button is clicked
+         */
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, UserActivity.class));
             }
         });
+
+        /**
+         * navigates to organizer activity when organizer button is clicked
+         */
         organizerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, OrganizerActivity.class));
             }
         });
+
+        /**
+         * navigates to admin activity when admin button is clicked
+         */
         adminBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Displays buttons based on user roles
+     * @param role the user's roles
+     */
     public void displayButtons(Map<String, Boolean> role){
         loginBtn.setVisibility(View.GONE); //hide log in button
         choosePageText.setVisibility(View.VISIBLE);
@@ -109,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Shows the sign-up fragment
+     */
     private void showSignUpFragment() {
         loginBtn.setVisibility(View.GONE); //hide log in button
         SignUpFragment signUpFragment = SignUpFragment.newInstance(All_UsersRef,android_id,usersRef,organizersRef);
