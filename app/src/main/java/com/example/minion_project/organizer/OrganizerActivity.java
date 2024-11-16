@@ -67,8 +67,9 @@ public class OrganizerActivity extends AppCompatActivity {
                             ArrayList<String> events = (ArrayList<String>) data.get("Events");
                             String phoneNumber = (String) data.get("Phone_number");
                             String email = (String) data.get("Email");
+                            String token = (String) data.get("token");
 
-                            organizer = new Organizer(events, phoneNumber, email, name, android_id);
+                            organizer = new Organizer(events, phoneNumber, email, token, name, android_id);
                             organizerController = new OrganizerController(organizer);
 
                             // Pass the controller to the initial fragment

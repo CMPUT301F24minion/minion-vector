@@ -14,6 +14,7 @@ public class Organizer {
     private String name;
     private String email;
     private String phoneNumber;
+    private String token;
     private ArrayList<String> allEvents;
 
     /**
@@ -24,14 +25,17 @@ public class Organizer {
      * @param name organizer's name
      * @param deviceID organizer's device ID
      */
-    public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID) {
+    public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String token, String name, String deviceID) {
         this.allEvents = allEvents;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.name = name;
         this.deviceID = deviceID;
+        this.token = token;
     }
 
+    public String getToken(){ return this.token;}
+    public void setToken(String token) { this.token = token;}
     /**
      * Getter for allEvents
      * @return allEvents

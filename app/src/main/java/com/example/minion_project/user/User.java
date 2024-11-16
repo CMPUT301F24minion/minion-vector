@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import kotlinx.coroutines.internal.AtomicKt;
+
 
 /**
  * Represents user objects, who are associated with their personal attributes and have permissions to attend events.
@@ -19,6 +21,7 @@ public class User {
     private String name;
     private String email;
     private String city;
+    private String token;
     private  Boolean AllowNotication;
     private String phoneNumber;
     private ArrayList<Event> attendingEvents;
@@ -35,6 +38,7 @@ public class User {
         this.name = "";
         this.email = "";
         this.city="";
+        this.token = "";
         this.AllowNotication=TRUE;
         this.notifcations=new HashMap<>();
         this.phoneNumber = "";
@@ -56,6 +60,7 @@ public class User {
         this.name = name;
         this.email = "";
         this.phoneNumber = "";
+        this.token = "";
         this.city = "";
         this.AllowNotication = TRUE;
         this.notifcations = new HashMap<>();
@@ -76,11 +81,12 @@ public class User {
      * @param city
      * @param notification
      */
-    public User(String deviceID, String name, String email, String phoneNumber, HashMap<String,String> allEvents , String city, HashMap<String,ArrayList> notification) {
+    public User(String deviceID, String name, String email, String phoneNumber, String token, HashMap<String,String> allEvents , String city, HashMap<String,ArrayList> notification) {
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.token = token;
         this.attendingEvents = new ArrayList<>();
         this.waitlistedEvents = new ArrayList<>();
         this.notificationsArrayList = new ArrayList<>();
@@ -104,13 +110,16 @@ public class User {
      * @param phoneNumber
      * @param city
      */
-    public User(String deviceID, String name, String email, String phoneNumber, String city) {
+    public User(String deviceID, String name, String email, String phoneNumber, String city, String token) {
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.city = city;
+        this.token = token;
     }
+    public String getToken(){ return this.token;}
+    public void setToken(String token) { this.token = token;}
 
     /**
      * @return this users unique device id
