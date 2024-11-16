@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -112,17 +113,39 @@ public class SignUpFragment extends Fragment {
         organizerCheckBox = view.findViewById(R.id.organizer_checkbox);
         userCheckBox = view.findViewById(R.id.user_checkbox);
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("FCM", "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+
+                    // Get new FCM registration token
+                    String token = task.getResult();
+                    Log.d("FCM Token", token);
+                    // Use this token to save in Firestore or send to server
+                });
+
         setImageButton.setOnClickListener(v -> openFileChooser());
 
         signupButton.setOnClickListener(v -> {
-            if (imageUri == null) {
-                randomizeProfile();
-                uploadImageToFirebase();
-
-            }
-            else {
-                uploadImageToFirebase();
-            }
+            // Fetch token, then continue with the signup process
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            String token = task.getResult();
+                            Log.d("FCM Token", token);
+                            if (imageUri == null) {
+                                randomizeProfile();
+                                uploadImageToFirebase(token); // Pass token to upload function
+                            } else {
+                                uploadImageToFirebase(token);
+                            }
+                        } else {
+                            Log.w("FCM", "Fetching FCM registration token failed", task.getException());
+                            Toast.makeText(getActivity(), "Token generation failed. Try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
         return view;
@@ -147,7 +170,8 @@ public class SignUpFragment extends Fragment {
      * Signs up a new user in the database.
      * @param imageUrl URL of the user's profile image
      */
-    private void signUpUser(String imageUrl) {
+    private void signUpUser(String imageUrl, String token) {
+
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String phone = phoneEditText.getText().toString().trim();
@@ -177,12 +201,14 @@ public class SignUpFragment extends Fragment {
         alluser.put("City", city);
         alluser.put("profileImage", imageUrl);
         alluser.put("Roles", roles);
+        alluser.put("token", token);
 
         if (organizerSelected) {
             Map<String, Object> organizer = new HashMap<>();
             organizer.put("Name", name);
             organizer.put("Email", email);
             organizer.put("Phone_number", phone);
+            organizer.put("token", token);
             ArrayList<String> events = new ArrayList<>();
             organizer.put("Events", events);
             saveDocument(organizersRef, organizer);
@@ -194,6 +220,7 @@ public class SignUpFragment extends Fragment {
             user.put("Phone_number", phone);
             user.put("Location", city);
             user.put("profileImage", imageUrl);
+            user.put("token", token);
             HashMap<String, String> events = new HashMap<>();
             user.put("Events", events);
             user.put("AllowNotication", TRUE);
@@ -280,7 +307,7 @@ public class SignUpFragment extends Fragment {
     /**
      * Uploads the selected image to Firebase Storage.
      */
-    private void uploadImageToFirebase() {
+    private void uploadImageToFirebase(String token) {
         if (imageUri != null) {
             // Upload image using imageUri
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -289,7 +316,7 @@ public class SignUpFragment extends Fragment {
             storageRef.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
-                        signUpUser(imageUrl);  // Save the image URL in Firestore
+                        signUpUser(imageUrl, token);  // Save the image URL in Firestore
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
@@ -308,7 +335,7 @@ public class SignUpFragment extends Fragment {
             UploadTask uploadTask = storageRef.putBytes(data);
             uploadTask.addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
-                        signUpUser(imageUrl);  // Save the image URL in Firestore
+                        signUpUser(imageUrl, token);  // Save the image URL in Firestore
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         }
