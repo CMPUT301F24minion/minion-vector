@@ -95,10 +95,9 @@ public class UserActivity extends AppCompatActivity {
                             String phoneNumber = (String) data.get("Phone_number");
                             String email = (String) data.get("Email");
                             String Location = (String) data.get("Location");
-                            String token = (String) data.get("token");
                             HashMap <String,ArrayList> Notification = (HashMap<String, ArrayList>) data.get("Notfication");
                             // Create the User object
-                            User user = new User(android_id, name, email, token, phoneNumber, events, Location, Notification);
+                            User user = new User(android_id,name, email, phoneNumber,events, Location, Notification);
                             userController=new UserController(user);
 
 
