@@ -15,13 +15,12 @@ public class OrganizerTest {
         events.add("Event1");
         events.add("Event2");
 
-        Organizer organizer = new Organizer(events, "1234567890", "organizer@example.com", "token","John Doe", "device123");
+        Organizer organizer = new Organizer(events, "1234567890", "organizer@example.com", "John Doe", "device123");
 
         // verifying that the organizer fields are correctly
         assertEquals("device123", organizer.getDeviceID(), "Device ID should be 'device123'");
         assertEquals("John Doe", organizer.getName(), "Name should be 'John Doe'");
         assertEquals("organizer@example.com", organizer.getEmail(), "Email should be 'organizer@example.com'");
-        assertEquals("token", organizer.getToken(), "Token should be 'token'");
         assertEquals("1234567890", organizer.getPhoneNumber(), "Phone number should be '1234567890'");
 
         // verifying that the events are correct
@@ -34,13 +33,12 @@ public class OrganizerTest {
     @Test
     void organizerGetterSetterTest() {
         // creating an organizer with an empty event list
-        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "token", "John Doe", "device123");
+        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123");
 
         // verifying initial val
         assertEquals("device123", organizer.getDeviceID(), "Device ID should be 'device123'");
         assertEquals("John Doe", organizer.getName(), "Name should be 'John Doe'");
         assertEquals("organizer@example.com", organizer.getEmail(), "Email should be 'organizer@example.com'");
-        assertEquals("token", organizer.getToken(), "token should be 'token'");
         assertEquals("1234567890", organizer.getPhoneNumber(), "Phone number should be '1234567890'");
 
         // changing values
@@ -59,7 +57,7 @@ public class OrganizerTest {
     @Test
     void addEventTest() {
         // creating an organizer with an empty events list
-        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "token", "John Doe", "device123");
+        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123");
 
         organizer.addEvent("New Event");
 
@@ -77,13 +75,12 @@ public class OrganizerTest {
     @Test
     void organizerEdgeCasesTest() {
         // creating an organizer with empty events list and no name or email
-        Organizer organizer = new Organizer(new ArrayList<>(), "", "", "", "", "");
+        Organizer organizer = new Organizer(new ArrayList<>(), "", "", "", "");
 
         // verifying that empty strings are handled correctly
         assertEquals("", organizer.getDeviceID(), "Device ID should be an empty string");
         assertEquals("", organizer.getName(), "Name should be an empty string");
         assertEquals("", organizer.getEmail(), "Email should be an empty string");
-        assertEquals("", organizer.getToken(), "token should be an empty string");
         assertEquals("", organizer.getPhoneNumber(), "Phone number should be an empty string");
 
         organizer.addEvent("Empty Event Test");

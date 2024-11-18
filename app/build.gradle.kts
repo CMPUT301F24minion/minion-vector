@@ -67,7 +67,6 @@ dependencies {
     // Mockito for Android Instrumented Tests
 
     implementation (libs.qrGenerator)
-    implementation("com.google.firebase:firebase-messaging")
 
     //
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
