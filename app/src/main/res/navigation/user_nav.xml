@@ -17,11 +17,6 @@
         android:label="fragment_user_attending"
         tools:layout="@layout/fragment_user_attending" />
     <fragment
-        android:id="@+id/userUpdates"
-        android:name="com.example.minion_project.user.UserUpdatesFragment"
-        android:label="fragment_user_updates"
-        tools:layout="@layout/fragment_user_updates" />
-    <fragment
         android:id="@+id/userScanQR"
         android:name="com.example.minion_project.user.UserScanFragment"
         android:label="fragment_user_scan_q_r"
