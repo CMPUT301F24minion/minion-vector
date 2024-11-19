@@ -19,11 +19,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityUserBinding;
-import com.example.minion_project.user.UserAttendingFragment;
-import com.example.minion_project.user.UserController;
-import com.example.minion_project.user.UserScanFragment;
-import com.example.minion_project.user.UserSettingsFragment;
-import com.example.minion_project.user.UserUpdatesFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,6 +34,7 @@ public class UserActivity extends AppCompatActivity {
     // a basic activity
 
     ActivityUserBinding binding;
+
     public User user;
     public FireStoreClass Our_Firestore=new FireStoreClass();
     private String android_id;
@@ -120,10 +116,6 @@ public class UserActivity extends AppCompatActivity {
             } else if (itemId == R.id.menu_user_settings) {
                 replaceFragment(new UserSettingsFragment());
                 binding.textView.setText("Settings");
-                loadUserProfileImage();
-            } else if (itemId == R.id.menu_user_updates) {
-                replaceFragment(new UserUpdatesFragment());
-                binding.textView.setText("Notifications");
                 loadUserProfileImage();
             } else if (itemId == R.id.menu_user_scan_qr) {
                 replaceFragment(new UserScanFragment(userController));
