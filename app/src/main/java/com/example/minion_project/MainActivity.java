@@ -3,8 +3,13 @@
  */
 package com.example.minion_project;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +17,9 @@ import android.widget.Toast;
 import android.provider.Settings.Secure;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.minion_project.admin.AdminActivity;
@@ -47,15 +55,21 @@ public class MainActivity extends AppCompatActivity {
         All_UsersRef = Our_Firestore.getAll_UsersRef();
         usersRef = Our_Firestore.getUsersRef();
         organizersRef=Our_Firestore.getOrganizersRef();
+        createNotificationChannel();
+        android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+        Notification notification = new Notification(android_id);
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+
+
+        loginBtn.setOnClickListener(new View.OnClickListener()
+
+        {
             /**
              * Called when a view has been clicked.
              * @param v
              */
             @Override
-            public void onClick(View v) {
-                // Get device id
+            public void onClick(View v) {// Get device id
                 android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 
                 // Check if user exists
@@ -89,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+
 
         /**
          * navigates to user activity when user button is clicked
@@ -153,5 +169,20 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragment_sign_up, signUpFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "my_channel_id";
+            CharSequence name = "My Notifications";
+            String description = "Channel for app notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

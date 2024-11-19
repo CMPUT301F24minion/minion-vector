@@ -4,6 +4,7 @@
  */
 package com.example.minion_project.admin;
 
+import com.example.minion_project.Notification;
 import com.example.minion_project.events.EventsAdapter;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -19,7 +20,6 @@ public class Admin {
     public FireStoreClass db;
     public String deviceID;
     public FirebaseStorage storage;
-
     /**
      * constructor for Admin class
      * @param deviceID
@@ -55,6 +55,11 @@ public class Admin {
      * @param eventsAdapter update the adapter
      */
     public void removeEvent(Event event, ArrayList<Event> eventList, EventsAdapter eventsAdapter) {
+
+        Notification notification = new Notification(event.getEventOrganizer());
+
+        notification.sendRemoveEventNotification(this);
+
         CollectionReference eventsRef = db.getEventsRef();
 
         // Step 1: Delete the event document from Firestore
@@ -75,6 +80,10 @@ public class Admin {
      * @param user every image is linked to a user
      */
     public void removeUserImage(User user) {
+
+        Notification notifcation = new Notification(user.getDeviceID());
+        notifcation.sendRemovedProfileImageNotification(this);
+
         CollectionReference userRef = db.getUsersRef();
         CollectionReference all_userRef = db.getAll_UsersRef();
         userRef.document(user.getDeviceID()).delete();
@@ -89,6 +98,7 @@ public class Admin {
      * @param user get the deviceID from the user to remove the user image form storage
      */
     public void removeUserImageFromStorage(User user) {
+
         // Assuming the image path is based on user device ID
         String imagePath = "user_images/" + user.getDeviceID() + ".jpg";
         StorageReference imageRef = storage.getReference().child(imagePath);
@@ -102,6 +112,9 @@ public class Admin {
      */
 
     public void removeEventImage(Event event) {
+        Notification notification = new Notification(event.getEventOrganizer());
+        notification.sendRemovedEventImageNotification(this);
+
         CollectionReference eventsRef = db.getEventsRef();
         eventsRef.document(event.getEventID())
                 .delete();
@@ -133,6 +146,11 @@ public class Admin {
      * @param user reference to the user to ge t the deviceID
      */
     public void removeUserProfile(User user) {
+        String userDeviceID = user.getDeviceID();
+        Notification notification = new Notification(userDeviceID);
+        notification.sendRemoveAccountNotification(this);
+
+
         // Step 1: Get Firestore references for the user
         CollectionReference userRef = db.getUsersRef();
         CollectionReference allUserRef = db.getAll_UsersRef();
