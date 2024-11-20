@@ -7,6 +7,11 @@
     android:padding="16dp"
     android:gravity="center"
     >
+    <EditText
+        android:id="@+id/facilityName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Facility Name" />
 
     <EditText
         android:id="@+id/createEventTitleEditText"
