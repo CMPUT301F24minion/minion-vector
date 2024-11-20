@@ -5,6 +5,10 @@
         android:title="Attending"
         android:icon="@drawable/baseline_tag_faces"/>
     <item
+        android:id="@+id/menu_user_updates"
+        android:title="Updates"
+        android:icon="@drawable/baseline_notifications"/>
+    <item
         android:id="@+id/menu_user_scan_qr"
         android:title="Scan QR"
         android:icon="@drawable/baseline_qr_code_scanner"/>
