@@ -48,7 +48,7 @@ public class OrganizerCreateEvent extends Fragment {
     private static final int QR_SIZE = 100;
 
     private Button selectTime, selectDate, uploadImage, createEventButton;
-    private EditText createEventTitle, createEventDetails, createEventInvitations;
+    private EditText createEventTitle, createEventDetails, createEventInvitations, facilityName;
     private FireStoreClass ourFirestore = new FireStoreClass();
     private String selectedDate = "";
     private String selectedTime = "";
@@ -82,7 +82,13 @@ public class OrganizerCreateEvent extends Fragment {
         createEventDetails = view.findViewById(R.id.createEventDetailsEditText);
         createEventInvitations = view.findViewById(R.id.createEventInvitationsEditText);
         eventImageView = view.findViewById(R.id.eventImageView);
+        facilityName = view.findViewById(R.id.facilityName);
         // Set listeners for buttons
+
+        if (organizerController.getOrganizer() != null) {
+            facilityName.setText(organizerController.getOrganizer().getFacilityName());
+        }
+
         selectTime.setOnClickListener(v -> openTimePickerDialog());
         selectDate.setOnClickListener(v -> openDatePickerDialog());
         uploadImage.setOnClickListener(v -> uploadImage());
@@ -124,34 +130,54 @@ public class OrganizerCreateEvent extends Fragment {
 
     /**
      * Creates an event
-     *@param None
+     *
      *
      */
     private void createEvent() {
         String eventTitle = createEventTitle.getText().toString().trim();
         String eventDetails = createEventDetails.getText().toString().trim();
         String eventInvitations = createEventInvitations.getText().toString().trim();
+        String facility = facilityName.getText().toString().trim();
+        String time = selectedTime;
+        String date = selectedDate;
 
         if (eventTitle.isEmpty()) {
             Toast.makeText(getContext(), "Please enter an event title", Toast.LENGTH_SHORT).show();
             return;
+        } else if (eventDetails.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter details to the event", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (eventInvitations.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter the capacity of the event", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (facility.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter the name of the facility", Toast.LENGTH_SHORT).show();
+            return;
+        }else if (time.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter the time the event starts", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (date.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter the date the event starts", Toast.LENGTH_SHORT).show();
+            return;
         }
+        Event event = new Event();
+        event.setEventName(eventTitle);
+        event.setEventDetails(eventDetails);
+        event.setEventCapacity(eventInvitations);
+        event.setEventDate(selectedDate);
+        event.setEventTime(selectedTime);
+        event.setEventOrganizer(Organizer.getDeviceID());
+        event.setFacilityName(facility);
 
-        Event newEvent = new Event();
-        newEvent.setEventName(eventTitle);
-        newEvent.setEventDetails(eventDetails);
-        newEvent.setEventCapacity(eventInvitations);
-        newEvent.setEventDate(selectedDate);
-        newEvent.setEventTime(selectedTime);
-        newEvent.setEventOrganizer(Organizer.getDeviceID());
+        updateOrganizerFacilityName(facility);
 
 
 
         CollectionReference eventsRef = ourFirestore.getEventsRef();
-        eventsRef.add(newEvent)
+        eventsRef.add(event)
                 .addOnSuccessListener(documentReference ->{
                     String eventId = documentReference.getId();
-                    newEvent.setEventID(eventId);
+                    event.setEventID(eventId);
                     // we pass the event to controller
                     // the controller updates both firestore and organizer class
                     organizerController.addEvent(eventId);
@@ -164,6 +190,14 @@ public class OrganizerCreateEvent extends Fragment {
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 
 
+    }
+
+    private void updateOrganizerFacilityName(String facility) {
+        String organizerID = Organizer.getDeviceID(); // Assuming this is the ID used in Firestore
+        ourFirestore.getOrganizersRef().document(organizerID)
+                .update("facilityName", facility)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Facility name updated successfully."))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to update facility name: " + e.getMessage()));
     }
 
     private void generateAndUploadQRCode(String qrContent) {

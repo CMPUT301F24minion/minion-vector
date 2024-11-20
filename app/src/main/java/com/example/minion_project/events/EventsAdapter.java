@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.minion_project.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -78,6 +79,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         Event event = eventList.get(position);
         holder.eventName.setText(event.getEventName());
         holder.eventDate.setText("Date: " + event.getEventDate());
+        fetchFacilityName(event.getEventOrganizer(), holder.facilityName);
         String imageUrl = event.getEventImage();
         Glide.with(context)
                 .load(imageUrl)
@@ -102,7 +104,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
      * ViewHolder class for holding the views for each event item
      */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView eventName, eventDate, eventTime, eventLocation, eventDescription, eventCapacity, eventOrganizer;
+        TextView eventName, eventDate, facilityName;
         ImageView eventImage;
 
         /**
@@ -114,6 +116,24 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             eventName = itemView.findViewById(R.id.event_name);
             eventDate = itemView.findViewById(R.id.event_Date);
             eventImage = itemView.findViewById(R.id.event_image);
+            facilityName = itemView.findViewById(R.id.facility); // Make sure you have the correct ID
         }
+    }
+
+    private void fetchFacilityName(String organizerID, TextView facilityTextView) {
+        FirebaseFirestore.getInstance().collection("Organizers")
+                .document(organizerID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String facilityName = documentSnapshot.getString("facilityName");
+                        facilityTextView.setText("Facility: " + facilityName);
+                    } else {
+                        facilityTextView.setText("Facility: Unknown");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    facilityTextView.setText("Facility: Error");
+                });
     }
 }

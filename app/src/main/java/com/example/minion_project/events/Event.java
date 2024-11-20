@@ -29,6 +29,7 @@ public class Event {
     private String eventLocation;
     private String eventImage;
     private String eventQrCode;
+    private String facilityName;
 
     /**
      * Default constructor for Event class: empty event
@@ -47,6 +48,7 @@ public class Event {
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
+        this.facilityName = "";
     }
 
     /**
@@ -68,8 +70,12 @@ public class Event {
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
+        this.facilityName = "";
 
     }
+    public String getFacilityName() {return this.facilityName;}
+
+    public void setFacilityName(String facilityName) {this.facilityName = facilityName;}
 
     /**
      * getEventID
