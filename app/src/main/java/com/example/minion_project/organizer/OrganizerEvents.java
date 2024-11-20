@@ -1,5 +1,8 @@
 package com.example.minion_project.organizer;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,43 +20,27 @@ import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-/**
- * One of two functionalities for organizer.
- * Organizers are able to schedule events, and are able to view their scheduled events here.
- * Handles displaying a recyclyer view for an organizers events (held within and associated with a unique organizer
- * within the database)
- */
 public class OrganizerEvents extends Fragment {
+    private static final int PICK_IMAGE_REQUEST = 1;  // Request code for image picker
+
     private RecyclerView organizerEventsRecyclerView;
     private EventsAdapter eventsAdapter;
     private ArrayList<Event> eventList;
     private FireStoreClass ourFirestore;
     private OrganizerController organizerController;
 
-    /**
-     * Constructor for OrganizerEvents
-     * @param organizerController the organizer controller for managing organizer actions
-     */
+    private Event selectedEvent;  // Keep track of which event's image is being replaced
+
     public OrganizerEvents(OrganizerController organizerController) {
         this.organizerController = organizerController;
         this.ourFirestore = new FireStoreClass();
     }
 
-    /**
-     * Inflates the fragment layout and sets up view components
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return
-     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizer_events, container, false);
@@ -61,17 +48,81 @@ public class OrganizerEvents extends Fragment {
         organizerEventsRecyclerView = view.findViewById(R.id.organizerEventsRecyclerView);
         organizerEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventList = new ArrayList<>();
-        eventsAdapter = new EventsAdapter(getContext(), eventList); // Using two-parameter constructor
+        eventsAdapter = new EventsAdapter(getContext(), eventList);
         organizerEventsRecyclerView.setAdapter(eventsAdapter);
+
+        // Set image select listener
+        eventsAdapter.setOnImageSelectListener(event -> {
+            selectedEvent = event;  // Set the selected event
+            openImagePicker();     // Open image picker
+        });
 
         fetchEvents();
 
         return view;
     }
 
-    /**
-     * Fetch all organizer events
-     */
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            Uri newImageUri = data.getData();
+
+            if (selectedEvent != null && newImageUri != null) {
+                replaceEventImage(selectedEvent, newImageUri);
+            } else {
+                Toast.makeText(getContext(), "Error selecting image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void replaceEventImage(Event event, Uri newImageUri) {
+        String oldImageUrl = event.getEventImage();
+        String newImageName = "event_images/" + event.getEventID() + "_new.jpg";
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference newImageRef = storage.getReference(newImageName);
+
+        newImageRef.putFile(newImageUri)
+                .addOnSuccessListener(taskSnapshot -> newImageRef.getDownloadUrl().addOnSuccessListener(newImageUrl -> {
+                    // Update Firestore with the new image URL
+                    FirebaseFirestore.getInstance()
+                            .collection("Events")
+                            .document(event.getEventID())
+                            .update("eventImage", newImageUrl.toString())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "Image updated successfully!", Toast.LENGTH_SHORT).show();
+                                event.setEventImage(newImageUrl.toString());
+                                eventsAdapter.notifyDataSetChanged();  // Refresh the list
+
+                                // Optionally delete old image
+                                if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                                    StorageReference oldImageRef = storage.getReferenceFromUrl(oldImageUrl);
+                                    oldImageRef.delete()
+                                            .addOnSuccessListener(aVoid1 -> {
+                                                Toast.makeText(getContext(), "Old image deleted", Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(getContext(), "Failed to delete old image", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Failed to update event image", Toast.LENGTH_SHORT).show();
+                            });
+                }))
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to upload new image", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void fetchEvents() {
         ArrayList<String> eventIds = organizerController.getOrganizer().getAllEvents();
         FirebaseFirestore db = ourFirestore.getFirestore();
