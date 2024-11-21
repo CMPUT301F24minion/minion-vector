@@ -58,10 +58,25 @@ public class OrganizerEvents extends Fragment {
         });
 
         fetchEvents();
-
+        eventsAdapter.setOnItemClickListener(event -> {
+            openEventDetailFragment(event);
+        });
         return view;
     }
+    private void openEventDetailFragment(Event event) {
+        EventDetailFragment eventDetailFragment = new EventDetailFragment();
 
+        // Pass the event data to the new fragment
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("event",  event.getEventID());
+        eventDetailFragment.setArguments(bundle);
+
+        // Replace the current fragment with the EventDetailFragment
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.organizerEvent, eventDetailFragment)
+                .addToBackStack(null)
+                .commit();
+    }
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -145,4 +160,6 @@ public class OrganizerEvents extends Fragment {
             });
         }
     }
+
+
 }
