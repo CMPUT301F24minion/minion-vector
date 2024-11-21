@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        loginBtn.setOnClickListener(new View.OnClickListener()
-
-        {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             /**
              * Called when a view has been clicked.
              * @param v
@@ -164,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showSignUpFragment() {
         loginBtn.setVisibility(View.GONE); //hide log in button
+        choosePageText.setVisibility(View.GONE);
         SignUpFragment signUpFragment = SignUpFragment.newInstance(All_UsersRef,android_id,usersRef,organizersRef);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_sign_up, signUpFragment);
