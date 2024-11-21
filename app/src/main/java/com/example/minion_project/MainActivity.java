@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public FireStoreClass Our_Firestore=new FireStoreClass();
     Button loginBtn,userBtn,organizerBtn,adminBtn;
     TextView choosePageText;
-
+    TextView appName;
     /**
      * Called when the activity is starting
      * @param savedInstanceState
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loginBtn = findViewById(R.id.start);
+        appName=findViewById(R.id.choose_page_launch);
         userBtn = findViewById(R.id.userBtn);
         organizerBtn = findViewById(R.id.organizerBtn);
         adminBtn=findViewById(R.id.adminBtn);
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
      * Shows the sign-up fragment
      */
     private void showSignUpFragment() {
+        appName.setVisibility(View.GONE);
         loginBtn.setVisibility(View.GONE); //hide log in button
         SignUpFragment signUpFragment = SignUpFragment.newInstance(All_UsersRef,android_id,usersRef,organizersRef);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
