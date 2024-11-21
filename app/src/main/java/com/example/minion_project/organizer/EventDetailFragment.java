@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.minion_project.Lottery;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
@@ -35,14 +36,6 @@ public class EventDetailFragment extends Fragment {
         this.eventController=new EventController();
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EventDetailFragment.
-     */
     public static EventDetailFragment newInstance(String param1, String param2) {
         EventDetailFragment fragment = new EventDetailFragment();
         Bundle args = new Bundle();
@@ -52,7 +45,7 @@ public class EventDetailFragment extends Fragment {
     }
 
     private Event event;
-
+    private Lottery lottery;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
@@ -67,12 +60,13 @@ public class EventDetailFragment extends Fragment {
             fetchEventData(eventId);
         }
         eventRunLottery.setOnClickListener(v->{
-            handleLottery(event);
+            handleLottery();
         });
 
         return view;
     }
-    private void  handleLottery(Event event){
+    private void  handleLottery(){
+        lottery.poolAplicants();
 
     };
     private void fetchEventData(String eventID) {
@@ -81,6 +75,14 @@ public class EventDetailFragment extends Fragment {
             public void onEventFetched(Event event) {
                 if (event != null) {
                     EventDetailFragment.this.event = event;
+
+                    // instantiate the lotter
+                    EventDetailFragment.this.lottery=new Lottery(event);
+                    if (event.getEventEnrolled().size()>=event.getEventCapacity()){
+                        // hide the button to pool if cannot pool more
+                        eventRunLottery.setVisibility(View.INVISIBLE);
+                    }
+
                     eventNameTextView.setText(event.getEventName());
                     eventDescriptionTextView.setText("Event Description ✏\uFE0F: "+event.getEventDescription());
                     eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());

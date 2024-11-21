@@ -18,7 +18,7 @@ public class Event {
     private String eventDate;
     private String eventName;
     private String eventDescription;
-    private String eventCapacity;
+    private Integer eventCapacity;
 
     private String eventOrganizer;
 
@@ -34,7 +34,7 @@ public class Event {
     private String eventImage;
     private String eventQrCode;
     private String facilityName;
-
+    private Integer DEFAULT_CAPACITY=10;
     /**
      * Default constructor for Event class: empty event
      */
@@ -43,7 +43,7 @@ public class Event {
         this.eventDate = "";
         this.eventName = "";
         this.eventDescription = "";
-        this.eventCapacity = "";
+        this.eventCapacity = DEFAULT_CAPACITY; //default capacity
         this.eventOrganizer = "";
         this.eventWaitlist = new ArrayList<>();
         this.eventEnrolled = new ArrayList<>();
@@ -67,7 +67,7 @@ public class Event {
         this.eventID=Id;
         this.eventDate = "";
         this.eventDescription = "";
-        this.eventCapacity = "";
+        this.eventCapacity = DEFAULT_CAPACITY;
         this.eventOrganizer = "";
         this.eventWaitlist = new ArrayList<>();
         this.eventEnrolled = new ArrayList<>();
@@ -204,7 +204,7 @@ public class Event {
      * getEventCapacity
      * @return eventCapacity
      */
-    public String getEventCapacity() {
+    public Integer getEventCapacity() {
         return eventCapacity;
     }
 
@@ -212,7 +212,7 @@ public class Event {
      * setEventCapacity
      * @param eventCapacity
      */
-    public void setEventCapacity(String eventCapacity) {
+    public void setEventCapacity(Integer eventCapacity) {
         this.eventCapacity = eventCapacity;
     }
 

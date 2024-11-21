@@ -136,7 +136,14 @@ public class OrganizerCreateEvent extends Fragment {
     private void createEvent() {
         String eventTitle = createEventTitle.getText().toString().trim();
         String eventDetails = createEventDetails.getText().toString().trim();
-        String eventInvitations = createEventInvitations.getText().toString().trim();
+        Integer eventInvitations = 10;
+
+        String invitationsString = createEventInvitations.getText().toString().trim();
+        try {
+            eventInvitations = Integer.parseInt(invitationsString);
+        } catch (NumberFormatException e) {
+
+        }
         String facility = facilityName.getText().toString().trim();
         String time = selectedTime;
         String date = selectedDate;
@@ -147,19 +154,18 @@ public class OrganizerCreateEvent extends Fragment {
         } else if (eventDetails.isEmpty()) {
             Toast.makeText(getContext(), "Please enter details to the event", Toast.LENGTH_SHORT).show();
             return;
-        } else if (eventInvitations.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter the capacity of the event", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (facility.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter the name of the facility", Toast.LENGTH_SHORT).show();
-            return;
-        }else if (time.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter the time the event starts", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (date.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter the date the event starts", Toast.LENGTH_SHORT).show();
-            return;
         }
+        //COMMENTED OUT TO DEVELOP EASIER
+//        else if (facility.isEmpty()) {
+//            Toast.makeText(getContext(), "Please enter the name of the facility", Toast.LENGTH_SHORT).show();
+//            return;
+//        }else if (time.isEmpty()) {
+//            Toast.makeText(getContext(), "Please enter the time the event starts", Toast.LENGTH_SHORT).show();
+//            return;
+//        } else if (date.isEmpty()) {
+//            Toast.makeText(getContext(), "Please enter the date the event starts", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         Event event = new Event();
         event.setEventName(eventTitle);
         event.setEventDetails(eventDetails);
