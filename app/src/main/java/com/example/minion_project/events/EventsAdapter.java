@@ -21,11 +21,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private ArrayList<Event> eventList;
     private OnEventDeleteListener deleteListener;
     private OnImageSelectListener imageSelectListener;
+    private OnItemClickListener listener;
 
     public interface OnEventDeleteListener {
         void onEventDelete(Event event);
     }
 
+    // for organizer view event
+    public interface OnItemClickListener {
+        void onItemClick(Event event);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
     public interface OnImageSelectListener {
         void onImageSelect(Event event);
     }
@@ -63,6 +71,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         holder.eventImage.setOnClickListener(v -> {
             if (imageSelectListener != null) {
                 imageSelectListener.onImageSelect(event); // Notify listener
+            }
+        });
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(event);  // Trigger listener when an item is clicked
             }
         });
     }
