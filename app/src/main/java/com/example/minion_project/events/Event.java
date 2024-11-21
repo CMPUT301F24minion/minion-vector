@@ -306,13 +306,7 @@ public class Event {
         return eventInvited;
     }
 
-    /**
-     * setEventInvited:
-     * @param invitedDeviceIds
-     */
-    public void setEventInvited(ArrayList<String> invitedDeviceIds) {
-        this.eventInvited.addAll(invitedDeviceIds);
-    }
+
 
 }
 

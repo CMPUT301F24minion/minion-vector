@@ -12,11 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.minion_project.Lottery;
+import com.example.minion_project.Lottery.Lottery;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
-import com.example.minion_project.user.UserEventFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +65,7 @@ public class EventDetailFragment extends Fragment {
         return view;
     }
     private void  handleLottery(){
-        lottery.poolAplicants();
+        lottery.poolApplicants();
 
     };
     private void fetchEventData(String eventID) {
@@ -76,7 +75,7 @@ public class EventDetailFragment extends Fragment {
                 if (event != null) {
                     EventDetailFragment.this.event = event;
 
-                    // instantiate the lotter
+                    // instantiate the lottery
                     EventDetailFragment.this.lottery=new Lottery(event);
                     if (event.getEventEnrolled().size()>=event.getEventCapacity()){
                         // hide the button to pool if cannot pool more
