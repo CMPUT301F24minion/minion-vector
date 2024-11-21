@@ -92,7 +92,12 @@ private void ButtonVisibility(){
     if ("joined".equals(userStatusforEvent)) {
         eventUnJoinButton.setVisibility(View.VISIBLE);
         eventJoinButton.setVisibility(View.INVISIBLE);
-    }else{
+    }else if("invited".equals(userStatusforEvent) ||"enrolled".equals(userStatusforEvent) || "declined".equals(userStatusforEvent)|| "rejected".equals(userStatusforEvent)){
+        // do not allow to join see if status is invited,enrolled,declined or rejected
+        eventUnJoinButton.setVisibility(View.INVISIBLE);
+        eventJoinButton.setVisibility(View.INVISIBLE);
+    }
+    else{
         eventUnJoinButton.setVisibility(View.INVISIBLE);
         eventJoinButton.setVisibility(View.VISIBLE);
     }
