@@ -28,6 +28,11 @@ public class EventDetailFragment extends Fragment {
     TextView eventDateTextView;
     TextView eventDescriptionTextView;
     TextView eventCapacityTextView;
+    TextView eventWaitlistCount ;
+    TextView eventAcceptedCount ;
+    TextView eventDeclinedCount ;
+    TextView eventPendingCount ;
+
     Button eventRunLottery;
     EventController eventController;
 
@@ -54,6 +59,10 @@ public class EventDetailFragment extends Fragment {
         eventDescriptionTextView = view.findViewById(R.id.eventDescription);
         eventCapacityTextView = view.findViewById(R.id.eventCapacity);
         eventRunLottery=view.findViewById(R.id.eventRunLottery);
+        eventWaitlistCount = view.findViewById(R.id.eventWaitlistcount);
+        eventAcceptedCount = view.findViewById(R.id.eventAcceptedCount);
+        eventDeclinedCount = view.findViewById(R.id.eventDeclinedCount);
+        eventPendingCount = view.findViewById(R.id.eventPendingCount);
         if (getArguments() != null) {
             String eventId = (String) getArguments().getSerializable("event");
             fetchEventData(eventId);
@@ -88,7 +97,16 @@ public class EventDetailFragment extends Fragment {
                     eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());
                     eventCapacityTextView.setText("Event Capacity\uD83E\uDDE2: "+event.getEventCapacity());
 
+                    int waitlistCount = event.getEventWaitlist().size();  // Number of users on the waitlist
+                    int acceptedCount = event.getEventEnrolled().size(); // Number of users accepted
+                    int declinedCount = event.getEventDeclined().size(); // Number of users declined
+                    int invitedCount = event.getEventInvited().size(); // Number of users invited
 
+                    // Set the waitlist, accepted, declined, and pending counts
+                    eventWaitlistCount.setText("Users on waitlist ⌛: " + waitlistCount);
+                    eventAcceptedCount.setText("Users accepted ✅: " + acceptedCount);
+                    eventDeclinedCount.setText("Users declined ❌: " + declinedCount);
+                    eventPendingCount.setText("Users invited count 📩: " + invitedCount);
 
                 }
             }

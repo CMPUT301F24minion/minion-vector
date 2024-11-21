@@ -39,6 +39,34 @@
         android:text="Event Description ✏️:"
         android:textSize="16sp"
         android:textColor="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/eventWaitlistcount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Users on waitlist ⌛:"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/eventAcceptedCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Users accepted ✅:"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/eventDeclinedCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Users declined ❌:"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/eventPendingCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Users invited count 📩:"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"/>
     <Button
         android:id="@+id/eventRunLottery"
         android:layout_width="wrap_content"
