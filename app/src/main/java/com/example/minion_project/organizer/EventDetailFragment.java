@@ -77,8 +77,9 @@ public class EventDetailFragment extends Fragment {
 
                     // instantiate the lottery
                     EventDetailFragment.this.lottery=new Lottery(event);
-                    if (event.getEventEnrolled().size()>=event.getEventCapacity()){
+                    if (event.getEventEnrolled().size()>=event.getEventCapacity() ||event.getEventWaitlist().size()==0){
                         // hide the button to pool if cannot pool more
+                        // or has no users in waitlist
                         eventRunLottery.setVisibility(View.INVISIBLE);
                     }
 
