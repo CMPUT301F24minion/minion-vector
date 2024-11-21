@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ public class EventDetailFragment extends Fragment {
     TextView eventDateTextView;
     TextView eventDescriptionTextView;
     TextView eventCapacityTextView;
-
+    Button eventRunLottery;
     EventController eventController;
 
     public EventDetailFragment() {
@@ -60,23 +61,26 @@ public class EventDetailFragment extends Fragment {
         eventDateTextView = view.findViewById(R.id.eventDate);
         eventDescriptionTextView = view.findViewById(R.id.eventDescription);
         eventCapacityTextView = view.findViewById(R.id.eventCapacity);
-
+        eventRunLottery=view.findViewById(R.id.eventRunLottery);
         if (getArguments() != null) {
             String eventId = (String) getArguments().getSerializable("event");
             fetchEventData(eventId);
         }
-
+        eventRunLottery.setOnClickListener(v->{
+            handleLottery(event);
+        });
 
         return view;
     }
+    private void  handleLottery(Event event){
 
+    };
     private void fetchEventData(String eventID) {
         eventController.getEvent(eventID, new EventController.EventCallback() {
             @Override
             public void onEventFetched(Event event) {
                 if (event != null) {
                     EventDetailFragment.this.event = event;
-
                     eventNameTextView.setText(event.getEventName());
                     eventDescriptionTextView.setText("Event Description ✏\uFE0F: "+event.getEventDescription());
                     eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());

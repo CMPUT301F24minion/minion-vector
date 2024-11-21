@@ -19,11 +19,15 @@ public class Event {
     private String eventName;
     private String eventDescription;
     private String eventCapacity;
+
     private String eventOrganizer;
-    private ArrayList<String> eventAttendees;
-    private ArrayList<String> eventWaitlist;
-    private ArrayList<String> eventInvited;
-    private ArrayList<String> eventCanceled;
+
+    private ArrayList<String> eventWaitlist; // users on the waitlist
+    private ArrayList<String> eventEnrolled; // users who accepted invite
+    private ArrayList<String> eventInvited;  // users chosen to attend
+    private ArrayList<String> eventDeclined; // users who were offered but declined
+    private ArrayList<String> eventRejected; // final users who weren't selected
+
     private String eventDetails;
     private String eventTime;
     private String eventLocation;
@@ -41,10 +45,12 @@ public class Event {
         this.eventDescription = "";
         this.eventCapacity = "";
         this.eventOrganizer = "";
-        this.eventAttendees = new ArrayList<>();
         this.eventWaitlist = new ArrayList<>();
+        this.eventEnrolled = new ArrayList<>();
         this.eventInvited = new ArrayList<>();
-        this.eventCanceled = new ArrayList<>();
+        this.eventDeclined = new ArrayList<>();
+        this.eventRejected = new ArrayList<>();
+
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
@@ -63,16 +69,41 @@ public class Event {
         this.eventDescription = "";
         this.eventCapacity = "";
         this.eventOrganizer = "";
-        this.eventAttendees = new ArrayList<>();
         this.eventWaitlist = new ArrayList<>();
+        this.eventEnrolled = new ArrayList<>();
         this.eventInvited = new ArrayList<>();
-        this.eventCanceled = new ArrayList<>();
+        this.eventDeclined = new ArrayList<>();
+        this.eventRejected = new ArrayList<>();
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
         this.facilityName = "";
 
     }
+    public ArrayList<String> getEventEnrolled() {
+        return eventEnrolled;
+    }
+
+    public void setEventEnrolled(ArrayList<String> eventEnrolled) {
+        this.eventEnrolled = eventEnrolled;
+    }
+
+    public ArrayList<String> getEventDeclined() {
+        return eventDeclined;
+    }
+
+    public void setEventDeclined(ArrayList<String> eventDeclined) {
+        this.eventDeclined = eventDeclined;
+    }
+
+    public ArrayList<String> getEventRejected() {
+        return eventRejected;
+    }
+
+    public void setEventRejected(ArrayList<String> eventRejected) {
+        this.eventRejected = eventRejected;
+    }
+
     public String getFacilityName() {return this.facilityName;}
 
     public void setFacilityName(String facilityName) {this.facilityName = facilityName;}
@@ -201,21 +232,7 @@ public class Event {
         this.eventOrganizer = eventOrganizer;
     }
 
-    /**
-     * getEventAttendees
-     * @return eventAttendees
-     */
-    public ArrayList<String> getEventAttendees() {
-        return eventAttendees;
-    }
 
-    /**
-     * setEventAttendees
-     * @param eventAttendees
-     */
-    public void setEventAttendees(ArrayList<String> eventAttendees) {
-        this.eventAttendees = eventAttendees;
-    }
 
     /**
      * getEventCanceled

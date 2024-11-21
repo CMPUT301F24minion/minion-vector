@@ -39,6 +39,13 @@
         android:text="Event Description ✏️:"
         android:textSize="16sp"
         android:textColor="@android:color/darker_gray"/>
+    <Button
+        android:id="@+id/eventRunLottery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run Lottery"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
 
 
 
