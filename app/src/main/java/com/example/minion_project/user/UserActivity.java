@@ -122,7 +122,7 @@ public class UserActivity extends AppCompatActivity {
                 binding.textView.setText("Settings");
                 loadUserProfileImage();
             } else if (itemId == R.id.menu_user_updates) {
-                replaceFragment(new UserUpdatesFragment());
+                replaceFragment(new UserEventStatusFragment());
                 binding.textView.setText("Notifications");
                 loadUserProfileImage();
             } else if (itemId == R.id.menu_user_scan_qr) {
