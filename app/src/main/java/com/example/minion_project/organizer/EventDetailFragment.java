@@ -182,7 +182,7 @@ public class EventDetailFragment extends Fragment {
                     }
 
                     eventNameTextView.setText(event.getEventName());
-                    eventDescriptionTextView.setText("Event Description ✏\uFE0F: "+event.getEventDescription());
+                    eventDescriptionTextView.setText("Event Description ✏\uFE0F: "+event.getEventDetails());
                     eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());
                     eventCapacityTextView.setText("Event Capacity\uD83E\uDDE2: "+event.getEventCapacity());
 
