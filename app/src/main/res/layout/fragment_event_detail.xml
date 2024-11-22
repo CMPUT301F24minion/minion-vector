@@ -1,89 +1,107 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/white"
-    android:gravity="top">
+    android:fillViewport="true"
+    android:background="@android:color/white">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:gravity="top">
 
-
-<TextView
-    android:id="@+id/eventTitle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Event Title"
-    android:textSize="24sp"
-    android:textStyle="bold"
-    android:layout_marginBottom="8dp"/>
-
-<TextView
-    android:id="@+id/eventDate"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Event Date 📅: "
-    android:textSize="16sp"
-    android:textColor="@android:color/darker_gray"/>
+    <ImageView
+        android:id="@+id/eventImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Event Image"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@android:color/darker_gray" />
 
     <TextView
-        android:id="@+id/eventCapacity"
+        android:id="@+id/eventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Capacity🧢: "
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
-    <TextView
-        android:id="@+id/eventDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event Description ✏️:"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
-    <TextView
-        android:id="@+id/eventWaitlistcount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Users on waitlist ⌛:"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
-    <TextView
-        android:id="@+id/eventAcceptedCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Users accepted ✅:"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
-    <TextView
-        android:id="@+id/eventDeclinedCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Users declined ❌:"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
-    <TextView
-        android:id="@+id/eventPendingCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Users invited count 📩:"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
-    <EditText
-        android:id="@+id/eventNumberOfApplicants"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-    android:hint="Enter number of applicants"
-    android:textSize="16sp"
-    android:textColor="@android:color/black"/>
+        android:text="Event Title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/eventRunLottery"
+    <TextView
+        android:id="@+id/eventDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Run Lottery"
+        android:text="Event Date 📅: "
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"/>
+
+        <TextView
+            android:id="@+id/eventCapacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Capacity🧢: "
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+        <TextView
+            android:id="@+id/eventDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Description ✏️:"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+        <TextView
+            android:id="@+id/eventWaitlistcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users on waitlist ⌛:"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+        <TextView
+            android:id="@+id/eventAcceptedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users accepted ✅:"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+        <TextView
+            android:id="@+id/eventDeclinedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users declined ❌:"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+        <TextView
+            android:id="@+id/eventPendingCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users invited count 📩:"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+        <EditText
+            android:id="@+id/eventNumberOfApplicants"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:inputType="number"
+        android:hint="Enter number of applicants"
         android:textSize="16sp"
         android:textColor="@android:color/black"/>
 
+        <Button
+            android:id="@+id/eventRunLottery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Run Lottery"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"/>
 
+        <!-- Added this view for spacing so user can scroll content fully into view-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
-    </LinearLayout>
+        </LinearLayout>
+</ScrollView>

@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.minion_project.Lottery.Lottery;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
@@ -25,6 +27,7 @@ import com.example.minion_project.events.EventController;
  */
 public class EventDetailFragment extends Fragment {
 
+    ImageView eventImage;
     TextView eventNameTextView;
     TextView eventDateTextView;
     TextView eventDescriptionTextView;
@@ -55,6 +58,7 @@ public class EventDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
         // Use the 'event' object to populate the UI
+        eventImage = view.findViewById(R.id.eventImage);
         eventNameTextView = view.findViewById(R.id.eventTitle);
         eventDateTextView = view.findViewById(R.id.eventDate);
         eventDescriptionTextView = view.findViewById(R.id.eventDescription);
@@ -98,6 +102,19 @@ public class EventDetailFragment extends Fragment {
                         eventRunLottery.setVisibility(View.INVISIBLE);
                         eventNumberOfApplicants.setVisibility(View.INVISIBLE);
 
+                    }
+
+                    // Check if the event image exists
+                    String eventImageUrl = event.getEventImage();
+
+                    if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
+                        // Load the event image using Glide
+                        Glide.with(getActivity())
+                                .load(eventImageUrl)
+                                .into(eventImage);
+                    } else {
+                        // Show a "+" icon if no image exists
+                        eventImage.setImageResource(R.drawable.baseline_add); // Placeholder drawable
                     }
 
                     eventNameTextView.setText(event.getEventName());
