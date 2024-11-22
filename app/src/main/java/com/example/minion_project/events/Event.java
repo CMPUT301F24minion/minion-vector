@@ -33,7 +33,7 @@ public class Event {
     private String eventLocation;
     private String eventImage;
     private String eventQrCode;
-    private boolean facility;
+    private String facilityName;
     private Integer DEFAULT_CAPACITY=10;
     /**
      * Default constructor for Event class: empty event
@@ -54,7 +54,7 @@ public class Event {
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
-        this.facility = false;
+        this.facilityName = "";
     }
 
     /**
@@ -77,7 +77,7 @@ public class Event {
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
-        this.facility = false;
+        this.facilityName = "";
 
     }
     public ArrayList<String> getEventEnrolled() {
@@ -104,9 +104,9 @@ public class Event {
         this.eventRejected = eventRejected;
     }
 
-    public boolean getFacility() {return this.facility;}
+    public String getFacilityName() {return this.facilityName;}
 
-    public void setFacility(boolean facility) {this.facility = facility;}
+    public void setFacilityName(String facilityName) {this.facilityName = facilityName;}
 
     /**
      * getEventID
