@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         organizersRef=Our_Firestore.getOrganizersRef();
         createNotificationChannel();
         android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
-        Notification notification = new Notification(android_id);
 
 
 

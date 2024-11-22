@@ -8,6 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,30 @@ public class FireStoreClass {
      */
     public CollectionReference getOrganizersRef() {
         return organizersRef;
+    }
+    /**
+     * Retrieves the facility name and image URL from the organizer document.
+     * @param ID The document ID of the organizer.
+     * @return A Task<Map<String, String>> containing the "Name" and "ImageURL" fields.
+     */
+    public Task<Map<String, String>> getFacilityInfo(String ID) {
+        return organizersRef.document(ID)
+                .get()
+                .continueWith(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        DocumentSnapshot document = task.getResult();
+                        String name = document.getString("Name");
+                        String imageURL = document.getString("ImageURL");
+
+                        // Create a map to hold the Name and ImageURL
+                        Map<String, String> facilityData = new HashMap<>();
+                        facilityData.put("Name", name);
+                        facilityData.put("ImageURL", imageURL);
+
+                        return facilityData; // Return the map
+                    }
+                    return null; // Return null if the document does not exist or is invalid
+                });
     }
     /**
      * method to get events ref

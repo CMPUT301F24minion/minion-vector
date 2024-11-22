@@ -55,30 +55,34 @@ public class OrganizerActivity extends AppCompatActivity {
         android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         organizersRef = Our_Firestore.getOrganizersRef();
 
-        organizersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        Map<String, Object> data = document.getData();
-                        if (data != null) {
-                            String name = (String) data.get("Name");
-                            ArrayList<String> events = (ArrayList<String>) data.get("Events");
-                            String phoneNumber = (String) data.get("Phone_number");
-                            String email = (String) data.get("Email");
-                            String facilityName = (String) data.get("facilityName");
+        organizersRef.document(android_id).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    Map<String, Object> data = document.getData();
+                    if (data != null) {
+                        String name = (String) data.get("Name");
+                        ArrayList<String> events = (ArrayList<String>) data.get("Events");
+                        String phoneNumber = (String) data.get("Phone_number");
+                        String email = (String) data.get("Email");
+                        boolean facility = (boolean) data.get("facility");
 
-                            organizer = new Organizer(events, phoneNumber, email, name, android_id, facilityName);
-                            organizerController = new OrganizerController(organizer);
+                        organizer = new Organizer(events, phoneNumber, email, name, android_id, facility);
+                        organizerController = new OrganizerController(organizer);
 
-                            // Pass the controller to the initial fragment
+                        // Handle navigation based on intent flag
+                        String navigateTo = getIntent().getStringExtra("navigate_to");
+                        if ("create_event".equals(navigateTo)) {
+                            replaceFragment(new OrganizerCreateEvent(organizerController));
+                            binding.organizerBottomNavigationView.setSelectedItemId(R.id.menu_organizer_create_event);
+                        } else {
                             replaceFragment(new OrganizerEvents(organizerController));
+                            binding.organizerBottomNavigationView.setSelectedItemId(R.id.menu_organizer_events);
                         }
                     }
-                } else {
-                    Toast.makeText(OrganizerActivity.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(OrganizerActivity.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,6 +98,7 @@ public class OrganizerActivity extends AppCompatActivity {
             return true;
         });
     }
+
 
     /**
      * Replaces the current fragment with a new fragment
