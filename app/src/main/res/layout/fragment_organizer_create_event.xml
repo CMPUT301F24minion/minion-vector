@@ -7,11 +7,6 @@
     android:padding="16dp"
     android:gravity="center"
     >
-    <EditText
-        android:id="@+id/facilityName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Facility Name" />
 
     <EditText
         android:id="@+id/createEventTitleEditText"
@@ -95,5 +90,17 @@
         android:id="@+id/eventImageView"
         android:layout_width="180dp"
         android:layout_height="145dp" />
+
+    <Button
+        android:background="@drawable/round_button"
+        android:id="@+id/editFacilityButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Facility"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createEventInvitationsEditText">
+
+    </Button>
 
 </LinearLayout>
