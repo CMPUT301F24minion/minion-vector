@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserEventStatusFragment extends Fragment {
 
@@ -50,12 +51,20 @@ public class UserEventStatusFragment extends Fragment {
 
         // Prepare event data (this can be dynamic or fetched from a database)
         eventList = new ArrayList<>();
-        adapter = new UserEventStatusAdapter(getContext(), eventList);
-        fetchEvents();
+        adapter = new UserEventStatusAdapter(getContext(), eventList, userController);
         // Set the adapter
         userEventStatusRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // get user info incase they were selcted
+        userController.fetchUser();
+
+
+        fetchEvents();
     }
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView eventName, eventDate, facilityName;
@@ -67,7 +76,7 @@ public class UserEventStatusFragment extends Fragment {
             eventDate = itemView.findViewById(R.id.event_Date);
         }
     }
-    private void fetchEvents() {
+    public void fetchEvents() {
         HashMap<String,String> eventIds = userController.user.getAllEvents();
 
         FirebaseFirestore db = ourFirestore.getFirestore();
@@ -86,7 +95,6 @@ public class UserEventStatusFragment extends Fragment {
                         Log.e("userfrag", "SUCCESS to add event: " + uEvent);
 
                         if (uEvent != null) {
-//                            uEvent.setEventID(document.getId());
                             eventList.add(uEvent);
                             adapter.notifyItemInserted(eventList.size() - 1);
                         }

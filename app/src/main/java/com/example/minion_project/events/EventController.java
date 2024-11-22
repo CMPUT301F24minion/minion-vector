@@ -8,6 +8,7 @@ package com.example.minion_project.events;
 import android.util.Log;
 
 import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.Lottery.Lottery;
 import com.example.minion_project.user.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,12 +21,12 @@ public class EventController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference eventsRef;
     private Event event;
-
     /**
      * Constructor for EventController class
      */
     public EventController() {
         this.eventsRef=Our_Firestore.getEventsRef();
+
     }
 
     /**
@@ -85,7 +86,12 @@ public class EventController {
         });
 
     }
-    // a method to add a user to event inivted list
+    /**
+     * addToEventInvited:  a method to add a user to event inivted list
+     * @param event
+     * @param userId
+     * @return None
+     */
     public void addToEventInvited(Event event,String userid){
         eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -112,6 +118,40 @@ public class EventController {
         });
     }
     /**
+     * addToEventsRejected:  a method to add a user to event rejected list+ pool from lottery
+     * @param event
+     * @param userId
+     * @return None
+     */
+    public void addToEventsRejected(Event event,String userid){
+
+        eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+
+                if (document.exists()) {
+                    // Use Firestore's arrayUnion to add "complete" to the eventWaitlist array
+                    eventsRef.document(event.getEventID())
+                            .update("eventDeclined", FieldValue.arrayUnion(userid))
+                            .addOnSuccessListener(aVoid -> {
+                                // Successfully added to the waitlist
+                                Lottery lottery=new Lottery(event);
+                                lottery.poolApplicants(1); // pool an additionalApplicant
+                                Log.d("EventUpdate", "Successfully added  to the declined.");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure
+                                Log.e("EventUpdate", "Error adding 'complete' to the declined", e);
+                            });
+                } else {
+                    Log.e("EventUpdate", "Event document does not exist.");
+                }
+            } else {
+                Log.e("EventUpdate", "Failed to fetch event document", task.getException());
+            }
+        });
+    }
+    /**
      * Removes a user from a waitlist of a event
      * @param event event that user will be removed from
      * @param UserID userID that will be removed from event
@@ -125,6 +165,52 @@ public class EventController {
                 .addOnFailureListener(e -> {
                     // Log failure message
                     Log.e("Firestore", "Error removing user " + UserID + " from the waitlist for event " + event.getEventID(), e);
+                });
+    }
+    /**
+     * add Events to Enrolled
+     * @param event event that user will be removed from
+     * @param UserID userID that will be removed from event
+     */
+    public void addToEventsEnrolled(Event event, String userid) {
+        eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+
+                if (document.exists()) {
+                    // Use Firestore's arrayUnion to add "complete" to the eventWaitlist array
+                    eventsRef.document(event.getEventID())
+                            .update("eventEnrolled", FieldValue.arrayUnion(userid))
+                            .addOnSuccessListener(aVoid -> {
+                                // Successfully added to the waitlist
+                                Log.d("EventUpdate", "Successfully added  to the enrolled.");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure
+                                Log.e("EventUpdate", "Error adding 'complete' to the enrolled", e);
+                            });
+                } else {
+                    Log.e("EventUpdate", "Event document does not exist.");
+                }
+            } else {
+                Log.e("EventUpdate", "Failed to fetch event document", task.getException());
+            }
+        });
+    }
+    /**
+     * remove Events from invited
+     * @param event event that user will be removed from
+     * @param UserID userID that will be removed from event
+     */
+    public void removeFromInvited(Event event, String UserID) {
+        eventsRef.document(event.getEventID()).update("eventInvited", FieldValue.arrayRemove(UserID))
+                .addOnSuccessListener(aVoid -> {
+                    // Log success message
+                    Log.d("Firestore", "User " + UserID + " successfully removed from the invited for event " + event.getEventID());
+                })
+                .addOnFailureListener(e -> {
+                    // Log failure message
+                    Log.e("Firestore", "Error removing user " + UserID + " from the invited for event " + event.getEventID(), e);
                 });
     }
 

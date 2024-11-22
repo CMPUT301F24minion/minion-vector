@@ -96,6 +96,8 @@ public class EventDetailFragment extends Fragment {
                         // hide the button to pool if cannot pool more
                         // or has no users in waitlist
                         eventRunLottery.setVisibility(View.INVISIBLE);
+                        eventNumberOfApplicants.setVisibility(View.INVISIBLE);
+
                     }
 
                     eventNameTextView.setText(event.getEventName());
