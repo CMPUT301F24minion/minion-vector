@@ -1,6 +1,10 @@
 package com.example.minion_project.user;
 import com.example.minion_project.MainActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import com.bumptech.glide.Glide;
@@ -135,25 +140,25 @@ public class UserSettingsFragment extends Fragment {
         // Validate if any of the fields are empty
         if (nameV.isEmpty()) {
             Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
-            return; // Stop further execution
+            return;
         }
 
         if (emailV.isEmpty()) {
             Toast.makeText(getActivity(), "Email cannot be empty", Toast.LENGTH_SHORT).show();
-            return; // Stop further execution
+            return;
         }
 
         if (phoneV.isEmpty()) {
             Toast.makeText(getActivity(), "Phone number cannot be empty", Toast.LENGTH_SHORT).show();
-            return; // Stop further execution
+            return;
         }
 
         if (cityV.isEmpty()) {
             Toast.makeText(getActivity(), "City cannot be empty", Toast.LENGTH_SHORT).show();
-            return; // Stop further execution
+            return;
         }
 
-        // Prepare the userData to be updated in Firestore
+        // Prepare the user data to be updated in Firestore
         Map<String, Object> userData = new HashMap<>();
         userData.put("City", cityV);
         userData.put("Email", emailV);
@@ -161,24 +166,88 @@ public class UserSettingsFragment extends Fragment {
         userData.put("Phone_number", phoneV);
 
         Map<String, Object> Roles = new HashMap<>();
-        Roles.put("Admin", false);  // Set the Admin role
-        Roles.put("Organizer", changeRole.isChecked());  // Set Organizer role based on CheckBox
-        Roles.put("User", true);  // Set User role
+        Roles.put("Admin", false);
+        Roles.put("Organizer", changeRole.isChecked());
+        Roles.put("User", true);
 
-        // Add the Roles map to userData
         userData.put("Roles", Roles);
 
-        // Update Firestore document with the new userData
-        fire.getAll_UsersRef().document(androidID).set(userData)
-                .addOnSuccessListener(aVoid -> {
-                    // Success message
-                    Toast.makeText(getActivity(), "Information Updated Successfully!", Toast.LENGTH_SHORT).show();
+        // Check if the profileImage field exists in Firestore
+        fire.getAll_UsersRef().document(androidID).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists() && documentSnapshot.getString("profileImage") == null) {
+                        // If no profile image exists, generate one with the first letter of the name
+                        char firstLetter = nameV.charAt(0);
+                        generateLetterProfile(androidID, firstLetter, userData);
+                    } else {
+                        // Update Firestore directly without generating an image
+                        fire.getAll_UsersRef().document(androidID).set(userData)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getActivity(), "Information Updated Successfully!", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getContext(), "Error updating user information", Toast.LENGTH_SHORT).show();
+                                });
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    // Failure handling
-                    Toast.makeText(getContext(), "Error updating user information", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error checking profile image", Toast.LENGTH_SHORT).show());
     }
+
+    private void generateLetterProfile(String androidID, char firstLetter, Map<String, Object> userData) {
+        // Create a Bitmap with the first letter
+        int imageSize = 200; // Size of the profile picture
+        Bitmap bitmap = Bitmap.createBitmap(imageSize, imageSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Set background color and draw text
+        canvas.drawColor(Color.WHITE); // Background color
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text color
+        paint.setTextSize(100); // Text size
+        paint.setTextAlign(Paint.Align.CENTER);
+        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+
+        // Draw the letter in the center of the canvas
+        float x = imageSize / 2f;
+        float y = imageSize / 2f - (fontMetrics.ascent + fontMetrics.descent) / 2f;
+        canvas.drawText(String.valueOf(firstLetter).toUpperCase(), x, y, paint);
+
+        // Convert Bitmap to ByteArray
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        // Upload the generated image to Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference("profile_images/" + androidID + ".jpg");
+
+        storageRef.putBytes(data)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String downloadUrl = uri.toString();
+
+                    // Update Firestore with the new profile image URL in All_UsersRef
+                    userData.put("profileImage", downloadUrl);
+                    fire.getAll_UsersRef().document(androidID).set(userData)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Information Updated Successfully in All_UsersRef!", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Error updating user information in All_UsersRef", Toast.LENGTH_SHORT).show();
+                            });
+
+                    // Update Firestore with the new profile image URL in UsersRef
+                    fire.getUsersRef().document(androidID).update("profileImage", downloadUrl)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Information Updated Successfully in UsersRef!", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Error updating user information in UsersRef", Toast.LENGTH_SHORT).show();
+                            });
+                }));
+    }
+
+
+
 
 
     /**
@@ -318,20 +387,30 @@ public class UserSettingsFragment extends Fragment {
     }
 
     private void saveProfileImageUrlToFirestore(String androidID, String downloadUrl) {
-        // Update the profile image URL in getAll_UsersRef
+        // Prepare update tasks for both collections
+        Map<String, Object> updateData = new HashMap<>();
+        updateData.put("profileImage", downloadUrl);
+
+        // Update the profile image URL in All_UsersRef
         fire.getAll_UsersRef().document(androidID)
-                .update("profileImage", downloadUrl)
+                .update(updateData)
                 .addOnSuccessListener(aVoid -> {
-                    // Display the new image in the ImageView
+                    // Successfully updated in All_UsersRef
                     Glide.with(getActivity()).load(downloadUrl).into(profileImageView);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle error
                 });
 
-
-        // Update the profile image URL in getUsersRef
+        // Update the profile image URL in UsersRef
         fire.getUsersRef().document(androidID)
-                .update("profileImage", downloadUrl)
+                .update(updateData)
                 .addOnSuccessListener(aVoid -> {
-                    // Successfully updated in both references
+                    // Successfully updated in UsersRef
+                })
+                .addOnFailureListener(e -> {
+                    // Handle error
                 });
     }
+
 }

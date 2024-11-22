@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -129,19 +131,48 @@ public class SignUpFragment extends Fragment {
     }
 
     /**
-     * Randomizes the profile image and background color.
+     * Sets the profile image to the first letter of the user's name
+     * with a default background color.
      */
     private void randomizeProfile() {
-        Random random = new Random();
+        String name = nameEditText.getText().toString().trim();
+        if (name.isEmpty()) {
+            // Set default image or background if name is empty
+            profileImageView.setBackgroundColor(Color.LTGRAY); // Default light gray background
+            profileImageView.setImageDrawable(null); // Clear any previous image
+            return;
+        }
 
-        // Assign a random background color
-        int color = COLORS[random.nextInt(COLORS.length)];
-        profileImageView.setBackgroundColor(color);
+        char firstLetter = name.charAt(0); // Get the first letter of the name
 
-        // Assign a random profile image from the drawable resources
-        int drawable = PROFILE_DRAWABLES[random.nextInt(PROFILE_DRAWABLES.length)];
-        profileImageView.setImageResource(drawable);
+        // Create a Bitmap to draw the profile
+        int size = 200; // Size of the profile image
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Fill the background with a default color
+        canvas.drawColor(Color.WHITE); // Light gray background
+
+        // Configure the Paint object to draw the text
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text color
+        paint.setTextSize(80); // Text size
+        paint.setAntiAlias(true);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        // Calculate the text position
+        Rect textBounds = new Rect();
+        paint.getTextBounds(String.valueOf(firstLetter), 0, 1, textBounds);
+        float x = size / 2f;
+        float y = size / 2f - textBounds.exactCenterY();
+
+        // Draw the first letter
+        canvas.drawText(String.valueOf(firstLetter).toUpperCase(), x, y, paint);
+
+        // Set the Bitmap as the profile picture
+        profileImageView.setImageBitmap(bitmap);
     }
+
 
     /**
      * Signs up a new user in the database.
