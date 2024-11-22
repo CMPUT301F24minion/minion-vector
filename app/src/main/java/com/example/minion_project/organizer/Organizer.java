@@ -15,7 +15,7 @@ public class Organizer {
     private String email;
     private String phoneNumber;
     private ArrayList<String> allEvents;
-    private boolean facility;
+    private String facilityName;
 
     public Organizer() {
         this.allEvents = null;
@@ -23,7 +23,7 @@ public class Organizer {
         this.email = "";
         this.name = "";
         this.deviceID = "";
-        this.facility = false;
+        this.facilityName = "";
 
     }
 
@@ -35,17 +35,17 @@ public class Organizer {
      * @param name organizer's name
      * @param deviceID organizer's device ID
      */
-    public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID, boolean facility) {
+    public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID, String facilityname) {
         this.allEvents = allEvents;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.name = name;
         this.deviceID = deviceID;
-        this.facility = facility;
+        this.facilityName = facilityname;
     }
 
-    public void setFacility(boolean facility) {this.facility = facility;}
-    public boolean getFacility() {return this.facility;}
+    public void setFacilityName(String facilityName) {this.facilityName = facilityName;}
+    public String getFacilityName() {return this.facilityName;}
 
     /**
      * Getter for allEvents

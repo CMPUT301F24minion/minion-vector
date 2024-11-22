@@ -56,6 +56,9 @@ public class Admin {
      */
     public void removeEvent(Event event, ArrayList<Event> eventList, EventsAdapter eventsAdapter) {
 
+        Notification notification = new Notification(event.getEventOrganizer());
+
+        notification.sendRemoveEventNotification(this);
 
         CollectionReference eventsRef = db.getEventsRef();
 
@@ -77,6 +80,9 @@ public class Admin {
      * @param user every image is linked to a user
      */
     public void removeUserImage(User user) {
+
+        Notification notifcation = new Notification(user.getDeviceID());
+        notifcation.sendRemovedProfileImageNotification(this);
 
         CollectionReference userRef = db.getUsersRef();
         CollectionReference all_userRef = db.getAll_UsersRef();
@@ -106,6 +112,8 @@ public class Admin {
      */
 
     public void removeEventImage(Event event) {
+        Notification notification = new Notification(event.getEventOrganizer());
+        notification.sendRemovedEventImageNotification(this);
 
         CollectionReference eventsRef = db.getEventsRef();
         eventsRef.document(event.getEventID())
@@ -139,6 +147,8 @@ public class Admin {
      */
     public void removeUserProfile(User user) {
         String userDeviceID = user.getDeviceID();
+        Notification notification = new Notification(userDeviceID);
+        notification.sendRemoveAccountNotification(this);
 
 
         // Step 1: Get Firestore references for the user
