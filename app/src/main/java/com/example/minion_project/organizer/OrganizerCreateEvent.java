@@ -53,7 +53,6 @@ public class OrganizerCreateEvent extends Fragment {
     private String selectedDate = "";
     private String selectedTime = "";
     private ImageView eventImageView;
-    private Button editFacilityButton;
     private Organizer Organizer;
     // contoller
     private OrganizerController organizerController;
@@ -73,20 +72,8 @@ public class OrganizerCreateEvent extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
 
-        // Check if the facilityID is empty
-        if (!organizerController.getOrganizer().getFacility()) {
 
-            // Redirect to FacilityFragment
-            OrganizerFacility facilityFragment = new OrganizerFacility(organizerController);
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(container.getId(), facilityFragment)
-                    .addToBackStack(null) // Add this transaction to the back stack
-                    .commit();
-            return null; // Return null to stop further execution
-        }
-
-        // Proceed with setting up views if facilityID is not empty
+        // Find views by ID
         selectTime = view.findViewById(R.id.selectTimeButton);
         selectDate = view.findViewById(R.id.selectDateButton);
         uploadImage = view.findViewById(R.id.uploadImageButton);
@@ -95,27 +82,20 @@ public class OrganizerCreateEvent extends Fragment {
         createEventDetails = view.findViewById(R.id.createEventDetailsEditText);
         createEventInvitations = view.findViewById(R.id.createEventInvitationsEditText);
         eventImageView = view.findViewById(R.id.eventImageView);
-        editFacilityButton = view.findViewById(R.id.editFacilityButton);
+        facilityName = view.findViewById(R.id.facilityName);
+        // Set listeners for buttons
 
-        // Set up listeners for buttons
+        if (organizerController.getOrganizer() != null) {
+            facilityName.setText(organizerController.getOrganizer().getFacilityName());
+        }
+
         selectTime.setOnClickListener(v -> openTimePickerDialog());
         selectDate.setOnClickListener(v -> openDatePickerDialog());
         uploadImage.setOnClickListener(v -> uploadImage());
         createEventButton.setOnClickListener(v -> createEvent());
 
-        editFacilityButton.setOnClickListener(v -> {
-            // Navigate to OrganizerFacility fragment
-            OrganizerFacility facilityFragment = new OrganizerFacility(organizerController);
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frameLayoutOrganizer, facilityFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-
         return view;
     }
-
 
     private void openTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
@@ -193,6 +173,7 @@ public class OrganizerCreateEvent extends Fragment {
         event.setEventDate(selectedDate);
         event.setEventTime(selectedTime);
         event.setEventOrganizer(Organizer.getDeviceID());
+        event.setFacilityName(facility);
 
         updateOrganizerFacilityName(facility);
 
