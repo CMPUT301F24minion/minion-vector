@@ -57,7 +57,6 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
                                 public void onClick(DialogInterface dialog, int id) {
                                     // Handle Accept action
                                     Toast.makeText(context, "You have accepted the invitation!", Toast.LENGTH_SHORT).show();
-
                                     //set the user to enrolled
                                     userController.AcceptInvite(event.getEventID());
                                     event.setStatus("enrolled");  // Assuming the status will be "enrolled" after accept
@@ -67,8 +66,12 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
                             })
                             .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-
                                     Toast.makeText(context, "You have declined the invitation!", Toast.LENGTH_SHORT).show();
+
+                                    //set the event to declined
+                                    userController.DeclineInvite(event.getEventID());
+                                    event.setStatus("declined");  // Assuming the status will be "enrolled" after accept
+                                    notifyItemChanged(position);
                                 }
                             })
                             .create()

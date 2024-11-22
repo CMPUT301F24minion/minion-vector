@@ -115,7 +115,7 @@ public class UserController {
                                 .update("Events."+event.getEventID(), "enrolled")
                                 .addOnSuccessListener(aVoid -> {
                                     // If the Firestore update is successful, add the event to the local user object
-                                    user.addEvent(event, "joined");
+                                    user.addEvent(event, "enrolled");
                                 });
                         eventController.addToEventsEnrolled(event,user.getDeviceID());
                         eventController.removeFromInvited(event,user.getDeviceID());
@@ -133,6 +133,45 @@ public class UserController {
 
     return FALSE;
     };
+    public Boolean DeclineInvite(String eventID) {
+        //fetch eventfirst
+        Event event = eventController.getEvent(eventID, new EventController.EventCallback() {
+            @Override
+            public void onEventFetched(Event event) {
+
+                // Prepare the data to be added to Firestore
+                Map<String, String> eventData = new HashMap<>();
+
+                // Check that event data is valid and not empty
+                if (event.getEventID() != null && !event.getEventID().isEmpty() &&
+                        event.getEventName() != null && !event.getEventName().isEmpty()) {
+
+
+                    // Update the user's document with the new event
+                    usersRef.document(user.getDeviceID())
+                            .update("Events."+event.getEventID(), "declined")
+                            .addOnSuccessListener(aVoid -> {
+                                // If the Firestore update is successful, add the event to the local user object
+                                user.addEvent(event, "declined");
+                            });
+                    // add to events rejected also pools one random user for lottery
+                    eventController.addToEventsRejected(event,user.getDeviceID());
+                    eventController.removeFromInvited(event,user.getDeviceID());
+
+                } else {
+                    Log.e("UserController", "Event data is invalid: Event ID or Event Name is empty.");
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+            }
+
+            ;
+        });
+
+        return FALSE;
+    }
 
     //fetch user infor with new info
     public void fetchUser(){
@@ -203,5 +242,6 @@ public class UserController {
             Log.e("UserController", "Event not found in user's list: " + event.getEventID());
         }
     }
+
 
 }
