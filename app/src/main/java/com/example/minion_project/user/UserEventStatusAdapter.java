@@ -38,8 +38,12 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserEvent event = eventList.get(position);
-        if (!"invited".equals(event.getStatus())) {
-            holder.eventSelectedTextView.setText(""); // Safe comparison and prevents NPE
+        if ("invited".equals(event.getStatus())) {
+            holder.eventSelectedTextView.setVisibility(View.VISIBLE);
+        }else if ("rejected".equals(event.getStatus() )|| "declined".equals(event.getStatus())){
+            holder.eventRejectedView.setVisibility(View.VISIBLE);
+        }else if ("enrolled".equals(event.getStatus())) {
+            holder.eventAcceptedView.setVisibility(View.VISIBLE);
         }
 
         holder.eventTitle.setText("Title: " + event.getEventName());
@@ -62,6 +66,9 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
         public TextView eventStatus;
         public TextView eventsDate;
         public  TextView eventSelectedTextView;
+        public TextView eventRejectedView;
+        public TextView eventAcceptedView;
+
         public ViewHolder(View view) {
             super(view);
             eventsDate = view.findViewById(R.id.eventDate);
@@ -69,6 +76,8 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
             eventDetails = view.findViewById(R.id.eventDetails);
             eventStatus = view.findViewById(R.id.eventStatus);
             eventSelectedTextView=view.findViewById(R.id.selectionMessage);
+            eventRejectedView=view.findViewById(R.id.rejectedMessage);
+            eventAcceptedView=view.findViewById(R.id.enrolledMessage);
 
         }
     }
