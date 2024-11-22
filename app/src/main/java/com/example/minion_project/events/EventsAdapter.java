@@ -68,6 +68,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     }
 
     private void fetchFacilityName(String organizerID, TextView facilityTextView) {
+        if (organizerID == null || organizerID.isEmpty()) {
+            facilityTextView.setText("Facility: Unknown");
+            return;
+        }
         FirebaseFirestore.getInstance().collection("Organizers")
                 .document(organizerID)
                 .get()
