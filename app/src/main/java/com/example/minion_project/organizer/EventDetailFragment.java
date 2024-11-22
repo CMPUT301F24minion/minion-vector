@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class EventDetailFragment extends Fragment {
     TextView eventAcceptedCount ;
     TextView eventDeclinedCount ;
     TextView eventPendingCount ;
-
+    EditText eventNumberOfApplicants;
     Button eventRunLottery;
     EventController eventController;
 
@@ -63,18 +64,23 @@ public class EventDetailFragment extends Fragment {
         eventAcceptedCount = view.findViewById(R.id.eventAcceptedCount);
         eventDeclinedCount = view.findViewById(R.id.eventDeclinedCount);
         eventPendingCount = view.findViewById(R.id.eventPendingCount);
+        eventNumberOfApplicants=view.findViewById(R.id.eventNumberOfApplicants);
         if (getArguments() != null) {
             String eventId = (String) getArguments().getSerializable("event");
             fetchEventData(eventId);
         }
         eventRunLottery.setOnClickListener(v->{
-            handleLottery();
+            String applicantsStr = eventNumberOfApplicants.getText().toString();
+            if (!applicantsStr.isEmpty()) {
+                int numberOfApplicants = Integer.parseInt(applicantsStr);
+                handleLottery(numberOfApplicants);
+            }
         });
 
         return view;
     }
-    private void  handleLottery(){
-        lottery.poolApplicants();
+    private void  handleLottery(Integer num){
+        lottery.poolApplicants(num);
 
     };
     private void fetchEventData(String eventID) {

@@ -67,6 +67,15 @@
         android:text="Users invited count 📩:"
         android:textSize="16sp"
         android:textColor="@android:color/darker_gray"/>
+    <EditText
+        android:id="@+id/eventNumberOfApplicants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+    android:hint="Enter number of applicants"
+    android:textSize="16sp"
+    android:textColor="@android:color/black"/>
+
     <Button
         android:id="@+id/eventRunLottery"
         android:layout_width="wrap_content"

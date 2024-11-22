@@ -23,7 +23,7 @@ public class Lottery {
 
     }
 
-    public void poolApplicants(){
+    public void poolApplicants(Integer numberToPool){
         // first we get the list of all people in waitlist
         ArrayList<String> eventsWaitlist=event.getEventWaitlist();
         // Log.d("poolApplicants", String.valueOf(eventsWaitlist));
@@ -31,6 +31,7 @@ public class Lottery {
         // next we sample from this pool eventCapacity random users
         // and save into an array called processPooled
         int numberOfApplicantsToPool = Math.min(eventsWaitlist.size(), event.getEventCapacity());
+        numberOfApplicantsToPool=Math.min(numberToPool,numberOfApplicantsToPool);
         ArrayList<String> processPooled = new ArrayList<>();
         Random random = new Random();
 
