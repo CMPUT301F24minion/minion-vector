@@ -1,5 +1,8 @@
 package com.example.minion_project.organizer;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,9 @@ import com.example.minion_project.Lottery.Lottery;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +32,8 @@ import com.example.minion_project.events.EventController;
  * create an instance of this fragment.
  */
 public class EventDetailFragment extends Fragment {
+    private static final int PICK_IMAGE_REQUEST = 1;  // Request code for image picker
+    private Uri newImageUri;  // To store the selected image URI
 
     ImageView eventImage;
     TextView eventNameTextView;
@@ -73,6 +81,10 @@ public class EventDetailFragment extends Fragment {
             String eventId = (String) getArguments().getSerializable("event");
             fetchEventData(eventId);
         }
+
+        // Set click listener on the event image
+        eventImage.setOnClickListener(v -> openImagePicker());
+
         eventRunLottery.setOnClickListener(v->{
             String applicantsStr = eventNumberOfApplicants.getText().toString();
             if (!applicantsStr.isEmpty()) {
@@ -83,6 +95,58 @@ public class EventDetailFragment extends Fragment {
 
         return view;
     }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            newImageUri = data.getData();
+            if (event != null && newImageUri != null) {
+                replaceEventImage(newImageUri);
+            } else {
+                Toast.makeText(getContext(), "Error selecting image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void replaceEventImage(Uri newImageUri) {
+        String oldImageUrl = event.getEventImage();
+        String newImageName = "event_images/" + event.getEventID() + "_new.jpg";
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference newImageRef = storage.getReference(newImageName);
+
+        newImageRef.putFile(newImageUri)
+                .addOnSuccessListener(taskSnapshot -> newImageRef.getDownloadUrl().addOnSuccessListener(newImageUrl -> {
+                    // Update Firestore with the new image URL
+                    FirebaseFirestore.getInstance()
+                            .collection("Events")
+                            .document(event.getEventID())
+                            .update("eventImage", newImageUrl.toString())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "Image updated successfully!", Toast.LENGTH_SHORT).show();
+                                event.setEventImage(newImageUrl.toString());
+                                // Update the displayed image
+                                Glide.with(getActivity())
+                                        .load(newImageUrl.toString())
+                                        .into(eventImage);
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Failed to update event image", Toast.LENGTH_SHORT).show();
+                            });
+                }))
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to upload new image", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void  handleLottery(Integer num){
         lottery.poolApplicants(num);
 
