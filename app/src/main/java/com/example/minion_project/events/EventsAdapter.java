@@ -3,12 +3,15 @@
  */
 
 package com.example.minion_project.events;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -31,9 +34,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     public interface OnItemClickListener {
         void onItemClick(Event event);
     }
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
+
     public interface OnImageSelectListener {
         void onImageSelect(Event event);
     }
@@ -48,6 +49,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         this(context, eventList, null);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setOnImageSelectListener(OnImageSelectListener listener) {
+        this.imageSelectListener = listener;
+    }
+
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -60,7 +69,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         Event event = eventList.get(position);
         holder.eventName.setText(event.getEventName());
         holder.eventDate.setText("Date: " + event.getEventDate());
-        fetchFacilityName(event.getEventOrganizer(), holder.facilityName);
+        fetchFacilityDetails(event.getEventOrganizer(), holder.facilityName);
 
         String imageUrl = event.getEventImage();
         Glide.with(context)
@@ -68,11 +77,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                 .placeholder(R.drawable.baseline_add)
                 .into(holder.eventImage);
 
+        // Click listener for image
         holder.eventImage.setOnClickListener(v -> {
             if (imageSelectListener != null) {
-                imageSelectListener.onImageSelect(event); // Notify listener
+                imageSelectListener.onImageSelect(event);
             }
         });
+
+        // Click listener for item
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(event);  // Trigger listener when an item is clicked
@@ -80,32 +92,43 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         });
     }
 
-    private void fetchFacilityName(String organizerID, TextView facilityTextView) {
+    private void fetchFacilityDetails(String organizerID, TextView facilityTextView) {
         if (organizerID == null || organizerID.isEmpty()) {
             facilityTextView.setText("Facility: Unknown");
             return;
         }
-        FirebaseFirestore.getInstance().collection("Organizers")
+
+        FirebaseFirestore.getInstance().collection("Facility")
                 .document(organizerID)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String facilityName = documentSnapshot.getString("facilityName");
-                        facilityTextView.setText("Facility: " + facilityName);
+                        String facilityName = documentSnapshot.getString("facilityID");
+                        String facilityImageURL = documentSnapshot.getString("facilityImage");
+
+                        if (facilityName != null) {
+                            facilityTextView.setText("Facility: " + facilityName);
+                        } else {
+                            facilityTextView.setText("Facility: Unknown");
+                        }
+
+                        // Debug log for the facility image URL
+                        if (facilityImageURL != null) {
+                            Log.d("FacilityDetails", "Facility Image URL: " + facilityImageURL);
+                        }
                     } else {
                         facilityTextView.setText("Facility: Unknown");
                     }
                 })
-                .addOnFailureListener(e -> facilityTextView.setText("Facility: Error"));
+                .addOnFailureListener(e -> {
+                    facilityTextView.setText("Facility: Error");
+                    Log.e("FacilityDetails", "Error fetching facility details", e);
+                });
     }
 
     @Override
     public int getItemCount() {
         return eventList.size();
-    }
-
-    public void setOnImageSelectListener(OnImageSelectListener listener) {
-        this.imageSelectListener = listener;
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
