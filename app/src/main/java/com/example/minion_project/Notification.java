@@ -74,26 +74,6 @@ public class Notification {
     public void sendChosenEntrantNotification(Context context) {
         saveNotificationToFirestore(getReceiver(), "Event Update", CHOSEN_MESSAGE);
     }
-
-    // Dynamic Notification Method for Removed Profile Image
-    public void sendRemovedProfileImageNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVED_PROFILE_IMAGE);
-    }
-
-    // Dynamic Notification Method for Removed Event Image
-    public void sendRemovedEventImageNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVED_EVENT_IMAGE);
-    }
-
-    // Dynamic Notification Method for Account Removal
-    public void sendRemoveAccountNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVE_ACCOUNT);
-    }
-
-    // Dynamic Notification Method for Event Removal
-    public void sendRemoveEventNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVE_EVENT);
-    }
     public void sendAnotherChanceNotification(Context context) {
         saveNotificationToFirestore(getReceiver(), "Event Update", ANOTHER_CHANCE_MESSAGE);
     }

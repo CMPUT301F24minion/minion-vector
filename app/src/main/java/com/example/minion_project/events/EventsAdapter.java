@@ -4,6 +4,7 @@
 
 package com.example.minion_project.events;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         Event event = eventList.get(position);
         holder.eventName.setText(event.getEventName());
         holder.eventDate.setText("Date: " + event.getEventDate());
-        fetchFacilityName(event.getEventOrganizer(), holder.facilityName);
+        fetchFacilityDetails(event.getEventOrganizer(), holder.facilityName);
 
         String imageUrl = event.getEventImage();
         Glide.with(context)
@@ -80,24 +81,50 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         });
     }
 
+<<<<<<< Updated upstream
     private void fetchFacilityName(String organizerID, TextView facilityTextView) {
         if (organizerID == null || organizerID.isEmpty()) {
             facilityTextView.setText("Facility: Unknown");
             return;
         }
         FirebaseFirestore.getInstance().collection("Organizers")
+=======
+    private void fetchFacilityDetails(String organizerID, TextView facilityTextView) {
+
+        if (organizerID == null || organizerID.isEmpty()) {
+            facilityTextView.setText("Facility: blank");
+            return;
+        }
+        FirebaseFirestore.getInstance().collection("Facility")
+>>>>>>> Stashed changes
                 .document(organizerID)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String facilityName = documentSnapshot.getString("facilityName");
-                        facilityTextView.setText("Facility: " + facilityName);
+                        String facilityName = documentSnapshot.getString("facilityID"); // Fetch facility name
+                        String facilityImageURL = documentSnapshot.getString("facilityImage"); // Fetch image URL
+
+                        if (facilityName != null) {
+                            facilityTextView.setText("Facility: " + facilityName);
+                        } else {
+                            facilityTextView.setText("Facility: Unknown");
+                        }
+
+                        // Log or store the image URL for future use
+                        if (facilityImageURL != null) {
+                            // Log the image URL for debugging or future usage
+                            Log.d("FacilityDetails", "Image URL: " + facilityImageURL);
+                        }
                     } else {
                         facilityTextView.setText("Facility: Unknown");
                     }
                 })
-                .addOnFailureListener(e -> facilityTextView.setText("Facility: Error"));
+                .addOnFailureListener(e -> {
+                    facilityTextView.setText("Facility: Error");
+                    Log.e("FacilityDetails", "Error fetching facility details", e);
+                });
     }
+
 
     @Override
     public int getItemCount() {
