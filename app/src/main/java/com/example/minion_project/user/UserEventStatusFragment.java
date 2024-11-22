@@ -51,7 +51,7 @@ public class UserEventStatusFragment extends Fragment {
 
         // Prepare event data (this can be dynamic or fetched from a database)
         eventList = new ArrayList<>();
-        adapter = new UserEventStatusAdapter(getContext(), eventList);
+        adapter = new UserEventStatusAdapter(getContext(), eventList, userController);
         // Set the adapter
         userEventStatusRecyclerView.setAdapter(adapter);
 
@@ -62,10 +62,7 @@ public class UserEventStatusFragment extends Fragment {
         super.onResume();
         // get user info incase they were selcted
         userController.fetchUser();
-        HashMap<String, String> eventIds = userController.user.getAllEvents();
-        for (Map.Entry<String, String> entry : eventIds.entrySet()) {
-            Log.e("Event Log", entry.getKey() + " = " + entry.getValue());
-        }
+
 
         fetchEvents();
     }
@@ -98,7 +95,6 @@ public class UserEventStatusFragment extends Fragment {
                         Log.e("userfrag", "SUCCESS to add event: " + uEvent);
 
                         if (uEvent != null) {
-//                            uEvent.setEventID(document.getId());
                             eventList.add(uEvent);
                             adapter.notifyItemInserted(eventList.size() - 1);
                         }

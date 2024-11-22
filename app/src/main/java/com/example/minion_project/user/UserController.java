@@ -96,6 +96,43 @@ public class UserController {
             }
         }
     }
+    public Boolean AcceptInvite(String eventId) {
+        //fetch eventfirst
+        Event event = eventController.getEvent(eventId, new EventController.EventCallback() {
+            @Override
+            public void onEventFetched(Event event) {
+
+                    // Prepare the data to be added to Firestore
+                    Map<String, String> eventData = new HashMap<>();
+
+                    // Check that event data is valid and not empty
+                    if (event.getEventID() != null && !event.getEventID().isEmpty() &&
+                            event.getEventName() != null && !event.getEventName().isEmpty()) {
+
+
+                        // Update the user's document with the new event
+                        usersRef.document(user.getDeviceID())
+                                .update("Events."+event.getEventID(), "enrolled")
+                                .addOnSuccessListener(aVoid -> {
+                                    // If the Firestore update is successful, add the event to the local user object
+                                    user.addEvent(event, "joined");
+                                });
+                        eventController.addToEventsEnrolled(event,user.getDeviceID());
+                        eventController.removeFromInvited(event,user.getDeviceID());
+                    } else {
+                        Log.e("UserController", "Event data is invalid: Event ID or Event Name is empty.");
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+            }
+
+            ;
+        });
+
+    return FALSE;
+    };
 
     //fetch user infor with new info
     public void fetchUser(){

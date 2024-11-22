@@ -128,6 +128,44 @@ public class EventController {
                 });
     }
 
+    public void addToEventsEnrolled(Event event, String userid) {
+        eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+
+                if (document.exists()) {
+                    // Use Firestore's arrayUnion to add "complete" to the eventWaitlist array
+                    eventsRef.document(event.getEventID())
+                            .update("eventEnrolled", FieldValue.arrayUnion(userid))
+                            .addOnSuccessListener(aVoid -> {
+                                // Successfully added to the waitlist
+                                Log.d("EventUpdate", "Successfully added  to the enrolled.");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure
+                                Log.e("EventUpdate", "Error adding 'complete' to the enrolled", e);
+                            });
+                } else {
+                    Log.e("EventUpdate", "Event document does not exist.");
+                }
+            } else {
+                Log.e("EventUpdate", "Failed to fetch event document", task.getException());
+            }
+        });
+    }
+
+    public void removeFromInvited(Event event, String UserID) {
+        eventsRef.document(event.getEventID()).update("eventInvited", FieldValue.arrayRemove(UserID))
+                .addOnSuccessListener(aVoid -> {
+                    // Log success message
+                    Log.d("Firestore", "User " + UserID + " successfully removed from the invited for event " + event.getEventID());
+                })
+                .addOnFailureListener(e -> {
+                    // Log failure message
+                    Log.e("Firestore", "Error removing user " + UserID + " from the invited for event " + event.getEventID(), e);
+                });
+    }
+
 
     /**
      * EventCallback interface for handling event-related callbacks
