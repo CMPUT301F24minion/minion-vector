@@ -35,7 +35,7 @@
                 android:id="@+id/eventDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="Description: "
                 android:textColor="@android:color/darker_gray"
                 android:textSize="14sp" />
             <TextView
@@ -52,6 +52,16 @@
                 android:id="@+id/eventDate"
                 android:textSize="14sp">
             </TextView>
+            <TextView
+                android:id="@+id/selectionMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔥🔥🔥🔥🔥 Wohooo, you've been selected! Please Click on me to accept or decline"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="16dp" />
+
         </LinearLayout>
 
     </RelativeLayout>

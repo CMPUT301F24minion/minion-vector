@@ -9,15 +9,25 @@ import static java.lang.Boolean.TRUE;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
 import com.example.minion_project.organizer.Organizer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +97,43 @@ public class UserController {
         }
     }
 
+    //fetch user infor with new info
+    public void fetchUser(){
+        usersRef.document(user.getDeviceID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            /**
+             * onComplete method for fetching user data
+             * @param task
+             */
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        Map<String, Object> data = document.getData();
+                        if (data!=null) {
+
+                            String name = (String) data.get("Name");
+                            String profileImageUrl = (String) data.get("profileImage");
+
+
+                            HashMap <String,String> events = (HashMap<String, String>)data.get("Events");
+
+                            String phoneNumber = (String) data.get("Phone_number");
+                            String email = (String) data.get("Email");
+                            String Location = (String) data.get("Location");
+                            HashMap <String, ArrayList> Notification = (HashMap<String, ArrayList>) data.get("Notfication");
+                            // Create the User object
+                            String deviceId=user.getDeviceID();
+                            user = new User(deviceId,name, email, phoneNumber,events, Location, Notification);
+
+
+                        }
+                    }
+
+                }
+            }
+        });
+    }
     /**
      * Removes the user from an event if their status is "joined".
      * This also removes the user from the event's waitlist.

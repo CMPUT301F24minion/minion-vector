@@ -38,6 +38,9 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserEvent event = eventList.get(position);
+        if (!"invited".equals(event.getStatus())) {
+            holder.eventSelectedTextView.setText(""); // Safe comparison and prevents NPE
+        }
 
         holder.eventTitle.setText("Title: " + event.getEventName());
         holder.eventDetails.setText("Description: "+event.getEventDescription());
@@ -45,10 +48,6 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
         holder.eventStatus.setText("Status: "+event.getStatus());
 
 
-        //        holder.eventDetails.setText(event.getEventDescription());
-
-        // Set event image (you could load images via Glide if needed)
-//        holder.eventImage.setImageResource(R.drawable.baseline_location);  // Replace with actual image resource
     }
 
     @Override
@@ -62,12 +61,15 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
         public TextView eventDetails;
         public TextView eventStatus;
         public TextView eventsDate;
+        public  TextView eventSelectedTextView;
         public ViewHolder(View view) {
             super(view);
             eventsDate = view.findViewById(R.id.eventDate);
             eventTitle = view.findViewById(R.id.eventTitle);
             eventDetails = view.findViewById(R.id.eventDetails);
             eventStatus = view.findViewById(R.id.eventStatus);
+            eventSelectedTextView=view.findViewById(R.id.selectionMessage);
+
         }
     }
 }

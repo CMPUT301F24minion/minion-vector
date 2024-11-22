@@ -122,8 +122,10 @@ public class UserActivity extends AppCompatActivity {
                 binding.textView.setText("Settings");
                 loadUserProfileImage();
             } else if (itemId == R.id.menu_user_updates) {
+
+
                 replaceFragment(new UserEventStatusFragment(userController));
-                binding.textView.setText("Notifications");
+                binding.textView.setText("Events Interacted");
                 loadUserProfileImage();
             } else if (itemId == R.id.menu_user_scan_qr) {
                 replaceFragment(new UserScanFragment(userController));
