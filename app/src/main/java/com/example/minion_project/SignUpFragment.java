@@ -151,7 +151,7 @@ public class SignUpFragment extends Fragment {
         Canvas canvas = new Canvas(bitmap);
 
         // Fill the background with a default color
-        canvas.drawColor(Color.LTGRAY); // Light gray background
+        canvas.drawColor(Color.WHITE); // Light gray background
 
         // Configure the Paint object to draw the text
         Paint paint = new Paint();
