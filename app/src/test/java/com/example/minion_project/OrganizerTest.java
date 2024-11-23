@@ -15,7 +15,7 @@ public class OrganizerTest {
         events.add("Event1");
         events.add("Event2");
 
-        Organizer organizer = new Organizer(events, "1234567890", "organizer@example.com", "John Doe", "device123", "fac");
+        Organizer organizer = new Organizer(events, "1234567890", "organizer@example.com", "John Doe", "device123", false);
 
         // verifying that the organizer fields are correctly
         assertEquals("device123", organizer.getDeviceID(), "Device ID should be 'device123'");
@@ -33,7 +33,7 @@ public class OrganizerTest {
     @Test
     void organizerGetterSetterTest() {
         // creating an organizer with an empty event list
-        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123", "fac");
+        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123", false);
 
         // verifying initial val
         assertEquals("device123", organizer.getDeviceID(), "Device ID should be 'device123'");
@@ -57,7 +57,7 @@ public class OrganizerTest {
     @Test
     void addEventTest() {
         // creating an organizer with an empty events list
-        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123", "fac");
+        Organizer organizer = new Organizer(new ArrayList<>(), "1234567890", "organizer@example.com", "John Doe", "device123", false);
 
         organizer.addEvent("New Event");
 
@@ -75,7 +75,7 @@ public class OrganizerTest {
     @Test
     void organizerEdgeCasesTest() {
         // creating an organizer with empty events list and no name or email
-        Organizer organizer = new Organizer(new ArrayList<>(), "", "", "", "", "");
+        Organizer organizer = new Organizer(new ArrayList<>(), "", "", "", "", false);
 
         // verifying that empty strings are handled correctly
         assertEquals("", organizer.getDeviceID(), "Device ID should be an empty string");

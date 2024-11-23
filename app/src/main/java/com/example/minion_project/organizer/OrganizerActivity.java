@@ -10,21 +10,17 @@
 
 package com.example.minion_project.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityOrganizerBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -39,6 +35,23 @@ public class OrganizerActivity extends AppCompatActivity {
     private CollectionReference organizersRef;
 
     public OrganizerController organizerController;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent != null) {
+            String action = intent.getAction();
+            if ("OPEN_FACILITY_FRAGMENT".equals(action)) {
+                replaceFragment(new OrganizerFacility(organizerController));
+            } else if ("OPEN_CREATE_EVENT_FRAGMENT".equals(action)) {
+                replaceFragment(new OrganizerCreateEvent(organizerController));
+            }
+        }
+    }
 
     /**
      * Initializes the activity, sets up the binding, and fetches the organizer data from Firestore.
@@ -65,19 +78,15 @@ public class OrganizerActivity extends AppCompatActivity {
                         ArrayList<String> events = (ArrayList<String>) data.get("Events");
                         String phoneNumber = (String) data.get("Phone_number");
                         String email = (String) data.get("Email");
-                        boolean facility = Boolean.TRUE.equals(data.get("Facility"));
+                        boolean facility = (boolean) data.get("Facility");
 
                         organizer = new Organizer(events, phoneNumber, email, name, android_id, facility);
                         organizerController = new OrganizerController(organizer);
 
-                        // Navigate to the appropriate fragment
                         String navigateTo = getIntent().getStringExtra("navigate_to");
                         if ("create_event".equals(navigateTo)) {
                             replaceFragment(new OrganizerCreateEvent(organizerController));
                             binding.organizerBottomNavigationView.setSelectedItemId(R.id.menu_organizer_create_event);
-                        } else {
-                            replaceFragment(new OrganizerEvents(organizerController));
-                            binding.organizerBottomNavigationView.setSelectedItemId(R.id.menu_organizer_events);
                         }
                     }
                 }
@@ -98,16 +107,11 @@ public class OrganizerActivity extends AppCompatActivity {
             return true;
         });
     }
-
-
-    /**
-     * Replaces the current fragment with a new fragment
-     * @param fragment the fragment to be displayed
-     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayoutOrganizer, fragment);
         fragmentTransaction.commit();
     }
+
 }
