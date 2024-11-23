@@ -216,7 +216,7 @@ public class SignUpFragment extends Fragment {
             organizer.put("Phone_number", phone);
             ArrayList<String> events = new ArrayList<>();
             organizer.put("Events", events);
-            organizer.put("Facility", null);
+            organizer.put("Facility", false);
             saveDocument(organizersRef, organizer);
         }
         if (userSelected) {
