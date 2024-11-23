@@ -59,10 +59,12 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
         Notification notification = new Notification(android_id);
+        notification.addUserToNotificationWon(android_id);
 
 
 
         loginBtn.setOnClickListener(new View.OnClickListener()
+
 
         {
             /**
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {// Get device id
                 android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+
 
                 // Check if user exists
                 All_UsersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

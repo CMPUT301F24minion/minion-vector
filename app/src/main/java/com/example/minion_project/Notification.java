@@ -1,18 +1,19 @@
 package com.example.minion_project;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.minion_project.admin.Admin;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 import java.util.Map;
 
 public class Notification {
@@ -24,15 +25,14 @@ public class Notification {
     private static final String CHANNEL_ID = "my_channel_id";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    // Predefined messages
-    private static final String JOINED_EVENT_MESSAGE = "Thank you for joining the event!";
-    private static final String NOT_CHOSEN_MESSAGE = "You have not been chosen for the event, sorry.";
-    private static final String CHOSEN_MESSAGE = "You have been chosen to attend the event, congratulations!";
-    private static final String REMOVED_PROFILE_IMAGE = "Your profile picture has been removed for violating policy.";
-    private static final String REMOVED_EVENT_IMAGE = "Your event image has been removed for violating policy.";
-    private static final String REMOVE_ACCOUNT = "Your account has been removed because it violated policy.";
-    private static final String REMOVE_EVENT = "Your event has been removed for violating policy.";
-    private static final String ANOTHER_CHANCE_MESSAGE = "You have another chance to participate in the event.";
+    // Predefined document IDs for the four notification types
+    private static final String Won = "Won_lottery";
+    private static final String Lost = "lost_lottery";
+    private static final String cancelled = "cancelled_event";
+    private static final String waitlisted = "waitlistlist_entrants";
+
+    // Predefined messages (assumed to be stored in Firestore documents)
+    // If you have constants in code, you can use them here
 
     // Default constructor
     public Notification() {
@@ -43,9 +43,7 @@ public class Notification {
     public Notification(String receiver) {
         this.receiver = receiver;
         this.uniqueDocumentID = db.collection("Notifications").document().getId(); // Generate unique ID at creation
-
     }
-
 
     public String getUniqueDocumentID() {
         return uniqueDocumentID;
@@ -58,44 +56,6 @@ public class Notification {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
-    }
-
-    // Dynamic Notification Method for Joined Event
-    public void sendJoinedEventNotification(Context context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", JOINED_EVENT_MESSAGE);
-    }
-
-    // Dynamic Notification Method for Not Chosen Entrant
-    public void sendNotChosenEntrantNotification(Context context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", NOT_CHOSEN_MESSAGE);
-    }
-
-    // Dynamic Notification Method for Chosen Entrant
-    public void sendChosenEntrantNotification(Context context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", CHOSEN_MESSAGE);
-    }
-
-    // Dynamic Notification Method for Removed Profile Image
-    public void sendRemovedProfileImageNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVED_PROFILE_IMAGE);
-    }
-
-    // Dynamic Notification Method for Removed Event Image
-    public void sendRemovedEventImageNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVED_EVENT_IMAGE);
-    }
-
-    // Dynamic Notification Method for Account Removal
-    public void sendRemoveAccountNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVE_ACCOUNT);
-    }
-
-    // Dynamic Notification Method for Event Removal
-    public void sendRemoveEventNotification(Admin context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", REMOVE_EVENT);
-    }
-    public void sendAnotherChanceNotification(Context context) {
-        saveNotificationToFirestore(getReceiver(), "Event Update", ANOTHER_CHANCE_MESSAGE);
     }
 
     // General sendNotification method
@@ -112,53 +72,118 @@ public class Notification {
     }
 
     /**
-     * Queries Firestore for notifications matching the target Android ID and sends them.
+     * Checks each notification document to see if the user's Android ID is present in the array.
+     * If found, sends the notification and removes the Android ID from the array.
+     *
      * @param context The application context.
      */
     public void checkAndSendNotifications(Context context) {
-        db.collection("Notifications")  // Collection name
-                .whereEqualTo("androidID", getReceiver())  // Query for matching androidID
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                String title = document.getString("title");  // Notification title
-                                String message = document.getString("message");  // Notification message
-                                // Send notification using dynamic content from Firestore
-                                sendNotification(context, title, message);
-                            }
-                        } else {
-                            System.out.println("No matching notifications for this Android ID.");
-                        }
+        checkAndSendNotificationForDocument(context, Won);
+        checkAndSendNotificationForDocument(context, Lost);
+        checkAndSendNotificationForDocument(context, cancelled);
+        checkAndSendNotificationForDocument(context, waitlisted);
+    }
+
+    private void checkAndSendNotificationForDocument(Context context, String documentID) {
+        DocumentReference docRef = db.collection("Notifications").document(documentID);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // Get the IDs array
+                    List<String> androidIDs = (List<String>) document.get("ID");
+                    if (androidIDs != null && androidIDs.contains(getReceiver())) {
+                        String title = document.getString("Title");
+                        String message = document.getString("Message");
+
+                        // Send notification
+                        sendNotification(context, title, message);
+
+                        // Remove the androidID from the array after sending
+                        androidIDs.remove(getReceiver());
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("ID", androidIDs);
+
+                        docRef.update(updates).addOnSuccessListener(aVoid -> {
+                            System.out.println("AndroidID removed from notification document after sending.");
+                        }).addOnFailureListener(e -> {
+                            System.err.println("Error updating notification document: " + e.getMessage());
+                        });
                     } else {
-                        System.err.println("Error fetching documents: " + task.getException().getMessage());
+                        System.out.println("AndroidID not found in notification document: " + documentID);
                     }
-                });
+                } else {
+                    System.out.println("Notification document does not exist: " + documentID);
+                }
+            } else {
+                System.err.println("Error getting notification document: " + task.getException().getMessage());
+            }
+        });
     }
 
-    private void saveNotificationToFirestore(String androidID, String title, String message) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Create a unique document ID
-
-        // Prepare notification data
-        Map<String, Object> notificationData = new HashMap<>();
-        notificationData.put("androidID", androidID);
-        notificationData.put("title", title);
-        notificationData.put("message", message);
-        notificationData.put("timestamp", new Date()); // Optional: to sort notifications
-
-        // Save the data to Firestore under the unique document ID
-        db.collection("Notifications").document(uniqueDocumentID).set(notificationData)
-                .addOnSuccessListener(aVoid -> {
-                    System.out.println("Notification saved successfully.");
-                })
-                .addOnFailureListener(e -> {
-                    System.err.println("Error saving notification: " + e.getMessage());
-                });
+    // Methods to add user to each notification type
+    public void addUserToNotificationWon(String androidID) {
+        addUserToNotificationDocument(Won, androidID);
     }
 
+    public void addUserToNotificationLost(String androidID) {
+        addUserToNotificationDocument(Lost, androidID);
+    }
 
+    public void addUserToNotificationCancelled(String androidID) {
+        addUserToNotificationDocument(cancelled, androidID);
+    }
+
+    public void addUserToNotificationWaitlisted(String androidID) {
+        addUserToNotificationDocument(waitlisted, androidID);
+    }
+
+    private void addUserToNotificationDocument(String documentID, String androidID) {
+        DocumentReference docRef = db.collection("Notifications").document(documentID);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // Get the existing IDs array
+                    List<String> androidIDs = (List<String>) document.get("ID");
+                    if (androidIDs == null) {
+                        androidIDs = new ArrayList<>();
+                    }
+                    // Add the androidID if not already present
+                    if (!androidIDs.contains(androidID)) {
+                        androidIDs.add(androidID);
+
+                        // Update the document with new IDs array
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("ID", androidIDs);
+
+                        docRef.update(updates).addOnSuccessListener(aVoid -> {
+                            System.out.println("Notification document updated successfully.");
+                        }).addOnFailureListener(e -> {
+                            System.err.println("Error updating notification document: " + e.getMessage());
+                        });
+                    } else {
+                        System.out.println("AndroidID already exists in notification document: " + documentID);
+                    }
+                } else {
+                    // Document does not exist, create it
+                    Map<String, Object> data = new HashMap<>();
+                    List<String> androidIDs = new ArrayList<>();
+                    androidIDs.add(androidID);
+                    data.put("ID", androidIDs);
+                    // message and title are constants; assume they are already set in Firestore
+
+                    docRef.set(data).addOnSuccessListener(aVoid -> {
+                        System.out.println("Notification document created successfully.");
+                    }).addOnFailureListener(e -> {
+                        System.err.println("Error creating notification document: " + e.getMessage());
+                    });
+                }
+            } else {
+                System.err.println("Error getting notification document: " + task.getException().getMessage());
+            }
+        });
+    }
 }
