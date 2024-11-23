@@ -8,14 +8,13 @@ package com.example.minion_project.organizer;
 
 import java.util.ArrayList;
 
-
 public class Organizer {
     private String deviceID;
     private String name;
     private String email;
     private String phoneNumber;
     private ArrayList<String> allEvents;
-    private String facilityName;
+    private boolean facility;
 
     public Organizer() {
         this.allEvents = null;
@@ -23,8 +22,7 @@ public class Organizer {
         this.email = "";
         this.name = "";
         this.deviceID = "";
-        this.facilityName = "";
-
+        this.facility = false;
     }
 
     /**
@@ -34,18 +32,32 @@ public class Organizer {
      * @param email organizer's email
      * @param name organizer's name
      * @param deviceID organizer's device ID
+     * @param facility indicates if the organizer has a facility
      */
-    public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID, String facilityname) {
+    public Organizer(ArrayList<String> allEvents, String phoneNumber, String email, String name, String deviceID, boolean facility) {
         this.allEvents = allEvents;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.name = name;
         this.deviceID = deviceID;
-        this.facilityName = facilityname;
+        this.facility = facility;
     }
 
-    public void setFacilityName(String facilityName) {this.facilityName = facilityName;}
-    public String getFacilityName() {return this.facilityName;}
+    /**
+     * Getter for facility
+     * @return facility
+     */
+    public boolean getFacility() {
+        return facility;
+    }
+
+    /**
+     * Setter for facility
+     * @param facility boolean indicating if the organizer has a facility
+     */
+    public void setFacility(boolean facility) {
+        this.facility = facility;
+    }
 
     /**
      * Getter for allEvents
@@ -57,7 +69,7 @@ public class Organizer {
 
     /**
      * Setter for allEvents
-     * @param allEvents
+     * @param allEvents list of events the organizer is associated with
      */
     public void setAllEvents(ArrayList<String> allEvents) {
         this.allEvents = allEvents;
@@ -73,7 +85,7 @@ public class Organizer {
 
     /**
      * Setter for phoneNumber
-     * @param phoneNumber
+     * @param phoneNumber organizer's phone number
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -85,11 +97,10 @@ public class Organizer {
      */
     public void addEvent(String event) {
         this.allEvents.add(event);
-
     }
 
     /**
-     * getter for email
+     * Getter for email
      * @return email
      */
     public String getEmail() {
@@ -97,15 +108,15 @@ public class Organizer {
     }
 
     /**
-     * setter for email
-     * @param email
+     * Setter for email
+     * @param email organizer's email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * getter for name
+     * Getter for name
      * @return name
      */
     public String getName() {
@@ -113,15 +124,15 @@ public class Organizer {
     }
 
     /**
-     * setter for name
-     * @param name
+     * Setter for name
+     * @param name organizer's name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * getter for deviceID
+     * Getter for deviceID
      * @return deviceID
      */
     public String getDeviceID() {
@@ -129,8 +140,8 @@ public class Organizer {
     }
 
     /**
-     * setter for deviceID
-     * @param deviceID
+     * Setter for deviceID
+     * @param deviceID organizer's device ID
      */
     public void setDeviceID(String deviceID) {
         this.deviceID = deviceID;
