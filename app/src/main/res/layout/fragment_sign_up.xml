@@ -13,12 +13,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Device Not Recognized!"
+        android:text="Hey! Have we met?"
         android:id="@+id/userNotRecognized"
-        android:fontFamily="sans-serif-light"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="40sp"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="@color/material3deepPurple"
+        android:textSize="60sp"
         >
     </TextView>
 
@@ -38,6 +37,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="User Profile Picture"
             android:scaleType="centerCrop"
+            android:padding="16sp"
             android:src="@drawable/baseline_account_circle_24" />
 
         <!-- Buttons for Change and Remove in Column -->
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Enter Name:"
+        android:hint="Name"
         android:paddingBottom="50px" />
 
     <EditText
@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
-        android:hint="Enter Email:"
+        android:hint="Email"
         android:paddingBottom="50px" />
 
     <EditText
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
-        android:hint="Enter Phone Number:"
+        android:hint="Phone Number"
         android:paddingBottom="50px"
         android:inputType="phone"/>
     <EditText
@@ -96,7 +96,7 @@
         android:fontFamily="sans-serif-light"
         android:layout_height="wrap_content"
         android:layout_margin="10px"
-        android:hint="Enter Location:"
+        android:hint="Location"
         android:paddingBottom="50px" />
 
     <CheckBox
