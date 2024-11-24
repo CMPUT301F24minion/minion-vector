@@ -94,24 +94,8 @@ public class EventDetailFragment extends Fragment {
         // Set click listener on the event image
         eventImage.setOnClickListener(v -> openImagePicker());
 
-        removeImageButton.setOnClickListener(v -> {
-            FirebaseStorage.getInstance().getReferenceFromUrl(event.getEventImage())
-                    .delete()
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Image removed successfully!", Toast.LENGTH_SHORT).show();
-                        FirebaseFirestore.getInstance()
-                                .collection("Events")
-                                .document(event.getEventID())
-                                .update("eventImage", null) // Remove the image URL from Firestore
-                                .addOnSuccessListener(unused -> {
-                                    event.setEventImage(null); // Update local event object
-                                    eventImage.setImageResource(R.drawable.baseline_add); // Set placeholder
-                                    removeImageButton.setVisibility(View.GONE); // Hide button
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update Firestore", Toast.LENGTH_SHORT).show());
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to remove image", Toast.LENGTH_SHORT).show());
-        });
+        // Set click listener on the remove image button
+        removeImageButton.setOnClickListener(v -> removeImage());
 
         eventRunLottery.setOnClickListener(v->{
             String applicantsStr = eventNumberOfApplicants.getText().toString();
@@ -240,6 +224,31 @@ public class EventDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void removeImage() {
+        if (event.getEventImage() != null) {
+            FirebaseStorage.getInstance().getReferenceFromUrl(event.getEventImage())
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Image removed successfully!", Toast.LENGTH_SHORT).show();
+                        FirebaseFirestore.getInstance()
+                                .collection("Events")
+                                .document(event.getEventID())
+                                .update("eventImage", null) // Remove the image URL from Firestore
+                                .addOnSuccessListener(unused -> {
+                                    event.setEventImage(null); // Update local event object
+                                    eventImage.setImageResource(R.drawable.baseline_add); // Set placeholder image
+                                    removeImageButton.setVisibility(View.GONE); // Hide the "Remove Image" button
+                                })
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(getContext(), "Failed to update Firestore", Toast.LENGTH_SHORT).show());
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(getContext(), "Failed to remove image", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getContext(), "No image to remove!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showWaitlistDialog() {
