@@ -1,6 +1,7 @@
 package com.example.minion_project.organizer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +84,9 @@ public class EventDetailFragment extends Fragment {
             String eventId = (String) getArguments().getSerializable("event");
             fetchEventData(eventId);
         }
+
+        // Set click listener on the waitlist text
+        eventWaitlistCount.setOnClickListener(v -> showWaitlistDialog());
 
         // Set click listener on the event image
         eventImage.setOnClickListener(v -> openImagePicker());
@@ -205,6 +211,34 @@ public class EventDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showWaitlistDialog() {
+        if (event == null || event.getEventWaitlist() == null || event.getEventWaitlist().isEmpty()) {
+            Toast.makeText(getContext(), "No users in the waitlist", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Get the waitlist users
+        String[] waitlistUsers = event.getEventWaitlist().toArray(new String[0]);
+
+        // Create an AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Waitlisted Users");
+
+        // Set up a ListView to display the waitlist
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View dialogView = inflater.inflate(R.layout.dialog_waitlist, null);
+
+        ListView waitlistListView = dialogView.findViewById(R.id.waitlistListView);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, waitlistUsers);
+        waitlistListView.setAdapter(adapter);
+
+        builder.setView(dialogView);
+        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+
+        // Show the dialog
+        builder.create().show();
     }
 }
 
