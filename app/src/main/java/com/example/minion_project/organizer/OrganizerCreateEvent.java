@@ -161,7 +161,6 @@ public class OrganizerCreateEvent extends Fragment {
         } catch (NumberFormatException e) {
 
         }
-        String facility = facilityName.getText().toString().trim();
         String time = selectedTime;
         String date = selectedDate;
 
@@ -190,9 +189,6 @@ public class OrganizerCreateEvent extends Fragment {
         event.setEventDate(selectedDate);
         event.setEventTime(selectedTime);
         event.setEventOrganizer(Organizer.getDeviceID());
-
-        updateOrganizerFacilityName(facility);
-
 
 
         CollectionReference eventsRef = ourFirestore.getEventsRef();
