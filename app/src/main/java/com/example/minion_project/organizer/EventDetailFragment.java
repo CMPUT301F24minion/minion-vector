@@ -49,6 +49,7 @@ public class EventDetailFragment extends Fragment {
     TextView eventPendingCount ;
     EditText eventNumberOfApplicants;
     Button eventRunLottery;
+    Button removeImageButton;
     EventController eventController;
 
     public EventDetailFragment() {
@@ -80,6 +81,8 @@ public class EventDetailFragment extends Fragment {
         eventDeclinedCount = view.findViewById(R.id.eventDeclinedCount);
         eventPendingCount = view.findViewById(R.id.eventPendingCount);
         eventNumberOfApplicants=view.findViewById(R.id.eventNumberOfApplicants);
+        removeImageButton = view.findViewById(R.id.removeImageButton);
+
         if (getArguments() != null) {
             String eventId = (String) getArguments().getSerializable("event");
             fetchEventData(eventId);
@@ -90,6 +93,25 @@ public class EventDetailFragment extends Fragment {
 
         // Set click listener on the event image
         eventImage.setOnClickListener(v -> openImagePicker());
+
+        removeImageButton.setOnClickListener(v -> {
+            FirebaseStorage.getInstance().getReferenceFromUrl(event.getEventImage())
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Image removed successfully!", Toast.LENGTH_SHORT).show();
+                        FirebaseFirestore.getInstance()
+                                .collection("Events")
+                                .document(event.getEventID())
+                                .update("eventImage", null) // Remove the image URL from Firestore
+                                .addOnSuccessListener(unused -> {
+                                    event.setEventImage(null); // Update local event object
+                                    eventImage.setImageResource(R.drawable.baseline_add); // Set placeholder
+                                    removeImageButton.setVisibility(View.GONE); // Hide button
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update Firestore", Toast.LENGTH_SHORT).show());
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to remove image", Toast.LENGTH_SHORT).show());
+        });
 
         eventRunLottery.setOnClickListener(v->{
             String applicantsStr = eventNumberOfApplicants.getText().toString();
@@ -143,6 +165,11 @@ public class EventDetailFragment extends Fragment {
                                 Glide.with(getActivity())
                                         .load(newImageUrl.toString())
                                         .into(eventImage);
+
+                                // Show the "Remove Image" button
+                                if (removeImageButton != null) {
+                                    removeImageButton.setVisibility(View.VISIBLE);
+                                }
                             })
                             .addOnFailureListener(e -> {
                                 Toast.makeText(getContext(), "Failed to update event image", Toast.LENGTH_SHORT).show();
@@ -182,9 +209,11 @@ public class EventDetailFragment extends Fragment {
                         Glide.with(getActivity())
                                 .load(eventImageUrl)
                                 .into(eventImage);
+                        removeImageButton.setVisibility(View.VISIBLE);
                     } else {
                         // Show a "+" icon if no image exists
                         eventImage.setImageResource(R.drawable.baseline_add); // Placeholder drawable
+                        removeImageButton.setVisibility(View.GONE);
                     }
 
                     eventNameTextView.setText(event.getEventName());

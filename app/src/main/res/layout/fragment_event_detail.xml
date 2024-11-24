@@ -12,15 +12,30 @@
         android:background="@android:color/white"
         android:gravity="top">
 
-    <ImageView
-        android:id="@+id/eventImage"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="Event Image"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@android:color/darker_gray" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@android:color/darker_gray">
+
+            <ImageView
+                android:id="@+id/eventImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="Event Image"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/removeImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/baseline_delete"
+                android:contentDescription="Remove Image"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="8dp"
+                android:visibility="gone" />
+        </RelativeLayout>
 
     <TextView
         android:id="@+id/eventTitle"
