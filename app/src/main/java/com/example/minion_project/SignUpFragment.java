@@ -208,6 +208,7 @@ public class SignUpFragment extends Fragment {
         alluser.put("City", city);
         alluser.put("profileImage", imageUrl);
         alluser.put("Roles", roles);
+        alluser.put("AllowNotifications", TRUE);
 
         if (organizerSelected) {
             Map<String, Object> organizer = new HashMap<>();
@@ -228,7 +229,7 @@ public class SignUpFragment extends Fragment {
             user.put("profileImage", imageUrl);
             HashMap<String, String> events = new HashMap<>();
             user.put("Events", events);
-            user.put("AllowNotication", TRUE);
+            user.put("AllowNotifications", TRUE);
 
             HashMap<String, ArrayList<String>> notifications = new HashMap<>();
             ArrayList<String> temp = new ArrayList<>();
