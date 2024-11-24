@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.Gravity;
@@ -31,6 +32,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,6 +59,8 @@ public class UserSettingsFragment extends Fragment {
     private ImageView profileImageView;
     private Button changeImageButton;
     private Button removeImageButton;
+
+    private SwitchCompat notificationToggle;
 
     /**
      * Create a new instance of UserSettingsFragment
@@ -105,6 +110,7 @@ public class UserSettingsFragment extends Fragment {
         profileImageView = view.findViewById(R.id.profileImageView);
         changeImageButton = view.findViewById(R.id.changeImageButton);
         removeImageButton = view.findViewById(R.id.removeImageButton);
+        notificationToggle = view.findViewById(R.id.notificationToggle);
 
         String androidID = Secure.getString(getActivity().getContentResolver(), Secure.ANDROID_ID);
 
@@ -121,9 +127,22 @@ public class UserSettingsFragment extends Fragment {
 
         removeImageButton.setOnClickListener(view13 -> removeProfileImage(androidID)); // Removes the profile image
 
+        notificationToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            updateAllowNotification(androidID, isChecked);
+        });
+
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    // The updateAllowNotification method
+    private void updateAllowNotification(String androidID, boolean isChecked) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("allowNotifications", isChecked);
+
+        fire.getAll_UsersRef().document(androidID)
+                .update(data);
     }
 
     /**
@@ -136,6 +155,7 @@ public class UserSettingsFragment extends Fragment {
         String emailV = email.getText().toString().trim();
         String phoneV = num.getText().toString().trim();
         String cityV = city.getText().toString().trim();
+        boolean notif = notificationToggle.isChecked();
 
         // Validate if any of the fields are empty
         if (nameV.isEmpty()) {
@@ -164,6 +184,7 @@ public class UserSettingsFragment extends Fragment {
         userData.put("Email", emailV);
         userData.put("Name", nameV);
         userData.put("Phone_number", phoneV);
+        userData.put("allowNotifications", notif);
 
         Map<String, Object> Roles = new HashMap<>();
         Roles.put("Admin", false);
@@ -181,16 +202,9 @@ public class UserSettingsFragment extends Fragment {
                         generateLetterProfile(androidID, firstLetter, userData);
                     } else {
                         // Update Firestore directly without generating an image
-                        fire.getAll_UsersRef().document(androidID).set(userData)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(getActivity(), "Information Updated Successfully!", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Error updating user information", Toast.LENGTH_SHORT).show();
-                                });
+                        fire.getAll_UsersRef().document(androidID).set(userData);
                     }
-                })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error checking profile image", Toast.LENGTH_SHORT).show());
+                });
     }
 
     private void generateLetterProfile(String androidID, char firstLetter, Map<String, Object> userData) {
@@ -227,22 +241,10 @@ public class UserSettingsFragment extends Fragment {
 
                     // Update Firestore with the new profile image URL in All_UsersRef
                     userData.put("profileImage", downloadUrl);
-                    fire.getAll_UsersRef().document(androidID).set(userData)
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(getActivity(), "Information Updated Successfully in All_UsersRef!", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getContext(), "Error updating user information in All_UsersRef", Toast.LENGTH_SHORT).show();
-                            });
+                    fire.getAll_UsersRef().document(androidID).set(userData);
 
                     // Update Firestore with the new profile image URL in UsersRef
-                    fire.getUsersRef().document(androidID).update("profileImage", downloadUrl)
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(getActivity(), "Information Updated Successfully in UsersRef!", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getContext(), "Error updating user information in UsersRef", Toast.LENGTH_SHORT).show();
-                            });
+                    fire.getUsersRef().document(androidID).update("profileImage", downloadUrl);
                 }));
     }
 
@@ -268,12 +270,14 @@ public class UserSettingsFragment extends Fragment {
                             String cityValue = document.getString("City");
                             Boolean isOrganizer = document.getBoolean("Roles.Organizer");
                             String profileImageUrl = document.getString("profileImage"); // Get the profile image URL
+                            Boolean showNotifications = document.getBoolean("allowNotifications");
 
                             // Set the UI elements with retrieved data
                             name.setText(nameValue);
                             email.setText(emailValue);
                             num.setText(phoneValue);
                             city.setText(cityValue);
+                            notificationToggle.setChecked(Boolean.TRUE.equals(showNotifications));
 
                             // Check or uncheck the Organizer CheckBox
                             if (isOrganizer != null && isOrganizer) {
@@ -284,7 +288,7 @@ public class UserSettingsFragment extends Fragment {
 
                             // Load the profile image using Glide
                             if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                                Glide.with(getActivity())
+                                Glide.with(requireActivity())
                                         .load(profileImageUrl)
                                         .circleCrop()
                                         .into(profileImageView); // Replace with your actual ImageView ID

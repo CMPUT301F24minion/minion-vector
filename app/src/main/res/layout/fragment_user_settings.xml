@@ -96,6 +96,14 @@
         android:layout_margin="10px"
         android:text="&quot;I am an organizer&quot;"/>
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/notificationToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable Notifications"
+        android:layout_margin="10dp"
+        android:textColor="@color/black" />
+
 
     <Button
         android:id="@+id/save"

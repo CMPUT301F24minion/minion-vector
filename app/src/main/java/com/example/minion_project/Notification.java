@@ -94,22 +94,42 @@ public class Notification {
                     // Get the IDs array
                     List<String> androidIDs = (List<String>) document.get("ID");
                     if (androidIDs != null && androidIDs.contains(getReceiver())) {
-                        String title = document.getString("Title");
-                        String message = document.getString("Message");
+                        // Retrieve the user's allowNotifications setting
+                        DocumentReference userDocRef = db.collection("All_Users").document(getReceiver());
+                        userDocRef.get().addOnCompleteListener(userTask -> {
+                            if (userTask.isSuccessful()) {
+                                DocumentSnapshot userDocument = userTask.getResult();
+                                if (userDocument.exists()) {
+                                    Boolean allowNotifications = userDocument.getBoolean("allowNotifications");
+                                    if (allowNotifications != null && allowNotifications) {
+                                        String title = document.getString("Title");
+                                        String message = document.getString("Message");
 
-                        // Send notification
-                        sendNotification(context, title, message);
+                                        // Send notification
+                                        sendNotification(context, title, message);
+                                    } else {
+                                        System.out.println("User has disabled notifications.");
+                                    }
+                                } else {
+                                    System.out.println("User document does not exist.");
+                                }
 
-                        // Remove the androidID from the array after sending
-                        androidIDs.remove(getReceiver());
-                        Map<String, Object> updates = new HashMap<>();
-                        updates.put("ID", androidIDs);
+                                // Remove the androidID from the array after processing
+                                androidIDs.remove(getReceiver());
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("ID", androidIDs);
 
-                        docRef.update(updates).addOnSuccessListener(aVoid -> {
-                            System.out.println("AndroidID removed from notification document after sending.");
-                        }).addOnFailureListener(e -> {
-                            System.err.println("Error updating notification document: " + e.getMessage());
+                                docRef.update(updates).addOnSuccessListener(aVoid -> {
+                                    System.out.println("AndroidID removed from notification document after processing.");
+                                }).addOnFailureListener(e -> {
+                                    System.err.println("Error updating notification document: " + e.getMessage());
+                                });
+
+                            } else {
+                                System.err.println("Error getting user document: " + userTask.getException().getMessage());
+                            }
                         });
+
                     } else {
                         System.out.println("AndroidID not found in notification document: " + documentID);
                     }
@@ -121,6 +141,7 @@ public class Notification {
             }
         });
     }
+
 
     // Methods to add user to each notification type
     public void addUserToNotificationWon(String androidID) {
@@ -186,4 +207,6 @@ public class Notification {
             }
         });
     }
+
+
 }
