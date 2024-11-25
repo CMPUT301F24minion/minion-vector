@@ -1,3 +1,7 @@
+/**
+ * this class handles all the notifications, from sending, to adding the user to the system and etc.
+ */
+
 package com.example.minion_project;
 
 import android.content.Context;
@@ -45,20 +49,38 @@ public class Notification {
         this.uniqueDocumentID = db.collection("Notifications").document().getId(); // Generate unique ID at creation
     }
 
+    /**
+     *
+     * @return the uniqueDocumentID
+     */
+
     public String getUniqueDocumentID() {
         return uniqueDocumentID;
     }
 
-    // Getter and Setter
+    /**
+     *
+     * @return the receiver, this is their androidID
+     */
     public String getReceiver() {
         return receiver;
     }
 
+    /**
+     * this method sets the receiver androidID
+     * @param receiver
+     */
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
 
-    // General sendNotification method
+    /**
+     * this method sends the notification to the users' notification tab when they scroll down from
+     * the top of the screen
+     * @param context
+     * @param title
+     * @param message
+     */
     private static void sendNotification(Context context, String title, String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.baseline_add)  // Replace with your app's icon
@@ -83,6 +105,13 @@ public class Notification {
         checkAndSendNotificationForDocument(context, cancelled);
         checkAndSendNotificationForDocument(context, waitlisted);
     }
+
+    /**
+     * this method checks whether the Users' ID is in the notification collection (any. win, lose, cancelled or joined lottery)
+     * if its in there, it will call sendNotification, and remove the Users' ID from that document.
+     * @param context
+     * @param documentID the document with the associated ID
+     */
 
     private void checkAndSendNotificationForDocument(Context context, String documentID) {
         DocumentReference docRef = db.collection("Notifications").document(documentID);
@@ -143,23 +172,44 @@ public class Notification {
     }
 
 
-    // Methods to add user to each notification type
+    /**
+     * this method calls the method that adds the user to the documentID of winning the lottery
+     * @param androidID
+     */
     public void addUserToNotificationWon(String androidID) {
         addUserToNotificationDocument(Won, androidID);
     }
 
+    /**
+     * this method calls the method that adds the user to the documentID of losing the lottery system
+     * @param androidID
+     */
     public void addUserToNotificationLost(String androidID) {
         addUserToNotificationDocument(Lost, androidID);
     }
 
+    /**
+     * this method calls the method that adds the user to the documentID of cancelling the event
+     * @param androidID
+     */
     public void addUserToNotificationCancelled(String androidID) {
         addUserToNotificationDocument(cancelled, androidID);
     }
 
+    /**
+     * this method calls the method that adds the user to the documentID of being waitlisted
+     * @param androidID
+     */
     public void addUserToNotificationWaitlisted(String androidID) {
         addUserToNotificationDocument(waitlisted, androidID);
     }
 
+    /**
+     * this method adds the user to the collection of Notifications, the documentID is a String of
+     * the type of notification we want to send to the User
+     * @param documentID
+     * @param androidID
+     */
     private void addUserToNotificationDocument(String documentID, String androidID) {
         DocumentReference docRef = db.collection("Notifications").document(documentID);
 
