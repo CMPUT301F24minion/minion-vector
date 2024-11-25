@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -95,8 +96,11 @@ public class EventDetailFragment extends Fragment {
             fetchEventData(eventId);
         }
 
-        // Set click listener on the waitlist text
-        eventWaitlistCount.setOnClickListener(v -> showWaitlistDialog());
+        // Set click listener on the lists of users
+        eventWaitlistCount.setOnClickListener(v -> showUserListDialog("eventWaitlist", "Waitlisted Users"));
+        eventAcceptedCount.setOnClickListener(v -> showUserListDialog("eventEnrolled", "Accepted Users"));
+        eventDeclinedCount.setOnClickListener(v -> showUserListDialog("eventDeclined", "Declined Users"));
+        eventPendingCount.setOnClickListener(v -> showUserListDialog("eventInvited", "Invited Users"));
 
         // Set click listener on the event image
         eventImage.setOnClickListener(v -> openImagePicker());
@@ -266,34 +270,6 @@ public class EventDetailFragment extends Fragment {
         }
     }
 
-    private void showWaitlistDialog() {
-        if (event == null || event.getEventWaitlist() == null || event.getEventWaitlist().isEmpty()) {
-            Toast.makeText(getContext(), "No users in the waitlist", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Get the waitlist users
-        String[] waitlistUsers = event.getEventWaitlist().toArray(new String[0]);
-
-        // Create an AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Waitlisted Users");
-
-        // Set up a ListView to display the waitlist
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View dialogView = inflater.inflate(R.layout.dialog_waitlist, null);
-
-        ListView waitlistListView = dialogView.findViewById(R.id.waitlistListView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, waitlistUsers);
-        waitlistListView.setAdapter(adapter);
-
-        builder.setView(dialogView);
-        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
-
-        // Show the dialog
-        builder.create().show();
-    }
-
     private void showEditEventDetailsDialog() {
         // Create an AlertDialog builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -422,6 +398,44 @@ public class EventDetailFragment extends Fragment {
                                     Toast.makeText(getContext(), "Failed to update event date", Toast.LENGTH_SHORT).show());
                 }, year, month, day);
         datePickerDialog.show();
+    }
+
+    private void showUserListDialog(String listField, String title) {
+        if (event == null) {
+            Toast.makeText(getContext(), "Event data not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        eventController.fetchUserNamesFromList(event.getEventID(), listField, new EventController.UserListCallback() {
+            @Override
+            public void onUserListFetched(ArrayList<String> userNames) {
+                if (userNames.isEmpty()) {
+                    Toast.makeText(getContext(), "No users found in " + listField, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Log.d("EventDetailFragment", "User Names Fetched: " + userNames);
+
+                // Create a dialog with the fetched user names
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(title);
+
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_user_list, null);
+                ListView userListView = dialogView.findViewById(R.id.userListView);
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userNames);
+                userListView.setAdapter(adapter);
+
+                builder.setView(dialogView);
+                builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+                builder.create().show();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
 
