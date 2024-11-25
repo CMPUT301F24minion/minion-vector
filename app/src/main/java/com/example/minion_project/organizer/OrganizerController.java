@@ -6,12 +6,9 @@ import android.widget.Toast;
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventsAdapter;
-import com.example.minion_project.user.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
-
-import java.util.ArrayList;
 
 
 /**
@@ -22,7 +19,6 @@ public class OrganizerController {
     public Organizer organizer;
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference organizersRef;
-    private CollectionReference usersRef;
 
     /**
      * Constructs an OrganizerController for a specific organizer.
@@ -33,7 +29,6 @@ public class OrganizerController {
     public OrganizerController(Organizer organizer) {
         this.organizer = organizer;
         this.organizersRef = Our_Firestore.getOrganizersRef();
-        this.usersRef = Our_Firestore.getUsersRef();
     }
 
 
@@ -59,13 +54,6 @@ public class OrganizerController {
                 });
         ;
 
-    }
-    public ArrayList<User> fecthUsersForEvent(ArrayList<String>  allusers,String eventId) {
-        ArrayList<User> finalUsers=new ArrayList<>();
-        for(int i=0;i< allusers.size();i++){
-            usersRef.document(allusers.get(i));
-        }
-        return finalUsers;
     }
 
     /**
