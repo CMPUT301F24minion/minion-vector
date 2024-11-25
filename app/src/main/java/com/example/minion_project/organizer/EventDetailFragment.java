@@ -97,6 +97,9 @@ public class EventDetailFragment extends Fragment {
         // Set click listener on the remove image button
         removeImageButton.setOnClickListener(v -> removeImage());
 
+        eventDescriptionTextView.setOnClickListener(v -> showEditEventDetailsDialog());
+
+
         eventRunLottery.setOnClickListener(v->{
             String applicantsStr = eventNumberOfApplicants.getText().toString();
             if (!applicantsStr.isEmpty()) {
@@ -274,6 +277,44 @@ public class EventDetailFragment extends Fragment {
 
         builder.setView(dialogView);
         builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+
+        // Show the dialog
+        builder.create().show();
+    }
+
+    private void showEditEventDetailsDialog() {
+        // Create an AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Edit Event Details");
+
+        // Add an EditText to the dialog
+        final EditText input = new EditText(getContext());
+        input.setText(event.getEventDetails()); // Pre-fill with the current event details
+        input.setSelection(input.getText().length()); // Move cursor to the end
+        input.setLines(3);
+        input.setMaxLines(5);
+        input.setPadding(40, 16, 40, 16);
+        input.setBackgroundColor(getResources().getColor(android.R.color.white));
+        builder.setView(input);
+
+        // Add "Save" and "Cancel" buttons
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String updatedDetails = input.getText().toString().trim();
+
+            // Update Firebase
+            FirebaseFirestore.getInstance()
+                    .collection("Events")
+                    .document(event.getEventID())
+                    .update("eventDetails", updatedDetails) // Update eventDetails field
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Event details updated successfully!", Toast.LENGTH_SHORT).show();
+                        event.setEventDetails(updatedDetails); // Update local object
+                        eventDescriptionTextView.setText("Event Description ✏️: " + updatedDetails); // Update UI
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update event details", Toast.LENGTH_SHORT).show());
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
         // Show the dialog
         builder.create().show();

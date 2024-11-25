@@ -37,13 +37,14 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-    <TextView
+    <EditText
         android:id="@+id/eventTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:text="Event Title"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:background="@android:color/transparent"
         android:layout_marginBottom="8dp"/>
 
     <TextView
