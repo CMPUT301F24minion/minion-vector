@@ -2,6 +2,8 @@ package com.example.minion_project.organizer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Calendar;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link EventDetailFragment#newInstance} factory method to
@@ -41,6 +46,7 @@ public class EventDetailFragment extends Fragment {
     ImageView eventImage;
     TextView eventNameTextView;
     TextView eventDateTextView;
+    TextView eventTimeTextView;
     TextView eventDescriptionTextView;
     TextView eventCapacityTextView;
     TextView eventWaitlistCount ;
@@ -73,6 +79,7 @@ public class EventDetailFragment extends Fragment {
         eventImage = view.findViewById(R.id.eventImage);
         eventNameTextView = view.findViewById(R.id.eventTitle);
         eventDateTextView = view.findViewById(R.id.eventDate);
+        eventTimeTextView = view.findViewById(R.id.eventTime);
         eventDescriptionTextView = view.findViewById(R.id.eventDescription);
         eventCapacityTextView = view.findViewById(R.id.eventCapacity);
         eventRunLottery=view.findViewById(R.id.eventRunLottery);
@@ -97,6 +104,9 @@ public class EventDetailFragment extends Fragment {
         // Set click listener on the remove image button
         removeImageButton.setOnClickListener(v -> removeImage());
 
+        eventNameTextView.setOnClickListener(v -> showEditEventTitleDialog());
+        eventDateTextView.setOnClickListener(v -> openDatePickerDialog());
+        eventTimeTextView.setOnClickListener(v -> openTimePickerDialog());
         eventDescriptionTextView.setOnClickListener(v -> showEditEventDetailsDialog());
 
 
@@ -206,6 +216,8 @@ public class EventDetailFragment extends Fragment {
                     eventNameTextView.setText(event.getEventName());
                     eventDescriptionTextView.setText("Event Description ✏\uFE0F: "+event.getEventDetails());
                     eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());
+                    eventTimeTextView.setText("Event Time \uD83D\uDD53: "+event.getEventTime());
+
                     eventCapacityTextView.setText("Event Capacity\uD83E\uDDE2: "+event.getEventCapacity());
 
                     int waitlistCount = event.getEventWaitlist().size();  // Number of users on the waitlist
@@ -318,6 +330,98 @@ public class EventDetailFragment extends Fragment {
 
         // Show the dialog
         builder.create().show();
+    }
+
+    private void showEditEventTitleDialog() {
+        if (event == null) {
+            Toast.makeText(getContext(), "Event data not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create an AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Edit Event Title");
+
+        // Add an EditText to the dialog
+        final EditText input = new EditText(getContext());
+        input.setText(event.getEventName()); // Pre-fill with the current event title
+        input.setSelection(input.getText().length()); // Move cursor to the end
+        input.setPadding(40, 16, 40, 16);
+        input.setBackgroundColor(getResources().getColor(android.R.color.white));
+        builder.setView(input);
+
+        // Add "Save" and "Cancel" buttons
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String updatedTitle = input.getText().toString().trim();
+
+            if (!updatedTitle.isEmpty()) {
+                // Update Firebase
+                FirebaseFirestore.getInstance()
+                        .collection("Events")
+                        .document(event.getEventID())
+                        .update("eventName", updatedTitle)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getContext(), "Event title updated successfully!", Toast.LENGTH_SHORT).show();
+                            event.setEventName(updatedTitle); // Update local object
+                            eventNameTextView.setText(updatedTitle); // Update UI
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update event title", Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(getContext(), "Event title cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // Show the dialog
+        builder.create().show();
+    }
+
+    private void openTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                (view, hourOfDay, minuteOfHour) -> {
+                    String selectedTime = String.format("%02d:%02d", hourOfDay, minuteOfHour);
+                    eventTimeTextView.setText("Event Time ⏰: " + selectedTime);
+
+                    // Update Firebase
+                    FirebaseFirestore.getInstance()
+                            .collection("Events")
+                            .document(event.getEventID())
+                            .update("eventTime", selectedTime)
+                            .addOnSuccessListener(aVoid ->
+                                    Toast.makeText(getContext(), "Event time updated successfully!", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(getContext(), "Failed to update event time", Toast.LENGTH_SHORT).show());
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+    private void openDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
+                    eventDateTextView.setText("Event Date 📅: " + selectedDate);
+
+                    // Update Firebase
+                    FirebaseFirestore.getInstance()
+                            .collection("Events")
+                            .document(event.getEventID())
+                            .update("eventDate", selectedDate)
+                            .addOnSuccessListener(aVoid ->
+                                    Toast.makeText(getContext(), "Event date updated successfully!", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(getContext(), "Failed to update event date", Toast.LENGTH_SHORT).show());
+                }, year, month, day);
+        datePickerDialog.show();
     }
 }
 
