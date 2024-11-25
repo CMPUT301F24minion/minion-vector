@@ -214,6 +214,61 @@ public class EventController {
                 });
     }
 
+    public void fetchUserNamesFromList(String eventId, String listField, UserListCallback callback) {
+        eventsRef.document(eventId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    ArrayList<String> userIds = (ArrayList<String>) document.get(listField);
+                    Log.d("EventController", "User IDs: " + userIds);
+
+                    if (userIds == null || userIds.isEmpty()) {
+                        callback.onError("No users found in " + listField);
+                        return;
+                    }
+
+                    ArrayList<String> userNames = new ArrayList<>();
+                    for (String userId : userIds) {
+                        Log.d("EventController", "Fetching user: " + userId);
+
+                        Our_Firestore.getUsersRef().document(userId.trim()).get()
+                                .addOnSuccessListener(userDoc -> {
+                                    if (userDoc.exists()) {
+                                        String userName = userDoc.getString("Name");
+                                        Log.d("EventController", "Fetched user name: " + userName);
+                                        if (userName != null) {
+                                            userNames.add(userName);
+                                        }
+                                    } else {
+                                        Log.d("EventController", "User not found: " + userId);
+                                    }
+
+                                    // Check if all users are processed
+                                    if (userNames.size() == userIds.size()) {
+                                        Log.d("EventController", "All user names fetched: " + userNames);
+                                        callback.onUserListFetched(userNames);
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("EventController", "Failed to fetch user: " + userId, e);
+                                    callback.onError("Failed to fetch user: " + userId);
+                                });
+                    }
+                } else {
+                    callback.onError("Event not found");
+                }
+            } else {
+                callback.onError("Failed to fetch event data: " + task.getException().getMessage());
+            }
+        });
+    }
+
+    // Callback interface for user list fetching
+    public interface UserListCallback {
+        void onUserListFetched(ArrayList<String> userNames);
+
+        void onError(String errorMessage);
+    }
 
     /**
      * EventCallback interface for handling event-related callbacks
