@@ -463,6 +463,14 @@ public class EventDetailFragment extends Fragment {
                                 notification.addUserToNotificationDocument("waitlistlist_entrants", userId);
 
                             }
+                            if (title.equals("Declined Users")){
+                                notification.addUserToNotificationDocument("cancelled_event", userId);
+
+                            }
+                            if (title.equals("Accepted Users")){
+                                notification.addUserToNotificationDocument("Won_lottery", userId);
+
+                            }
                             if (title.equals("Invited Users")){
                                 notification.addUserToNotificationDocument("chosen_entrant", userId);
 
