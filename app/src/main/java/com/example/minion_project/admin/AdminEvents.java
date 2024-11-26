@@ -1,3 +1,5 @@
+// AdminEvents.java
+
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
@@ -21,11 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-/**
- * A {@link Fragment} subclass: responsible for managing and displaying events in the admin view.
- * This fragment fetches events from Firestore, displays them in a RecyclerView,
- * and allows event deletion.
- */
 public class AdminEvents extends Fragment implements EventsAdapter.OnEventDeleteListener {
 
     private RecyclerView adminEventsRecyclerView;
@@ -40,25 +37,23 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
      * Default constructor
      */
     public AdminEvents() {
+        // Required empty public constructor
     }
 
     /**
      * Factory method to create a new instance of this fragment
-     * @param param1
-     * @param param2
-     * @return fragment A new instance of fragment AdminEvents.
+     *
+     * @return A new instance of fragment AdminEvents.
      */
-    public static AdminEvents newInstance(String param1, String param2) {
-        AdminEvents fragment = new AdminEvents();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    public static AdminEvents newInstance() {
+        return new AdminEvents();
     }
 
     /**
+     * Initialize Firestore and event list
      *
      * @param savedInstanceState If the fragment is being re-created from
-     * a previous saved state, this is the state.
+     *                           a previous saved state, this is the state.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,16 +64,16 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
     }
 
     /**
-     * Inflate the layout for this fragment
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
+     * Inflate the layout and setup RecyclerView
      *
-     * @return
+     * @param inflater           The LayoutInflater object that can be used to inflate
+     *                           any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's
+     *                           UI should be attached to. The fragment should not add the view itself,
+     *                           but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -126,26 +121,33 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 });
     }
 
-
     /**
-     * Handle event deletion
+     * Handle event deletion from the adapter
      *
      * @param event The event to be deleted
      */
     @Override
     public void onEventDelete(Event event) {
+        // TODO: Retrieve adminDeviceID securely (e.g., from authentication)
+        String adminDeviceID = getAdminDeviceID();
 
-        eventsRef.document(event.getEventID())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Event deleted successfully.", Toast.LENGTH_SHORT).show();
+        // Create an instance of Admin
+        Admin admin = new Admin(adminDeviceID, ourFirestore);
 
-                    eventList.remove(event);
-                    eventsAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error deleting event: " + e.getMessage());
-                    Toast.makeText(getContext(), "Failed to delete event.", Toast.LENGTH_SHORT).show();
-                });
+        // Call the removeEvent method
+        admin.removeEvent(event, eventList, eventsAdapter);
+    }
+
+    /**
+     * Placeholder method to retrieve adminDeviceID
+     *
+     * @return adminDeviceID as a String
+     */
+    private String getAdminDeviceID() {
+        // Implement logic to retrieve the admin's deviceID
+        // This could be from Firebase Authentication or another secure source
+        // For example:
+        // return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return "admin_device_id"; // Replace with actual retrieval logic
     }
 }

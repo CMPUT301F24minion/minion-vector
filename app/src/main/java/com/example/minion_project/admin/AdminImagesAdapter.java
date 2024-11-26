@@ -1,6 +1,4 @@
-/**
- * Adapter class for displaying images in a RecyclerView for the admin view.
- */
+// AdminImagesAdapter.java
 
 package com.example.minion_project.admin;
 
@@ -22,25 +20,20 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
 
     private Context context;
     private List<String> imageUrls;
+    private AdminImages adminImages; // Reference to the fragment for delete actions
 
     /**
      * Constructor for AdminImagesAdapter
      * @param context  The context in which the adapter is used.
      * @param imageUrls A list of image URLs to be displayed in the RecyclerView.
+     * @param adminImages Reference to AdminImages fragment for delete actions.
      */
-    public AdminImagesAdapter(Context context, List<String> imageUrls) {
+    public AdminImagesAdapter(Context context, List<String> imageUrls, AdminImages adminImages) {
         this.context = context;
         this.imageUrls = imageUrls;
+        this.adminImages = adminImages;
     }
 
-    /**
-     * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
-     * @param parent The ViewGroup into which the new View will be added after it is bound to
-     *               an adapter position.
-     * @param viewType The view type of the new View.
-     *
-     * @return
-     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,7 +52,13 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
         String imageUrl = imageUrls.get(position);
         Glide.with(context)
                 .load(imageUrl)
-                .into(holder.imageView);
+                .into(holder.imageViewAdminImage);
+
+        // Set click listener for delete button
+        holder.deleteImageButton.setOnClickListener(v -> {
+            // Call the removeImage method in AdminImages fragment
+            adminImages.removeImage(imageUrl);
+        });
     }
 
     /**
@@ -75,15 +74,17 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
      * ViewHolder class for holding the view for each item in the RecyclerView.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        ImageView imageViewAdminImage;
+        ImageView deleteImageButton;
 
         /**
          * Constructor for ViewHolder
-         * @param itemView
+         * @param itemView The view representing an individual item in the RecyclerView
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageViewAdminImage = itemView.findViewById(R.id.imageViewAdminImage); // Correct ID
+            deleteImageButton = itemView.findViewById(R.id.delete_image_button);
         }
     }
 }
