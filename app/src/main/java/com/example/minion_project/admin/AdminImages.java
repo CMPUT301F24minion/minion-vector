@@ -1,7 +1,4 @@
-/**
- * Fragment class for displaying event and profile images in the admin view.
- * This class fetches image URLs from Firebase Storage and displays them in a RecyclerView.
- */
+// AdminImages.java
 
 package com.example.minion_project.admin;
 
@@ -41,7 +38,7 @@ public class AdminImages extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
+     * @return The View for the fragment's UI, or null.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +60,7 @@ public class AdminImages extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         imageUrls = new ArrayList<>();
-        adapter = new AdminImagesAdapter(getContext(), imageUrls);
+        adapter = new AdminImagesAdapter(getContext(), imageUrls, this); // Pass 'this' as the third parameter
         recyclerView.setAdapter(adapter);
 
         loadImagesFromFirebaseStorage();
@@ -106,5 +103,25 @@ public class AdminImages extends Fragment {
                     Log.e("AdminImages", "Failed to list profile images", e);
                     Toast.makeText(getContext(), "Failed to load profile images", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * Removes the specified image from Firebase Storage and updates the UI.
+     *
+     * @param imageUrl The URL of the image to be removed.
+     */
+    public void removeImage(String imageUrl) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference imageRef = storage.getReferenceFromUrl(imageUrl);
+
+        imageRef.delete().addOnSuccessListener(aVoid -> {
+            imageUrls.remove(imageUrl);
+            adapter.notifyDataSetChanged();
+            Toast.makeText(getContext(), "Image deleted successfully.", Toast.LENGTH_SHORT).show();
+            Log.d("AdminImages", "Image deleted successfully: " + imageUrl);
+        }).addOnFailureListener(e -> {
+            Log.e("AdminImages", "Error deleting image: " + e.getMessage());
+            Toast.makeText(getContext(), "Failed to delete image.", Toast.LENGTH_SHORT).show();
+        });
     }
 }
