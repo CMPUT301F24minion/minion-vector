@@ -10,6 +10,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,12 +30,14 @@ import com.example.minion_project.Lottery.Lottery;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
+import com.example.minion_project.user.UserAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -411,20 +415,25 @@ public class EventDetailFragment extends Fragment {
                     return;
                 }
 
-                Log.d("EventDetailFragment", "User Names Fetched: " + userNames);
+                // Inflate the dialog layout
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_user_list, null);
+                RecyclerView recyclerView = dialogView.findViewById(R.id.userRecyclerView);
 
-                // Create a dialog with the fetched user names
+                // Set up the RecyclerView
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                UserAdapter adapter = new UserAdapter(getContext(), userNames);
+                recyclerView.setAdapter(adapter);
+
+                // Create the dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(title);
-
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_user_list, null);
-                ListView userListView = dialogView.findViewById(R.id.userListView);
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userNames);
-                userListView.setAdapter(adapter);
-
                 builder.setView(dialogView);
-                builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+                builder.setPositiveButton("Send Notification", (dialog, which) -> {
+                    Set<String> selectedUsers = adapter.getSelectedUsers();
+                    Log.d("EventDetailFragment", "Selected Users: " + selectedUsers);
+                    // Perform actions with the selected users if needed
+                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
                 builder.create().show();
             }
 
