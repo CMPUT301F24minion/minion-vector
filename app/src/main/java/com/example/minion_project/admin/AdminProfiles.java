@@ -5,21 +5,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-// Import necessary components
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.Toast;
+
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.user.User;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class AdminProfiles extends Fragment {
+/**
+ * Fragment class for managing and displaying user profiles in the admin view.
+ * Includes functionality to delete user profiles upon tapping on them.
+ */
+public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUserClickListener {
 
     private RecyclerView recyclerView;
     private AdminProfilesAdapter adapter;
@@ -59,23 +67,27 @@ public class AdminProfiles extends Fragment {
         recyclerView = view.findViewById(R.id.adminProfilesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdminProfilesAdapter(getContext(), userList);
+        adapter.setOnUserClickListener(this); // Set the click listener
         recyclerView.setAdapter(adapter);
 
         fetchUsers();
     }
 
-    private void fetchUsers() {
+    /**
+     * Fetch all users from Firestore and populate the RecyclerView.
+     * Manually maps Firestore fields to User object fields.
+     */
+    private void fetchUsers(){
         usersRef.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     userList.clear();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                    for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
                         // Manually extract fields from Firestore document
                         String deviceID = document.getId();
                         String name = document.getString("Name"); // Note the capital 'N'
                         String email = document.getString("Email"); // Capital 'E'
                         String phoneNumber = document.getString("Phone_number"); // Match the exact field name
                         String city = document.getString("City"); // Capital 'C'
-                        // Other fields as needed
 
                         // Create a new User object
                         User user = new User();
@@ -94,5 +106,67 @@ public class AdminProfiles extends Fragment {
                     Log.e(TAG, "Error fetching users: " + e.getMessage());
                 });
     }
+
+    /**
+     * Called when a user profile item is clicked.
+     * Shows a confirmation dialog before deleting the user.
+     *
+     * @param user The user to be deleted.
+     */
+    @Override
+    public void onUserClick(User user) {
+        // Show a confirmation dialog
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete User")
+                .setMessage("Do you want to delete this user profile?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Show second confirmation dialog
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Are you sure?")
+                            .setMessage("This action cannot be undone.")
+                            .setPositiveButton("Delete", (innerDialog, innerWhich) -> {
+                                deleteUser(user);
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * Deletes the user from Firestore and updates the local list.
+     *
+     * @param user The user to be deleted.
+     */
+    private void deleteUser(User user) {
+        // References to Firestore user documents in both collections
+        DocumentReference userDocRef = usersRef.document(user.getDeviceID());
+        CollectionReference allUsersRef = ourFirestore.getAll_UsersRef(); // This method exists in your FireStoreClass
+        DocumentReference allUserDocRef = allUsersRef.document(user.getDeviceID());
+
+        // Delete user from 'Users' collection
+        userDocRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    // After deleting from 'Users', delete from 'All_Users'
+                    allUserDocRef.delete()
+                            .addOnSuccessListener(aVoid2 -> {
+                                Toast.makeText(getContext(), "User deleted successfully from both collections.", Toast.LENGTH_SHORT).show();
+
+                                // Remove user from local list and update adapter
+                                userList.remove(user);
+                                adapter.notifyDataSetChanged();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error deleting user from 'All_Users': " + e.getMessage());
+                                Toast.makeText(getContext(), "Failed to delete user from 'All_Users'.", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting user from 'Users': " + e.getMessage());
+                    Toast.makeText(getContext(), "Failed to delete user.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
 
 }
