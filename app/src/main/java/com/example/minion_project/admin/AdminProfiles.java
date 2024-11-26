@@ -1,90 +1,98 @@
-/**
- * Fragment class for managing and displaying user profiles in the admin view
- */
-
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+// Import necessary components
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
+import com.example.minion_project.user.User;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminProfiles#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class AdminProfiles extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private AdminProfilesAdapter adapter;
+    private ArrayList<User> userList;
+    private FireStoreClass ourFirestore;
+    private CollectionReference usersRef;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "AdminProfiles";
 
-    /**
-     * Default constructor
-     */
     public AdminProfiles() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminProfiles.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminProfiles newInstance(String param1, String param2) {
-        AdminProfiles fragment = new AdminProfiles();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static AdminProfiles newInstance() {
+        return new AdminProfiles();
     }
 
-    /**
-     * Called when the fragment is first created.
-     * @param savedInstanceState If the fragment is being re-created from
-     * a previous saved state, this is the state.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        ourFirestore = new FireStoreClass();
+        usersRef = ourFirestore.getUsersRef(); // Ensure this method returns the users collection
+        userList = new ArrayList<>();
     }
 
-    /**
-     * Inflate the layout for this fragment
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState){
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_admin_profiles, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.adminProfilesRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new AdminProfilesAdapter(getContext(), userList);
+        recyclerView.setAdapter(adapter);
+
+        fetchUsers();
+    }
+
+    private void fetchUsers() {
+        usersRef.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    userList.clear();
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        // Manually extract fields from Firestore document
+                        String deviceID = document.getId();
+                        String name = document.getString("Name"); // Note the capital 'N'
+                        String email = document.getString("Email"); // Capital 'E'
+                        String phoneNumber = document.getString("Phone_number"); // Match the exact field name
+                        String city = document.getString("City"); // Capital 'C'
+                        // Other fields as needed
+
+                        // Create a new User object
+                        User user = new User();
+                        user.setDeviceID(deviceID);
+                        user.setName(name != null ? name : "No Name");
+                        user.setEmail(email != null ? email : "No Email");
+                        user.setPhoneNumber(phoneNumber != null ? phoneNumber : "No Phone");
+                        user.setLocation(city != null ? city : "No City");
+
+                        // Add the user to the list
+                        userList.add(user);
+                    }
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching users: " + e.getMessage());
+                });
+    }
+
 }
