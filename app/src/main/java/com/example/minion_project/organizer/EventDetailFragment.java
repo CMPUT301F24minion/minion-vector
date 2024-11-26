@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.minion_project.Lottery.Lottery;
+import com.example.minion_project.Notification;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -47,7 +49,7 @@ import java.util.Set;
 public class EventDetailFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;  // Request code for image picker
     private Uri newImageUri;  // To store the selected image URI
-
+    private Notification notification;
     ImageView eventImage;
     TextView eventNameTextView;
     TextView eventDateTextView;
@@ -70,7 +72,6 @@ public class EventDetailFragment extends Fragment {
     public static EventDetailFragment newInstance(String param1, String param2) {
         EventDetailFragment fragment = new EventDetailFragment();
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,7 +95,7 @@ public class EventDetailFragment extends Fragment {
         eventPendingCount = view.findViewById(R.id.eventPendingCount);
         eventNumberOfApplicants=view.findViewById(R.id.eventNumberOfApplicants);
         removeImageButton = view.findViewById(R.id.removeImageButton);
-
+        notification=new Notification();
 
         if (getArguments() != null) {
             String eventId = (String) getArguments().getSerializable("event");
@@ -409,10 +410,17 @@ public class EventDetailFragment extends Fragment {
 
         eventController.fetchUserNamesFromList(event.getEventID(), listField, new EventController.UserListCallback() {
             @Override
-            public void onUserListFetched(ArrayList<String> userNames) {
+            public void onUserListFetched(ArrayList<Map.Entry<String, String>> userNames) {
+                // Check if no users were found
                 if (userNames.isEmpty()) {
                     Toast.makeText(getContext(), "No users found in " + listField, Toast.LENGTH_SHORT).show();
                     return;
+                }
+
+                // Extract user names from the Map.Entry objects
+                ArrayList<String> userNamesList = new ArrayList<>();
+                for (Map.Entry<String, String> entry : userNames) {
+                    userNamesList.add(entry.getKey());  // Extract the user name
                 }
 
                 // Inflate the dialog layout
@@ -421,25 +429,64 @@ public class EventDetailFragment extends Fragment {
 
                 // Set up the RecyclerView
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                UserAdapter adapter = new UserAdapter(getContext(), userNames);
+                UserAdapter adapter = new UserAdapter(getContext(), userNamesList);  // Pass only the user names
                 recyclerView.setAdapter(adapter);
 
                 // Create the dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(title);
                 builder.setView(dialogView);
+
+                // Handle the positive button action (Send Notification)
                 builder.setPositiveButton("Send Notification", (dialog, which) -> {
-                    Set<String> selectedUsers = adapter.getSelectedUsers();
-                    Log.d("EventDetailFragment", "Selected Users: " + selectedUsers);
-                    // Perform actions with the selected users if needed
+                    Set<String> selectedUsers = adapter.getSelectedUsers();  // Get the selected users
+
+                    if (selectedUsers.isEmpty()) {
+                        Toast.makeText(getContext(), "No users selected", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Loop through the selected users and send them to the notification document
+                    for (String user : selectedUsers) {
+                        // Find the corresponding user ID for the selected user name
+                        String userId = null;
+                        for (Map.Entry<String, String> entry : userNames) {
+                            if (entry.getKey().equals(user)) {
+                                userId = entry.getValue();  // Get the userId from the Map.Entry
+                                break;
+                            }
+                        }
+
+                        if (userId != null) {
+                            // Send the notification for the selected user
+                            if (title.equals("Waitlisted Users")){
+                                notification.addUserToNotificationDocument("waitlistlist_entrants", userId);
+
+                            }
+                            if (title.equals("Invited Users")){
+                                notification.addUserToNotificationDocument("chosen_entrant", userId);
+
+                            }
+                            Log.d("EventDetailFragment", "Sending notification to user: " + user);  // Log the notification
+                        }
+                    }
+
+                    // Optionally, show a toast or dialog that the notifications have been sent
+                    Toast.makeText(getContext(), "Notifications sent to selected users", Toast.LENGTH_SHORT).show();
                 });
+
+                // Handle the negative button action (Cancel)
                 builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+                // Show the dialog
                 builder.create().show();
             }
 
             @Override
             public void onError(String errorMessage) {
+                // Handle the error callback
                 Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                Log.e("EventDetailFragment", "Error fetching user list: " + errorMessage);  // Log the error for debugging
             }
         });
     }

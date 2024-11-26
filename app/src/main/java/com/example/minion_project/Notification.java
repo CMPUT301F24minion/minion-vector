@@ -210,7 +210,7 @@ public class Notification {
      * @param documentID
      * @param androidID
      */
-    private void addUserToNotificationDocument(String documentID, String androidID) {
+    public void addUserToNotificationDocument(String documentID, String androidID) {
         DocumentReference docRef = db.collection("Notifications").document(documentID);
 
         docRef.get().addOnCompleteListener(task -> {
