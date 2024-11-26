@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.minion_project.Notification;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
@@ -28,7 +29,7 @@ public class UserEventFragment extends Fragment {
     private TextView eventStatus;
     private Button eventJoinButton;
     private Button eventUnJoinButton;
-
+    private Notification notification;
     private UserController userController;
 
 
@@ -42,6 +43,7 @@ public class UserEventFragment extends Fragment {
     public UserEventFragment(EventController eventController,UserController userController) {
         this.eventController=eventController;
         this.userController=userController;
+        this.notification=new Notification();
     }
 
     private Event event;
@@ -130,6 +132,8 @@ private void ButtonVisibility(){
             userStatusforEvent =userController.getUserEventStatus(event.getEventID());
             // change vis
             ButtonVisibility();
+            notification.addUserToNotificationDocument("waitlistlist_entrants", userController.user.getDeviceID());
+
 
         } else {
             // If event is not yet loaded, show a message

@@ -14,8 +14,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 public class EventController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
@@ -227,7 +229,7 @@ public class EventController {
                         return;
                     }
 
-                    ArrayList<String> userNames = new ArrayList<>();
+                    ArrayList<Map.Entry<String, String>> userNames = new ArrayList<>();
                     for (String userId : userIds) {
                         Log.d("EventController", "Fetching user: " + userId);
 
@@ -237,8 +239,7 @@ public class EventController {
                                         String userName = userDoc.getString("Name");
                                         Log.d("EventController", "Fetched user name: " + userName);
                                         if (userName != null) {
-                                            userNames.add(userName);
-                                        }
+                                            userNames.add(new AbstractMap.SimpleEntry<>(userName, userId));                                         }
                                     } else {
                                         Log.d("EventController", "User not found: " + userId);
                                     }
@@ -265,7 +266,7 @@ public class EventController {
 
     // Callback interface for user list fetching
     public interface UserListCallback {
-        void onUserListFetched(ArrayList<String> userNames);
+        void onUserListFetched(ArrayList<Map.Entry<String, String>>  userNames);
 
         void onError(String errorMessage);
     }

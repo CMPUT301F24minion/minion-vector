@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.Notification;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
@@ -37,7 +38,7 @@ public class UserController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference usersRef;
     private EventController eventController;
-
+    private Notification notification;
     /**
      * Constructor for UserController.
      * @param user The User object associated with this controller.
@@ -46,6 +47,7 @@ public class UserController {
         this.user = user;
         this.usersRef = Our_Firestore.getUsersRef();
         this.eventController=new EventController();
+        this.notification=new Notification();
     }
 
     /**
@@ -119,6 +121,8 @@ public class UserController {
                                 });
                         eventController.addToEventsEnrolled(event,user.getDeviceID());
                         eventController.removeFromInvited(event,user.getDeviceID());
+                        notification.addUserToNotificationDocument("Won_lottery", user.getDeviceID());
+
                     } else {
                         Log.e("UserController", "Event data is invalid: Event ID or Event Name is empty.");
                 }
@@ -157,6 +161,7 @@ public class UserController {
                     // add to events rejected also pools one random user for lottery
                     eventController.addToEventsRejected(event,user.getDeviceID());
                     eventController.removeFromInvited(event,user.getDeviceID());
+                    notification.addUserToNotificationDocument("cancelled_event", user.getDeviceID());
 
                 } else {
                     Log.e("UserController", "Event data is invalid: Event ID or Event Name is empty.");

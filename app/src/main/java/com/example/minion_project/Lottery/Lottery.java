@@ -1,6 +1,7 @@
 package com.example.minion_project.Lottery;
 
 import com.example.minion_project.FireStoreClass;
+import com.example.minion_project.Notification;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
 import com.google.firebase.firestore.CollectionReference;
@@ -13,6 +14,7 @@ public class Lottery {
     private EventController eventController;
     private FireStoreClass fireStore;
     private CollectionReference userRef;
+    private Notification notification;
 
     // the lottery has access to the event
     public Lottery(Event event){
@@ -20,7 +22,7 @@ public class Lottery {
         this.eventController=new EventController();
         this.fireStore=new FireStoreClass();
         this.userRef=fireStore.getUsersRef();
-
+        this.notification=new Notification();
     }
 
     public void poolApplicants(Integer numberToPool){
@@ -58,7 +60,8 @@ public class Lottery {
         setUserEventID(userId,"invited");
 
         // call notification
-        // TODO
+        notification.addUserToNotificationDocument("chosen_entrant", userId);
+
 
         //add to the eventsInvited arr
         eventController.addToEventInvited(event,userId);
