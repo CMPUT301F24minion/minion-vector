@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     Button loginBtn,userBtn,organizerBtn,adminBtn;
     TextView choosePageText;
     TextView appName;
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
+
     /**
      * Called when the activity is starting
      * @param savedInstanceState
@@ -61,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
         Notification notification = new Notification(android_id);
         notification.addUserToNotificationWon(android_id);
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+            }
+        }
 
         loginBtn.setOnClickListener(new View.OnClickListener()
 

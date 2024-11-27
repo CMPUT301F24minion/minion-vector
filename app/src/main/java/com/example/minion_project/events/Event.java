@@ -8,6 +8,8 @@
  */
 package com.example.minion_project.events;
 
+import static java.lang.Boolean.FALSE;
+
 import com.example.minion_project.user.User;
 
 import java.util.ArrayList;
@@ -34,6 +36,16 @@ public class Event {
     private String eventImage;
     private String eventQrCode;
     private Integer DEFAULT_CAPACITY=10;
+    private Boolean eventStart;
+
+    public Boolean getEventStart() {
+        return eventStart;
+    }
+
+    public void setEventStart(Boolean eventStart) {
+        this.eventStart = eventStart;
+    }
+
     /**
      * Default constructor for Event class: empty event
      */
@@ -49,7 +61,7 @@ public class Event {
         this.eventInvited = new ArrayList<>();
         this.eventDeclined = new ArrayList<>();
         this.eventRejected = new ArrayList<>();
-
+        this.eventStart=FALSE;
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
@@ -75,6 +87,8 @@ public class Event {
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
+        this.eventStart= FALSE;
+
 
     }
     public ArrayList<String> getEventEnrolled() {

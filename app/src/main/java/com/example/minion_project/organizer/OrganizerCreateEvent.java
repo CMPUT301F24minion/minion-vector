@@ -7,6 +7,8 @@
 
 package com.example.minion_project.organizer;
 
+import static java.lang.Boolean.FALSE;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -189,6 +191,7 @@ public class OrganizerCreateEvent extends Fragment {
         event.setEventDate(selectedDate);
         event.setEventTime(selectedTime);
         event.setEventOrganizer(Organizer.getDeviceID());
+        event.setEventStart(FALSE);
 
 
         CollectionReference eventsRef = ourFirestore.getEventsRef();

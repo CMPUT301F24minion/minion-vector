@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,9 +61,11 @@ public class EventDetailFragment extends Fragment {
     TextView eventAcceptedCount ;
     TextView eventDeclinedCount ;
     TextView eventPendingCount ;
+    TextView eventStartInfo;
     EditText eventNumberOfApplicants;
     Button eventRunLottery;
     Button removeImageButton;
+    Button eventStartButton;
     EventController eventController;
 
     public EventDetailFragment() {
@@ -89,6 +92,8 @@ public class EventDetailFragment extends Fragment {
         eventDescriptionTextView = view.findViewById(R.id.eventDescription);
         eventCapacityTextView = view.findViewById(R.id.eventCapacity);
         eventRunLottery=view.findViewById(R.id.eventRunLottery);
+        eventStartButton=view.findViewById(R.id.eventStart);
+        eventStartInfo=view.findViewById(R.id.eventStartInfo);
         eventWaitlistCount = view.findViewById(R.id.eventWaitlistcount);
         eventAcceptedCount = view.findViewById(R.id.eventAcceptedCount);
         eventDeclinedCount = view.findViewById(R.id.eventDeclinedCount);
@@ -125,7 +130,24 @@ public class EventDetailFragment extends Fragment {
         eventDateTextView.setOnClickListener(v -> openDatePickerDialog());
         eventTimeTextView.setOnClickListener(v -> openTimePickerDialog());
         eventDescriptionTextView.setOnClickListener(v -> showEditEventDetailsDialog());
+        eventStartButton.setOnClickListener(v->{
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Accept Invite")
+                    .setMessage("Do you want to start the event(This cannot be undone)?")
+                    .setPositiveButton("Start", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getContext(), "You have started the event!", Toast.LENGTH_SHORT).show();
 
+
+                        }
+                    })
+                    .setNegativeButton("Don't start", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    })
+                    .create()
+                    .show();
+        });
         return view;
     }
 
@@ -180,6 +202,13 @@ public class EventDetailFragment extends Fragment {
                     eventAcceptedCount.setText("Users accepted ✅: " + acceptedCount);
                     eventDeclinedCount.setText("Users declined ❌: " + declinedCount);
                     eventPendingCount.setText("Users invited count 📩: " + invitedCount);
+
+                    // check if can start event(can only start once
+
+                    if(event.getEventStart()){
+                        eventStartButton.setVisibility(View.INVISIBLE);
+                        eventStartInfo.setVisibility(View.VISIBLE);
+                    }
 
                 }
             }
@@ -457,6 +486,7 @@ public class EventDetailFragment extends Fragment {
                             }
                         }
 
+
                         if (userId != null) {
                             // Send the notification for the selected user
                             if (title.equals("Waitlisted Users")){
@@ -468,25 +498,22 @@ public class EventDetailFragment extends Fragment {
 
                             }
                             if (title.equals("Accepted Users")){
-                                notification.addUserToNotificationDocument("Won_lottery", userId);
+                                notification.addUserToNotificationDocument("chosen_entrant", userId);
 
                             }
                             if (title.equals("Invited Users")){
-                                notification.addUserToNotificationDocument("chosen_entrant", userId);
+                                notification.addUserToNotificationDocument("Won_lottery", userId);
 
                             }
                             Log.d("EventDetailFragment", "Sending notification to user: " + user);  // Log the notification
                         }
                     }
 
-                    // Optionally, show a toast or dialog that the notifications have been sent
                     Toast.makeText(getContext(), "Notifications sent to selected users", Toast.LENGTH_SHORT).show();
                 });
 
-                // Handle the negative button action (Cancel)
                 builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-                // Show the dialog
                 builder.create().show();
             }
 
