@@ -32,12 +32,6 @@ public class AdminActivity extends AppCompatActivity {
     // Binding object for activity layout views
     ActivityAdminBinding binding;
 
-    /**
-     * Initializes the binding, sets up the content view, and configures the initial fragment as
-     * well as the bottom navigation actions
-     *
-     * @param savedInstanceState the activity's previously saved state if it exists
-     */
     @Override
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +55,9 @@ public class AdminActivity extends AppCompatActivity {
             } else if (itemId == R.id.menu_admin_profiles) {
                 replaceFragment(new AdminProfiles());
                 binding.adminTextView.setText("Admin Profiles");
+            } else if (itemId == R.id.menu_admin_facilities) {
+                replaceFragment(new AdminFacilities());
+                binding.adminTextView.setText("Admin Facilities");
             }
 
             return true;
@@ -78,6 +75,5 @@ public class AdminActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayoutAdmin, fragment);
         fragmentTransaction.commit();
     }
-
-
 }
+
