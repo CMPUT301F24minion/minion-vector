@@ -137,6 +137,7 @@ public class UserController {
 
     return FALSE;
     };
+
     public Boolean DeclineInvite(String eventID) {
         //fetch eventfirst
         Event event = eventController.getEvent(eventID, new EventController.EventCallback() {

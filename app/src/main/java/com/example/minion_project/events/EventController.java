@@ -5,10 +5,13 @@
 
 package com.example.minion_project.events;
 
+import static java.lang.Boolean.TRUE;
+
 import android.util.Log;
 
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.Lottery.Lottery;
+import com.example.minion_project.Notification;
 import com.example.minion_project.user.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,12 +25,16 @@ import java.util.Map;
 public class EventController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
     private CollectionReference eventsRef;
+    private CollectionReference usersRef;
     private Event event;
+    private Notification notification;
     /**
      * Constructor for EventController class
      */
     public EventController() {
         this.eventsRef=Our_Firestore.getEventsRef();
+        this.usersRef=Our_Firestore.getUsersRef();
+        notification=new Notification();
 
     }
 
@@ -275,14 +282,87 @@ public class EventController {
      */
     public  void startEvent(Event event){
         //set the event start to true
+        eventsRef.document(event.getEventID()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Set the event start to true
+                        eventsRef.document(event.getEventID()).update("eventStart", TRUE);
 
-        //move everyone in waitlist to rejected and clear waitlist
+                        // Move everyone in the waitlist to rejected and clear waitlist
+                        ArrayList<String> waitlist = event.getEventWaitlist();
+                        ArrayList<String> rejected = event.getEventRejected();
+                        rejected.addAll(waitlist);  // Add all waitlisted users to rejected
+                        waitlist.clear();  // Clear the waitlist
 
-        //
+                        // Move everyone in the invited list to rejected and clear invited
+                        ArrayList<String> invited = event.getEventInvited();
+                        rejected.addAll(invited);  // Add all invited users to rejected
+                        invited.clear();  // Clear the invited list
 
+                        // Update the Firestore document with the updated lists
+                        eventsRef.document(event.getEventID()).update(
+                                "eventWaitlist", waitlist,
+                                "eventInvited", invited,
+                                "eventRejected", rejected
+                        );
+
+
+                        for (String userId : rejected) {
+                            rejecetUser(event.getEventID(),userId);
+                            notification.addUserToNotificationDocument("lost_lottery", userId);
+                        }
+                    } else {
+                        Log.e("Event", "Event not found in Firestore");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Event", "Error getting event data", e);
+                });
     }
 
-    /**
+
+public void rejecetUser(String eventId, String userId){
+    usersRef.document(userId).get().addOnCompleteListener(task -> {
+        if (task.isSuccessful()) {
+            DocumentSnapshot document = task.getResult();
+
+            if (document.exists()) {
+                // Retrieve current user data
+                Map<String, Object> userData = document.getData();
+
+                // Check if the "Events" field exists and is a map
+                if (userData != null && userData.containsKey("Events") && userData.get("Events") instanceof Map) {
+                    Map<String, String> eventsMap = (Map<String, String>) userData.get("Events");
+
+                    // Check if the user has the event in their list
+                    if (eventsMap.containsKey(eventId)) {
+                        // Update the event status to "rejected"
+                        eventsMap.put(eventId, "rejected");
+
+                        // Update the document with the new status
+                        usersRef.document(userId)
+                                .update("Events", eventsMap)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("User Update", "Event status updated to rejected for user " + userId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("User Update Error", "Failed to update event status: ", e);
+                                });
+                    } else {
+                        Log.d("User Update", "Event not found in user's events");
+                    }
+                }
+            } else {
+                // User document not found
+                Log.e("User Update Error", "User not found in database");
+            }
+        } else {
+            Log.e("User Fetch Error", "Error fetching user data: ", task.getException());
+        }
+    });
+}
+
+/**
      * EventCallback interface for handling event-related callbacks
      */
     public interface EventCallback {

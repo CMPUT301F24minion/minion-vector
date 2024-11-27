@@ -198,7 +198,7 @@ public class EventDetailFragment extends Fragment {
                     int acceptedCount = event.getEventEnrolled().size(); // Number of users accepted
                     int declinedCount = event.getEventDeclined().size(); // Number of users declined
                     int invitedCount = event.getEventInvited().size(); // Number of users invited
-                    int rejectedCount = event.getEventInvited().size(); // Number of users rejected
+                    int rejectedCount = event.getEventRejected().size(); // Number of users rejected
 
 
                     // Set the waitlist, accepted, declined, and pending counts
