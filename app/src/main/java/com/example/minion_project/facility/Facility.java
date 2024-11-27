@@ -1,11 +1,8 @@
 package com.example.minion_project.facility;
 
 public class Facility {
-    private String facilityID;
-    private String name;
-    private String location;
-    private String description;
-    private String imageUrl;
+    private String facilityID; // This holds the name
+    private String facilityImage;
 
     public Facility() {
         // Empty constructor required for Firestore
@@ -20,36 +17,11 @@ public class Facility {
         this.facilityID = facilityID;
     }
 
-    public String getName() {
-        return name;
+    public String getFacilityImage() {
+        return facilityImage;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    // Add getters and setters for other fields
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setFacilityImage(String facilityImage) {
+        this.facilityImage = facilityImage;
     }
 }

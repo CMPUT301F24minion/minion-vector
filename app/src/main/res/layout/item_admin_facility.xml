@@ -14,13 +14,15 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
+        <!-- Facility Image -->
         <ImageView
             android:id="@+id/facilityImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:contentDescription="Facility Image"
+            android:contentDescription="facility image"
             android:scaleType="centerCrop" />
 
+        <!-- Facility Name -->
         <TextView
             android:id="@+id/facilityNameTextView"
             android:layout_width="wrap_content"
@@ -29,19 +31,9 @@
             android:layout_marginStart="8dp"
             android:text="Facility Name"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
 
-        <TextView
-            android:id="@+id/facilityLocationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/facilityNameTextView"
-            android:layout_toEndOf="@id/facilityImageView"
-            android:layout_marginStart="8dp"
-            android:text="Location"
-            android:textSize="14sp" />
-
-        <!-- Add more views as needed -->
 
     </RelativeLayout>
 

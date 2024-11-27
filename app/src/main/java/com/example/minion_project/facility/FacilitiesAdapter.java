@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-// Import necessary components
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.minion_project.R;
 import com.bumptech.glide.Glide;
 
@@ -14,12 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
 public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.ViewHolder> {
 
     private Context context;
-    private List<com.example.minion_project.facility.Facility> facilityList;
+    private List<Facility> facilityList;
 
-    public FacilitiesAdapter(Context context, List<com.example.minion_project.facility.Facility> facilityList) {
+    public FacilitiesAdapter(Context context, List<Facility> facilityList) {
         this.context = context;
         this.facilityList = facilityList;
     }
@@ -27,14 +28,12 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
     // ViewHolder class to hold each item view
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView facilityNameTextView;
-        TextView facilityLocationTextView;
         ImageView facilityImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Initialize the views
             facilityNameTextView = itemView.findViewById(R.id.facilityNameTextView);
-            facilityLocationTextView = itemView.findViewById(R.id.facilityLocationTextView);
             facilityImageView = itemView.findViewById(R.id.facilityImageView);
         }
     }
@@ -49,15 +48,20 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull FacilitiesAdapter.ViewHolder holder, int position) {
-        com.example.minion_project.facility.Facility facility = facilityList.get(position);
-        // Set the facility's details
-        holder.facilityNameTextView.setText(facility.getName());
-        holder.facilityLocationTextView.setText(facility.getLocation());
+        Facility facility = facilityList.get(position);
 
-        // Load facility image using Glide or any other image loading library
+        // Set the facility's name using facilityID
+        String facilityName = facility.getFacilityID();
+        if (facilityName != null && !facilityName.isEmpty()) {
+            holder.facilityNameTextView.setText(facilityName);
+        } else {
+            holder.facilityNameTextView.setText("No Name Provided");
+        }
+
+        // Load facility image using Glide
         Glide.with(context)
-                .load(facility.getImageUrl())
-                .placeholder(R.drawable.business_center)
+                .load(facility.getFacilityImage())
+                .placeholder(R.drawable.business_center) // Ensure this drawable exists
                 .into(holder.facilityImageView);
     }
 

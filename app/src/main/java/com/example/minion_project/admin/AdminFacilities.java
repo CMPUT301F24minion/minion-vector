@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.facility.Facility;
-import com.example.minion_project.facility.FacilitiesAdapter; // Update the package name
+import com.example.minion_project.facility.FacilitiesAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class AdminFacilities extends Fragment {
 
     private RecyclerView recyclerView;
-    private com.example.minion_project.facility.FacilitiesAdapter adapter;
+    private FacilitiesAdapter adapter;
     private ArrayList<Facility> facilityList;
     private FireStoreClass ourFirestore;
     private CollectionReference facilitiesRef;
@@ -41,7 +41,7 @@ public class AdminFacilities extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ourFirestore = new FireStoreClass();
-        facilitiesRef = ourFirestore.getFacilitiesRef(); // Ensure this method exists
+        facilitiesRef = ourFirestore.getFacilitiesRef();
         facilityList = new ArrayList<>();
     }
 
@@ -52,7 +52,7 @@ public class AdminFacilities extends Fragment {
 
         recyclerView = view.findViewById(R.id.adminFacilitiesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new com.example.minion_project.facility.FacilitiesAdapter(getContext(), facilityList);
+        adapter = new FacilitiesAdapter(getContext(), facilityList);
         recyclerView.setAdapter(adapter);
 
         fetchFacilities();
@@ -67,8 +67,10 @@ public class AdminFacilities extends Fragment {
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                         Facility facility = document.toObject(Facility.class);
                         if (facility != null) {
-                            facility.setFacilityID(document.getId());
+                            // Remove this line to prevent overwriting
+                            // facility.setFacilityID(document.getId());
                             facilityList.add(facility);
+                            Log.d("AdminFacilities", "Added Facility: " + facility.toString());
                         }
                     }
 
