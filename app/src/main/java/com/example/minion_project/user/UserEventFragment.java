@@ -114,6 +114,9 @@ private void ButtonVisibility(){
             userStatusforEvent =userController.getUserEventStatus(event.getEventID());
             // change vis
             ButtonVisibility();
+            if (getActivity() instanceof UserActivity) {
+                ((UserActivity) getActivity()).replaceFragment(new UserEventStatusFragment(userController));
+            }
         }
         else {
             // If event is not yet loaded, show a message
@@ -133,6 +136,11 @@ private void ButtonVisibility(){
             // change vis
             ButtonVisibility();
             notification.addUserToNotificationDocument("waitlistlist_entrants", userController.user.getDeviceID());
+            //switch view to main page
+            if (getActivity() instanceof UserActivity) {
+                ((UserActivity) getActivity()).replaceFragment(new UserEventStatusFragment(userController));
+            }
+
 
 
         } else {
