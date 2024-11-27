@@ -45,6 +45,14 @@ public class FireStoreClass {
     public CollectionReference getAll_UsersRef() {
         return All_UsersRef;
     }
+
+    /**
+     * method to get facilities ref
+     * @return facilities ref
+     */
+    public CollectionReference getFacilitiesRef() {
+        return db.collection("Facility");
+    }
     /**
      * method to get organizer ref
      * @return organizer ref

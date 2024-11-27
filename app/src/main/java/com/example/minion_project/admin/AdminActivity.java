@@ -1,18 +1,8 @@
-/**
- * AdminActivity.java
- *
- * Main activity for the admin interface
- * Includes admin navigation which includes events, images, and profiles fragments
- *
- * Outstanding Issues:
- * - None
- */
-
+// AdminActivity.java
 package com.example.minion_project.admin;
 
 import android.os.Bundle;
 import android.util.Log;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -21,32 +11,22 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityAdminBinding;
-import com.example.minion_project.organizer.OrganizerEvents;
 
-/**
- * AdminActivity class manages the main UI components for the admin role
- * Sets up the fragment navigation and binding the view with the corresponding data
- */
 public class AdminActivity extends AppCompatActivity {
 
     // Binding object for activity layout views
-    ActivityAdminBinding binding;
+    private ActivityAdminBinding binding;
 
-    /**
-     * Initializes the binding, sets up the content view, and configures the initial fragment as
-     * well as the bottom navigation actions
-     *
-     * @param savedInstanceState the activity's previously saved state if it exists
-     */
     @Override
-    public void onCreate (Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Default fragment when the admin activity starts
         replaceFragment(new AdminEvents());
-        binding.adminTextView.setText("Admin Events");
+        // Assuming you have a TextView for the title, update accordingly
+        // binding.adminTextView.setText("Admin Events");
 
         // Admin bottom navigation
         binding.adminBottomNavigationView.setOnItemSelectedListener(item -> {
@@ -54,13 +34,16 @@ public class AdminActivity extends AppCompatActivity {
 
             if (itemId == R.id.menu_admin_events) {
                 replaceFragment(new AdminEvents());
-                binding.adminTextView.setText("Admin Events");
+                // binding.adminTextView.setText("Admin Events");
             } else if (itemId == R.id.menu_admin_images) {
                 replaceFragment(new AdminImages());
-                binding.adminTextView.setText("Admin Images");
+                // binding.adminTextView.setText("Admin Images");
             } else if (itemId == R.id.menu_admin_profiles) {
                 replaceFragment(new AdminProfiles());
-                binding.adminTextView.setText("Admin Profiles");
+                // binding.adminTextView.setText("Admin Profiles");
+            } else if (itemId == R.id.menu_admin_facilities) {
+                replaceFragment(new AdminFacilities());
+                // binding.adminTextView.setText("Admin Facilities");
             }
 
             return true;
@@ -78,6 +61,4 @@ public class AdminActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayoutAdmin, fragment);
         fragmentTransaction.commit();
     }
-
-
 }

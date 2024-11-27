@@ -20,4 +20,9 @@
         android:name="com.example.minion_project.admin.AdminImages"
         android:label="fragment_admin_images"
         tools:layout="@layout/fragment_admin_images" />
+    <fragment
+        android:id="@+id/adminFacilities"
+        android:name="com.example.minion_project.admin.AdminFacilities"
+        android:label="Admin Facilities"
+        tools:layout="@layout/fragment_admin_facilities" />
 </navigation>

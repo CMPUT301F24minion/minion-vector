@@ -14,4 +14,9 @@
         android:id="@+id/menu_admin_images"
         android:title="Images"
         android:icon="@drawable/baseline_image_24"/>
+
+    <item
+        android:id="@+id/menu_admin_facilities"
+        android:title="Facilities"
+        android:icon="@drawable/business_center" />
 </menu>

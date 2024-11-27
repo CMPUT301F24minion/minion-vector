@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/event_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="event image"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/event_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/event_image"
+            android:layout_marginStart="8dp"
+            android:text="Event Name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/event_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_name"
+            android:layout_toEndOf="@id/event_image"
+            android:layout_marginStart="8dp"
+            android:text="Date: YYYY-MM-DD"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/facility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_Date"
+            android:layout_toEndOf="@id/event_image"
+            android:layout_marginStart="8dp"
+            android:text="Facility: Facility Name"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/delete_event_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="delete event"
+            android:padding="4dp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
