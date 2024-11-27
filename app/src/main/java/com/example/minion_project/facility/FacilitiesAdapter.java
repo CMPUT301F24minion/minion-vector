@@ -1,4 +1,3 @@
-// FacilitiesAdapter.java
 package com.example.minion_project.facility;
 
 import android.content.Context;

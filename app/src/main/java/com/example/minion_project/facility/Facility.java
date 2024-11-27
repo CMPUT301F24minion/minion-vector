@@ -1,4 +1,3 @@
-// Facility.java
 package com.example.minion_project.facility;
 
 public class Facility {

@@ -1,4 +1,3 @@
-// AdminFacilities.java
 package com.example.minion_project.admin;
 
 import android.app.AlertDialog;
@@ -13,9 +12,13 @@ import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.facility.Facility;
 import com.example.minion_project.facility.FacilitiesAdapter;
+import com.example.minion_project.events.Event;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -136,26 +139,51 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
         // Reference to the Events collection
         CollectionReference eventsRef = ourFirestore.getEventsRef();
 
-        // Query events where eventOrganizer matches the facility's document ID
+        // Query events where eventOrganizer matches the facilityID
         eventsRef.whereEqualTo("eventOrganizer", facilityDocumentID)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         // Batch delete events
                         WriteBatch batch = ourFirestore.getFirestore().batch();
+                        int eventsToDelete = queryDocumentSnapshots.size();
+                        int[] deletionsCompleted = {0}; // To keep track of deletions
+
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            batch.delete(document.getReference());
+                            Event event = document.toObject(Event.class);
+                            if (event != null) {
+                                String eventImage = event.getEventImage();
+                                String eventQrCode = event.getEventQrCode();
+                                String eventID = document.getId(); // Use document ID for eventID
+
+                                // Delete the event image from Firebase Storage
+                                deleteFileFromStorage(eventImage);
+
+                                // Delete the event QR code from Firebase Storage
+                                deleteFileFromStorage(eventQrCode);
+
+                                // Delete references from Users and Organizers
+                                deleteEventReferencesFromUsersAndOrganizers(eventID, event);
+
+                                // Delete the event document
+                                batch.delete(document.getReference());
+                            }
+
+                            // After processing each event
+                            deletionsCompleted[0]++;
+                            if (deletionsCompleted[0] == eventsToDelete) {
+                                // Commit the batch after all events are processed
+                                batch.commit()
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.d("AdminFacilities", "Associated events and their files deleted successfully.");
+                                            onComplete.run();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("AdminFacilities", "Error deleting associated events: " + e.getMessage());
+                                            Toast.makeText(getContext(), "Failed to delete associated events.", Toast.LENGTH_SHORT).show();
+                                        });
+                            }
                         }
-                        // Commit the batch
-                        batch.commit()
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("AdminFacilities", "Associated events deleted successfully.");
-                                    onComplete.run();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("AdminFacilities", "Error deleting associated events: " + e.getMessage());
-                                    Toast.makeText(getContext(), "Failed to delete associated events.", Toast.LENGTH_SHORT).show();
-                                });
                     } else {
                         // No associated events found
                         onComplete.run();
@@ -165,5 +193,59 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                     Log.e("AdminFacilities", "Error fetching associated events: " + e.getMessage());
                     Toast.makeText(getContext(), "Failed to fetch associated events.", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void deleteFileFromStorage(String fileUrl) {
+        if (fileUrl != null && !fileUrl.isEmpty()) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReferenceFromUrl(fileUrl);
+
+            storageRef.delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("AdminFacilities", "File deleted successfully: " + fileUrl);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("AdminFacilities", "Error deleting file: " + fileUrl + " Error: " + e.getMessage());
+                    });
+        }
+    }
+
+    private void deleteEventReferencesFromUsersAndOrganizers(String eventID, Event event) {
+        // Reference to Users and Organizers collections
+        CollectionReference usersRef = ourFirestore.getUsersRef();
+        CollectionReference organizersRef = ourFirestore.getOrganizersRef();
+
+        // Remove the event from users in eventEnrolled, eventWaitlist, eventInvited, etc.
+        ArrayList<String> userIds = new ArrayList<>();
+        if (event.getEventEnrolled() != null) userIds.addAll(event.getEventEnrolled());
+        if (event.getEventWaitlist() != null) userIds.addAll(event.getEventWaitlist());
+        if (event.getEventInvited() != null) userIds.addAll(event.getEventInvited());
+        if (event.getEventDeclined() != null) userIds.addAll(event.getEventDeclined());
+        if (event.getEventRejected() != null) userIds.addAll(event.getEventRejected());
+
+        // Remove event from each user's Events array
+        for (String userId : userIds) {
+            usersRef.document(userId)
+                    .update("Events", FieldValue.arrayRemove(eventID))
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("AdminFacilities", "Removed event " + eventID + " from user " + userId);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("AdminFacilities", "Error removing event from user: " + e.getMessage());
+                    });
+        }
+
+        // Remove event from the organizer's Events array
+        String organizerId = event.getEventOrganizer();
+        if (organizerId != null && !organizerId.isEmpty()) {
+            organizersRef.document(organizerId)
+                    .update("Events", FieldValue.arrayRemove(eventID))
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("AdminFacilities", "Removed event " + eventID + " from organizer " + organizerId);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("AdminFacilities", "Error removing event from organizer: " + e.getMessage());
+                    });
+        }
     }
 }
