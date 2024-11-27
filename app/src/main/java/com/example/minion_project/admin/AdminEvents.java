@@ -2,6 +2,7 @@
 
 package com.example.minion_project.admin;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -128,15 +129,22 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
      */
     @Override
     public void onEventDelete(Event event) {
-        // TODO: Retrieve adminDeviceID securely (e.g., from authentication)
-        String adminDeviceID = getAdminDeviceID();
-
-        // Create an instance of Admin
-        Admin admin = new Admin(adminDeviceID, ourFirestore);
-
-        // Call the removeEvent method
-        admin.removeEvent(event, eventList, eventsAdapter);
+        // Show a confirmation dialog
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete Event")
+                .setMessage("Are you sure you want to delete this event?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Proceed with deleting the event
+                    String adminDeviceID = getAdminDeviceID();
+                    // Create an instance of Admin
+                    Admin admin = new Admin(adminDeviceID, ourFirestore);
+                    // Call the removeEvent method
+                    admin.removeEvent(event, eventList, eventsAdapter);
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
+
 
     /**
      * Placeholder method to retrieve adminDeviceID
