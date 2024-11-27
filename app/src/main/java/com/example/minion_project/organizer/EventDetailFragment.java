@@ -62,6 +62,7 @@ public class EventDetailFragment extends Fragment {
     TextView eventDeclinedCount ;
     TextView eventPendingCount ;
     TextView eventStartInfo;
+    TextView eventRejectedCount;
     EditText eventNumberOfApplicants;
     Button eventRunLottery;
     Button removeImageButton;
@@ -98,6 +99,7 @@ public class EventDetailFragment extends Fragment {
         eventAcceptedCount = view.findViewById(R.id.eventAcceptedCount);
         eventDeclinedCount = view.findViewById(R.id.eventDeclinedCount);
         eventPendingCount = view.findViewById(R.id.eventPendingCount);
+        eventRejectedCount= view.findViewById(R.id.eventRejectedCount);
         eventNumberOfApplicants=view.findViewById(R.id.eventNumberOfApplicants);
         removeImageButton = view.findViewById(R.id.removeImageButton);
         notification=new Notification();
@@ -119,6 +121,7 @@ public class EventDetailFragment extends Fragment {
         eventAcceptedCount.setOnClickListener(v -> showUserListDialog("eventEnrolled", "Accepted Users"));
         eventDeclinedCount.setOnClickListener(v -> showUserListDialog("eventDeclined", "Declined Users"));
         eventPendingCount.setOnClickListener(v -> showUserListDialog("eventInvited", "Invited Users"));
+        eventRejectedCount.setOnClickListener(v -> showUserListDialog("eventRejected", "Rejected Users"));
 
         // Set click listener on the event image
         eventImage.setOnClickListener(v -> openImagePicker());
@@ -137,7 +140,7 @@ public class EventDetailFragment extends Fragment {
                     .setPositiveButton("Start", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             Toast.makeText(getContext(), "You have started the event!", Toast.LENGTH_SHORT).show();
-
+                            eventController.startEvent(event);
 
                         }
                     })
@@ -191,18 +194,19 @@ public class EventDetailFragment extends Fragment {
                     eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());
                     eventTimeTextView.setText("Event Time \uD83D\uDD53: "+event.getEventTime());
                     eventCapacityTextView.setText("Event Capacity\uD83E\uDDE2: "+event.getEventCapacity());
-
                     int waitlistCount = event.getEventWaitlist().size();  // Number of users on the waitlist
                     int acceptedCount = event.getEventEnrolled().size(); // Number of users accepted
                     int declinedCount = event.getEventDeclined().size(); // Number of users declined
                     int invitedCount = event.getEventInvited().size(); // Number of users invited
+                    int rejectedCount = event.getEventInvited().size(); // Number of users rejected
+
 
                     // Set the waitlist, accepted, declined, and pending counts
                     eventWaitlistCount.setText("Users on waitlist ⌛: " + waitlistCount);
                     eventAcceptedCount.setText("Users accepted ✅: " + acceptedCount);
                     eventDeclinedCount.setText("Users declined ❌: " + declinedCount);
                     eventPendingCount.setText("Users invited count 📩: " + invitedCount);
-
+                    eventRejectedCount.setText("Users rejected ✖\uFE0F: " + rejectedCount);
                     // check if can start event(can only start once
 
                     if(event.getEventStart()){

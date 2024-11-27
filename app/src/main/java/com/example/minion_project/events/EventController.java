@@ -270,6 +270,17 @@ public class EventController {
 
         void onError(String errorMessage);
     }
+    /**
+     * Function to start the event
+     */
+    public  void startEvent(Event event){
+        //set the event start to true
+
+        //move everyone in waitlist to rejected and clear waitlist
+
+        //
+
+    }
 
     /**
      * EventCallback interface for handling event-related callbacks
