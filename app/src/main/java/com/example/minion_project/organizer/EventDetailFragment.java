@@ -509,6 +509,10 @@ public class EventDetailFragment extends Fragment {
                                 notification.addUserToNotificationDocument("Won_lottery", userId);
 
                             }
+                            if (title.equals("Rejected Users")){
+                                notification.addUserToNotificationDocument("lost_lottery", userId);
+
+                            }
                             Log.d("EventDetailFragment", "Sending notification to user: " + user);  // Log the notification
                         }
                     }
