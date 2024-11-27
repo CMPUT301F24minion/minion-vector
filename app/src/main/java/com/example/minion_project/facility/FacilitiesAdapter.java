@@ -1,14 +1,16 @@
+// FacilitiesAdapter.java
 package com.example.minion_project.facility;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.minion_project.R;
 import com.bumptech.glide.Glide;
+import com.example.minion_project.R;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,16 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
 
     private Context context;
     private List<Facility> facilityList;
+    private OnFacilityClickListener facilityClickListener;
+
+    // Interface for item click actions
+    public interface OnFacilityClickListener {
+        void onFacilityClick(Facility facility);
+    }
+
+    public void setOnFacilityClickListener(OnFacilityClickListener listener) {
+        this.facilityClickListener = listener;
+    }
 
     public FacilitiesAdapter(Context context, List<Facility> facilityList) {
         this.context = context;
@@ -26,7 +38,7 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
     }
 
     // ViewHolder class to hold each item view
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView facilityNameTextView;
         ImageView facilityImageView;
 
@@ -35,6 +47,20 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
             // Initialize the views
             facilityNameTextView = itemView.findViewById(R.id.facilityNameTextView);
             facilityImageView = itemView.findViewById(R.id.facilityImageView);
+
+            // Set click listener on the entire item view
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (facilityClickListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Facility clickedFacility = facilityList.get(position);
+                    facilityClickListener.onFacilityClick(clickedFacility);
+                }
+            }
         }
     }
 
@@ -49,6 +75,10 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull FacilitiesAdapter.ViewHolder holder, int position) {
         Facility facility = facilityList.get(position);
+
+        // Log facility details for debugging
+        Log.d("FacilitiesAdapter", "Binding Facility - Name: " + facility.getFacilityID());
+        Log.d("FacilitiesAdapter", "Binding Facility - Image URL: " + facility.getFacilityImage());
 
         // Set the facility's name using facilityID
         String facilityName = facility.getFacilityID();

@@ -1,7 +1,9 @@
+// Facility.java
 package com.example.minion_project.facility;
 
 public class Facility {
-    private String facilityID; // This holds the name
+    private String documentID;     // Firestore document ID
+    private String facilityID;     // Facility name
     private String facilityImage;
 
     public Facility() {
@@ -9,6 +11,15 @@ public class Facility {
     }
 
     // Getters and Setters
+
+    public String getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
+    }
+
     public String getFacilityID() {
         return facilityID;
     }
@@ -23,5 +34,14 @@ public class Facility {
 
     public void setFacilityImage(String facilityImage) {
         this.facilityImage = facilityImage;
+    }
+
+    @Override
+    public String toString() {
+        return "Facility{" +
+                "documentID='" + documentID + '\'' +
+                ", facilityID='" + facilityID + '\'' +
+                ", facilityImage='" + facilityImage + '\'' +
+                '}';
     }
 }
