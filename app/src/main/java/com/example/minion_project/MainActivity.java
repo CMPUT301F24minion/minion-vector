@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         android_id = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
         Notification notification = new Notification(android_id);
-        notification.addUserToNotificationWon(android_id);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
