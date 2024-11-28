@@ -9,6 +9,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#1B1B1B"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-180dp">
@@ -18,7 +19,7 @@
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="49dp"
-            android:background="@color/top_margin"
+            android:background="@color/zxing_custom_viewfinder_laser"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -51,10 +52,10 @@
         android:id="@+id/adminBottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/adminNavBar"
+        android:background="@color/zxing_custom_viewfinder_laser"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/admin_bottom_menu"  />
+        app:menu="@menu/admin_bottom_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
