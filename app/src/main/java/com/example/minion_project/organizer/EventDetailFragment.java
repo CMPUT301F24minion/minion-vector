@@ -33,12 +33,19 @@ import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
 import com.example.minion_project.user.UserAdapter;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -106,6 +113,7 @@ public class EventDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             String eventId = (String) getArguments().getSerializable("event");
+
             fetchEventData(eventId);
         }
         eventRunLottery.setOnClickListener(v->{
@@ -165,6 +173,9 @@ public class EventDetailFragment extends Fragment {
                 if (event != null) {
                     EventDetailFragment.this.event = event;
 
+                    // Clean invalid user IDs from event lists
+                    cleanInvalidUserIds(event);
+
                     // instantiate the lottery
                     EventDetailFragment.this.lottery=new Lottery(event);
                     if (event.getEventEnrolled().size()>=event.getEventCapacity() ||event.getEventWaitlist().size()==0){
@@ -199,7 +210,6 @@ public class EventDetailFragment extends Fragment {
                     int declinedCount = event.getEventDeclined().size(); // Number of users declined
                     int invitedCount = event.getEventInvited().size(); // Number of users invited
                     int rejectedCount = event.getEventRejected().size(); // Number of users rejected
-
 
                     // Set the waitlist, accepted, declined, and pending counts
                     eventWaitlistCount.setText("Users on waitlist ⌛: " + waitlistCount);
@@ -533,6 +543,85 @@ public class EventDetailFragment extends Fragment {
             }
         });
     }
+
+    private void cleanInvalidUserIds(Event event) {
+        Log.d("EventDetailFragment", "cleanInvalidUserIds called for event ID: " + event.getEventID());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference eventRef = db.collection("Events").document(event.getEventID());
+
+        Map<String, List<String>> userLists = new HashMap<>();
+        userLists.put("eventWaitlist", event.getEventWaitlist());
+        userLists.put("eventEnrolled", event.getEventEnrolled());
+        userLists.put("eventInvited", event.getEventInvited());
+        userLists.put("eventDeclined", event.getEventDeclined());
+        userLists.put("eventRejected", event.getEventRejected());
+
+        for (Map.Entry<String, List<String>> entry : userLists.entrySet()) {
+            String listName = entry.getKey();
+            List<String> userIds = entry.getValue();
+
+            Log.d("EventDetailFragment", "Processing list: " + listName + " with user IDs: " + userIds);
+
+            if (userIds == null || userIds.isEmpty()) {
+                Log.d("EventDetailFragment", "No user IDs in list: " + listName);
+                continue;
+            }
+
+            List<String> invalidUserIds = new ArrayList<>();
+            List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+            List<String> trimmedUserIds = new ArrayList<>();
+
+            // Trim user IDs and collect tasks
+            for (String userId : userIds) {
+                String trimmedUserId = userId.trim();
+                trimmedUserIds.add(trimmedUserId);
+                DocumentReference userRef = db.collection("Users").document(trimmedUserId);
+                tasks.add(userRef.get());
+            }
+
+            // Wait for all tasks to complete
+            Tasks.whenAllComplete(tasks)
+                    .addOnSuccessListener(taskList -> {
+                        Log.d("EventDetailFragment", "All tasks completed for list: " + listName);
+                        for (int i = 0; i < tasks.size(); i++) {
+                            Task<DocumentSnapshot> task = tasks.get(i);
+                            String userId = trimmedUserIds.get(i);
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot userSnapshot = task.getResult();
+                                if (!userSnapshot.exists()) {
+                                    invalidUserIds.add(userId);
+                                    Log.d("EventDetailFragment", "Invalid user ID: " + userId + " in list: " + listName);
+                                } else {
+                                    Log.d("EventDetailFragment", "Valid user ID: " + userId + " in list: " + listName);
+                                }
+                            } else {
+                                Log.e("EventDetailFragment", "Error fetching user: " + userId, task.getException());
+                            }
+                        }
+
+                        // Remove invalid user IDs from the event list in Firestore
+                        if (!invalidUserIds.isEmpty()) {
+                            Log.d("EventDetailFragment", "Removing invalid user IDs from list: " + listName + " IDs: " + invalidUserIds);
+                            for (String invalidUserId : invalidUserIds) {
+                                eventRef.update(listName, FieldValue.arrayRemove(invalidUserId))
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.d("EventDetailFragment", "Removed invalid user ID: " + invalidUserId + " from list: " + listName);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("EventDetailFragment", "Failed to remove invalid user ID: " + invalidUserId + " from list: " + listName, e);
+                                        });
+                            }
+                        } else {
+                            Log.d("EventDetailFragment", "No invalid user IDs to remove in list: " + listName);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("EventDetailFragment", "Failed to complete user ID validation tasks for list: " + listName, e);
+                    });
+        }
+    }
+
+
 
 }
 
