@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
-
+        android:textColorHint="@color/white"
         android:hint="Name"
         android:paddingBottom="50px"
         android:textColor="@color/white" />
@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-
+        android:textColorHint="@color/white"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
         android:hint="Email"
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-
+        android:textColorHint="@color/white"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
         android:hint="Phone Number"
@@ -106,6 +106,7 @@
         android:fontFamily="sans-serif-light"
         android:textColor="@color/white"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/white"
         android:layout_margin="10px"
         android:hint="Location"
         android:paddingBottom="50px" />
@@ -115,6 +116,7 @@
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/white"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
         android:minHeight="48dp"
@@ -125,6 +127,7 @@
         android:layout_width="wrap_content"
         android:textColor="@color/white"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/white"
         android:layout_margin="10px"
         android:fontFamily="sans-serif-light"
         android:minHeight="48dp"

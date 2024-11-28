@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="#1B1B1B"
+    >
 
     <TextView
         android:id="@+id/event_name"
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/box_outline"
+
         android:padding="8dp"
         android:layout_marginBottom="8dp">
 
@@ -41,6 +43,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/box_outline"
+
         android:padding="8dp"
         android:layout_marginBottom="8dp">
 

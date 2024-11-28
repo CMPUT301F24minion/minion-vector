@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center"
-    android:background="@android:color/white">
+    android:background="#1B1B1B">
 
     <!-- Event Title Input -->
     <EditText
@@ -12,9 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="What is your event called?"
+        android:textColorHint="@color/white"
         android:padding="16dp"
         android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="16sp" />
 
     <!-- Event Details Input -->
@@ -23,9 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Are there any details attendees should know?"
+        android:textColorHint="@color/white"
         android:padding="16dp"
         android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="16sp" />
 
     <!-- Event Capacity (Number of Invitations) -->
@@ -34,10 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="How many people are you able to host?"
+        android:textColorHint="@color/white"
         android:inputType="numberSigned"
         android:padding="16dp"
         android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="16sp" />
 
     <!-- Select Time Button -->
