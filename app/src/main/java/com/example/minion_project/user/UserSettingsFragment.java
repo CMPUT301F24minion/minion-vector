@@ -50,7 +50,7 @@ public class UserSettingsFragment extends Fragment {
     private TextView city;
     private Button save;
     private CheckBox changeRole;
-    public FireStoreClass fire =new FireStoreClass();
+    public FireStoreClass fire = new FireStoreClass();
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -59,6 +59,8 @@ public class UserSettingsFragment extends Fragment {
     private ImageView profileImageView;
     private Button changeImageButton;
     private Button removeImageButton;
+    public boolean Admin;
+    private boolean User;
 
     private SwitchCompat notificationToggle;
 
@@ -187,9 +189,9 @@ public class UserSettingsFragment extends Fragment {
         userData.put("allowNotifications", notif);
 
         Map<String, Object> Roles = new HashMap<>();
-        Roles.put("Admin", false);
+        Roles.put("Admin", Admin);
         Roles.put("Organizer", changeRole.isChecked());
-        Roles.put("User", true);
+        Roles.put("User", User);
 
         userData.put("Roles", Roles);
 
@@ -271,6 +273,9 @@ public class UserSettingsFragment extends Fragment {
                             Boolean isOrganizer = document.getBoolean("Roles.Organizer");
                             String profileImageUrl = document.getString("profileImage"); // Get the profile image URL
                             Boolean showNotifications = document.getBoolean("allowNotifications");
+                            Admin = Boolean.TRUE.equals(document.getBoolean("Roles.Admin"));
+                            User = Boolean.TRUE.equals(document.getBoolean("Roles.User"));
+
 
                             // Set the UI elements with retrieved data
                             name.setText(nameValue);
