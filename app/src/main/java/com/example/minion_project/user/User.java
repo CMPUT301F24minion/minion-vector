@@ -18,6 +18,8 @@ public class User {
     private String deviceID;
     private String name;
     private String email;
+    private double longi;
+    private double lat;
     private String city;
     private  Boolean AllowNotication;
     private String phoneNumber;
@@ -111,6 +113,12 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.city = city;
     }
+    public double getLongi() {return longi;}
+    public void setLongi(double longi) {
+        this.longi = longi;
+    }
+    public double getLat() { return lat;}
+    public void setLat(double lat) {this.lat = lat;}
 
     /**
      * @return this users unique device id
