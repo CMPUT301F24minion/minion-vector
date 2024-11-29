@@ -18,4 +18,5 @@
     <string name="organizer">Organizer</string>
     <string name="admin">Admin</string>
     <string name="choose_page_launch">Choose which page to launch</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

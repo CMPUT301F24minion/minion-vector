@@ -39,6 +39,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,6 +65,7 @@ public class EventDetailFragment extends Fragment {
     TextView eventStartInfo;
     TextView eventRejectedCount;
     EditText eventNumberOfApplicants;
+    Button showWaitlistMap;
     Button eventRunLottery;
     Button removeImageButton;
     Button eventStartButton;
@@ -102,6 +104,7 @@ public class EventDetailFragment extends Fragment {
         eventRejectedCount= view.findViewById(R.id.eventRejectedCount);
         eventNumberOfApplicants=view.findViewById(R.id.eventNumberOfApplicants);
         removeImageButton = view.findViewById(R.id.removeImageButton);
+        showWaitlistMap=view.findViewById(R.id.showWaitlistMap);
         notification=new Notification();
 
         if (getArguments() != null) {
@@ -116,6 +119,21 @@ public class EventDetailFragment extends Fragment {
             }
         });
 
+        //show map
+        showWaitlistMap.setOnClickListener(v->{
+            //open the mapactivity fragment
+                ArrayList<String> waitlisted=event.getEventWaitlist();
+                eventController.getLocation(waitlisted, new EventController.LocationCallback() {
+                @Override
+                public void onLocationFetched(ArrayList<HashMap<String, Double>> locations) {
+
+                    Intent intent = new Intent(getActivity(), MapsActivity.class);
+                    intent.putExtra("waitlisted", locations); // Pass the fetched data
+                    startActivity(intent);
+                }
+            });
+
+        });
         // Set click listener on the lists of users
         eventWaitlistCount.setOnClickListener(v -> showUserListDialog("eventWaitlist", "Waitlisted Users"));
         eventAcceptedCount.setOnClickListener(v -> showUserListDialog("eventEnrolled", "Accepted Users"));

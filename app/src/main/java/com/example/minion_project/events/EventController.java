@@ -9,10 +9,14 @@ import static java.lang.Boolean.TRUE;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.Lottery.Lottery;
 import com.example.minion_project.Notification;
 import com.example.minion_project.user.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -20,7 +24,9 @@ import com.google.firebase.firestore.FieldValue;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EventController {
     public FireStoreClass Our_Firestore = new FireStoreClass();
@@ -361,6 +367,58 @@ public void rejecetUser(String eventId, String userId){
         }
     });
 }
+    public void getLocation(ArrayList<String> waitlistUsers, LocationCallback callback) {
+        ArrayList<HashMap<String, Double>> ans = new ArrayList<>();
+        int totalUsers = waitlistUsers.size();
+        AtomicInteger completedRequests = new AtomicInteger(0); // To track completed requests
+
+        for (String uid : waitlistUsers) {
+
+            usersRef.document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            Map<String, Object> data = document.getData();
+
+                            if (data != null) {
+
+                                Double latitude = (Double) data.get("latitude");
+                                Double longitude = (Double) data.get("longitude");
+
+                                if (latitude != null && longitude != null) {
+                                    // Create a map to store the location data
+                                    HashMap<String, Double> locationData = new HashMap<>();
+                                    locationData.put("latitude", latitude);
+                                    locationData.put("longitude", longitude);
+
+                                    // Add the map to the result list
+                                    ans.add(locationData);
+                                    Log.d("MapsActivity", "Location Data: " + locationData.toString());
+                                }
+                            }
+                        }
+                    } else {
+                        Log.e("MapsActivity", "Error fetching data for user: " + uid, task.getException());
+                    }
+
+                    // Increment the completed requests counter
+                    if (completedRequests.incrementAndGet() == totalUsers) {
+                        // Once all requests are completed, call the callback
+                        Log.d("MapsActivity", ans.toString());
+
+                        callback.onLocationFetched(ans);
+                    }
+                }
+            });
+        }
+
+    }
+
+    public interface LocationCallback {
+        void onLocationFetched(ArrayList<HashMap<String, Double>> locations);
+    }
 
 /**
      * EventCallback interface for handling event-related callbacks
