@@ -157,6 +157,15 @@
             android:focusable="true"/>
 
         <Button
+            android:id="@+id/showWaitlistMap"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Waitlist Map"
+            android:textSize="16sp"
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"/>
+        <Button
             android:id="@+id/eventRunLottery"
             android:layout_width="match_parent"
             android:layout_height="48dp"

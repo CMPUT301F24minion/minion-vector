@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -49,6 +50,7 @@ dependencies {
 
     // Glide for image loading
     implementation(libs.glide)
+    implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
 
     annotationProcessor(libs.compiler)
