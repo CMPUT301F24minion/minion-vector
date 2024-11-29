@@ -193,6 +193,15 @@
             android:visibility="invisible"
             android:textColor="@android:color/black"
             android:layout_marginBottom="8dp"/>
+
+        <ImageView
+            android:id="@+id/eventQrCode"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:contentDescription="Event QR Code"
+            android:visibility="gone" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="50dp" />

@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityOrganizerBinding;
+import com.example.minion_project.user.UserAttendingFragment;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -87,6 +88,11 @@ public class OrganizerActivity extends AppCompatActivity {
                         if ("create_event".equals(navigateTo)) {
                             replaceFragment(new OrganizerCreateEvent(organizerController));
                             binding.organizerBottomNavigationView.setSelectedItemId(R.id.menu_organizer_create_event);
+                        } else {
+                            // Default to My Events page
+                            replaceFragment(new OrganizerEvents(organizerController));
+                            binding.organizerBottomNavigationView.setSelectedItemId(R.id.menu_organizer_events);
+                            binding.organizerTextView.setText("My Events");
                         }
                     }
                 }

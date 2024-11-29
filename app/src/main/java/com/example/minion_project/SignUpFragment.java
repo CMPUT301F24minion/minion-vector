@@ -230,6 +230,8 @@ public class SignUpFragment extends Fragment {
             HashMap<String, String> events = new HashMap<>();
             user.put("Events", events);
             user.put("AllowNotifications", TRUE);
+            user.put("longitude", null);
+            user.put("latitude", null);
 
             HashMap<String, ArrayList<String>> notifications = new HashMap<>();
             ArrayList<String> temp = new ArrayList<>();

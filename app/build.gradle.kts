@@ -51,6 +51,7 @@ dependencies {
     // Glide for image loading
     implementation(libs.glide)
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
 
     annotationProcessor(libs.compiler)
 
