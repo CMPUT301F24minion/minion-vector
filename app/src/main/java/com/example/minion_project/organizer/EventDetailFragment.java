@@ -59,6 +59,7 @@ public class EventDetailFragment extends Fragment {
     private Uri newImageUri;  // To store the selected image URI
     private Notification notification;
     ImageView eventImage;
+    ImageView eventQrCode;
     TextView eventNameTextView;
     TextView eventDateTextView;
     TextView eventTimeTextView;
@@ -94,6 +95,7 @@ public class EventDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
         // Use the 'event' object to populate the UI
         eventImage = view.findViewById(R.id.eventImage);
+        eventQrCode = view.findViewById(R.id.eventQrCode);
         eventNameTextView = view.findViewById(R.id.eventTitle);
         eventDateTextView = view.findViewById(R.id.eventDate);
         eventTimeTextView = view.findViewById(R.id.eventTime);
@@ -198,6 +200,16 @@ public class EventDetailFragment extends Fragment {
                         // Show a "+" icon if no image exists
                         eventImage.setImageResource(R.drawable.baseline_add); // Placeholder drawable
                         removeImageButton.setVisibility(View.GONE);
+                    }
+
+                    String eventQrCodeUrl = event.getEventQrCode();
+                    if (eventQrCodeUrl != null && !eventQrCodeUrl.isEmpty()) {
+                        eventQrCode.setVisibility(View.VISIBLE);
+                        Glide.with(getActivity())
+                                .load(eventQrCodeUrl)
+                                .into(eventQrCode);
+                    } else {
+                        eventQrCode.setVisibility(View.GONE); // Hide the QR code if not available
                     }
 
                     eventNameTextView.setText(event.getEventName());
