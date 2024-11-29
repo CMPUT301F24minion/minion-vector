@@ -1,103 +1,114 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
+    android:fillViewport="true"
     android:background="@android:color/white">
 
-    <!-- Event Title Input -->
-    <EditText
-        android:id="@+id/createEventTitleEditText"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="What is your event called?"
-        android:padding="16dp"
-        android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center"
+        android:background="@android:color/white">
 
-    <!-- Event Details Input -->
-    <EditText
-        android:id="@+id/createEventDetailsEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Are there any details attendees should know?"
-        android:padding="16dp"
-        android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        <!-- Event Title Input -->
+        <EditText
+            android:id="@+id/createEventTitleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What is your event called?"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
-    <!-- Event Capacity (Number of Invitations) -->
-    <EditText
-        android:id="@+id/createEventInvitationsEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="How many people are you able to host?"
-        android:inputType="numberSigned"
-        android:padding="16dp"
-        android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        <!-- Event Details Input -->
+        <EditText
+            android:id="@+id/createEventDetailsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Are there any details attendees should know?"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
-    <!-- Select Time Button -->
-    <Button
-        android:id="@+id/selectTimeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select Time"
-        android:background="@drawable/round_button"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="12dp"
-        android:textSize="16sp" />
+        <!-- Event Capacity (Number of Invitations) -->
+        <EditText
+            android:id="@+id/createEventInvitationsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="How many people are you able to host?"
+            android:inputType="numberSigned"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/selectDateButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select Date"
-        android:background="@drawable/round_button"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="12dp"
-        android:textSize="16sp" />
+        <!-- Select Time Button -->
+        <Button
+            android:id="@+id/selectTimeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Time"
+            android:background="@drawable/round_button"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/uploadImageButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Upload"
-        android:background="@drawable/round_button"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="12dp"
-        android:textSize="16sp" />
+        <Button
+            android:id="@+id/selectDateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Date"
+            android:background="@drawable/round_button"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/createEventButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create!"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/black"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+        <Button
+            android:id="@+id/uploadImageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            android:background="@drawable/round_button"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp"
+            android:textSize="16sp" />
 
-    <ImageView
-        android:id="@+id/eventImageView"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Event Image"
-        android:scaleType="centerCrop" />
+        <Button
+            android:id="@+id/createEventButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create!"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/black"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/editFacilityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Facility"
-        android:background="@drawable/round_button"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
+        <ImageView
+            android:id="@+id/eventImageView"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="Event Image"
+            android:scaleType="centerCrop" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/editFacilityButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Facility"
+            android:background="@drawable/round_button"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+</ScrollView>
