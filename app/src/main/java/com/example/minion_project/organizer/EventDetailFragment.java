@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -176,66 +177,10 @@ public class EventDetailFragment extends Fragment {
                     EventDetailFragment.this.event = event;
 
                     // Clean invalid user IDs from event lists
-                    cleanInvalidUserIds(event);
-
-                    // instantiate the lottery
-                    EventDetailFragment.this.lottery=new Lottery(event);
-                    if (event.getEventEnrolled().size()>=event.getEventCapacity() ||event.getEventWaitlist().size()==0){
-                        // hide the button to pool if cannot pool more
-                        // or has no users in waitlist
-                        eventRunLottery.setVisibility(View.INVISIBLE);
-                        eventNumberOfApplicants.setVisibility(View.INVISIBLE);
-
-                    }
-                    // Check if the event image exists
-                    String eventImageUrl = event.getEventImage();
-
-                    if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
-                        // Load the event image using Glide
-                        Glide.with(getActivity())
-                                .load(eventImageUrl)
-                                .into(eventImage);
-                        removeImageButton.setVisibility(View.VISIBLE);
-                    } else {
-                        // Show a "+" icon if no image exists
-                        eventImage.setImageResource(R.drawable.baseline_add); // Placeholder drawable
-                        removeImageButton.setVisibility(View.GONE);
-                    }
-
-                    String eventQrCodeUrl = event.getEventQrCode();
-                    if (eventQrCodeUrl != null && !eventQrCodeUrl.isEmpty()) {
-                        eventQrCode.setVisibility(View.VISIBLE);
-                        Glide.with(getActivity())
-                                .load(eventQrCodeUrl)
-                                .into(eventQrCode);
-                    } else {
-                        eventQrCode.setVisibility(View.GONE); // Hide the QR code if not available
-                    }
-
-                    eventNameTextView.setText(event.getEventName());
-                    eventDescriptionTextView.setText("Event Description ✏\uFE0F: "+event.getEventDetails());
-                    eventDateTextView.setText("Event Date \uD83D\uDCC5: "+event.getEventDate());
-                    eventTimeTextView.setText("Event Time \uD83D\uDD53: "+event.getEventTime());
-                    eventCapacityTextView.setText("Event Capacity\uD83E\uDDE2: "+event.getEventCapacity());
-                    int waitlistCount = event.getEventWaitlist().size();  // Number of users on the waitlist
-                    int acceptedCount = event.getEventEnrolled().size(); // Number of users accepted
-                    int declinedCount = event.getEventDeclined().size(); // Number of users declined
-                    int invitedCount = event.getEventInvited().size(); // Number of users invited
-                    int rejectedCount = event.getEventRejected().size(); // Number of users rejected
-
-                    // Set the waitlist, accepted, declined, and pending counts
-                    eventWaitlistCount.setText("Users on waitlist ⌛: " + waitlistCount);
-                    eventAcceptedCount.setText("Users accepted ✅: " + acceptedCount);
-                    eventDeclinedCount.setText("Users declined ❌: " + declinedCount);
-                    eventPendingCount.setText("Users invited count 📩: " + invitedCount);
-                    eventRejectedCount.setText("Users rejected ✖\uFE0F: " + rejectedCount);
-                    // check if can start event(can only start once
-
-                    if(event.getEventStart()){
-                        eventStartButton.setVisibility(View.INVISIBLE);
-                        eventStartInfo.setVisibility(View.VISIBLE);
-                    }
-
+                    cleanInvalidUserIds(event, () -> {
+                        // Now that invalid users are removed, update the UI
+                        updateUIWithEventData();
+                    });
                 }
             }
 
@@ -245,6 +190,7 @@ public class EventDetailFragment extends Fragment {
             }
         });
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -556,7 +502,7 @@ public class EventDetailFragment extends Fragment {
         });
     }
 
-    private void cleanInvalidUserIds(Event event) {
+    private void cleanInvalidUserIds(Event event, Runnable callback) {
         Log.d("EventDetailFragment", "cleanInvalidUserIds called for event ID: " + event.getEventID());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference eventRef = db.collection("Events").document(event.getEventID());
@@ -568,6 +514,9 @@ public class EventDetailFragment extends Fragment {
         userLists.put("eventDeclined", event.getEventDeclined());
         userLists.put("eventRejected", event.getEventRejected());
 
+        AtomicInteger listsProcessed = new AtomicInteger(0);
+        int totalLists = userLists.size();
+
         for (Map.Entry<String, List<String>> entry : userLists.entrySet()) {
             String listName = entry.getKey();
             List<String> userIds = entry.getValue();
@@ -576,6 +525,9 @@ public class EventDetailFragment extends Fragment {
 
             if (userIds == null || userIds.isEmpty()) {
                 Log.d("EventDetailFragment", "No user IDs in list: " + listName);
+                if (listsProcessed.incrementAndGet() == totalLists) {
+                    callback.run();
+                }
                 continue;
             }
 
@@ -611,10 +563,33 @@ public class EventDetailFragment extends Fragment {
                             }
                         }
 
-                        // Remove invalid user IDs from the event list in Firestore
+                        // Remove invalid user IDs from the event list in Firestore and local event object
                         if (!invalidUserIds.isEmpty()) {
                             Log.d("EventDetailFragment", "Removing invalid user IDs from list: " + listName + " IDs: " + invalidUserIds);
                             for (String invalidUserId : invalidUserIds) {
+                                // Remove from local event object
+                                List<String> listToModify = null;
+                                switch (listName) {
+                                    case "eventWaitlist":
+                                        listToModify = event.getEventWaitlist();
+                                        break;
+                                    case "eventEnrolled":
+                                        listToModify = event.getEventEnrolled();
+                                        break;
+                                    case "eventInvited":
+                                        listToModify = event.getEventInvited();
+                                        break;
+                                    case "eventDeclined":
+                                        listToModify = event.getEventDeclined();
+                                        break;
+                                    case "eventRejected":
+                                        listToModify = event.getEventRejected();
+                                        break;
+                                }
+                                if (listToModify != null) {
+                                    listToModify.remove(invalidUserId);
+                                }
+
                                 eventRef.update(listName, FieldValue.arrayRemove(invalidUserId))
                                         .addOnSuccessListener(aVoid -> {
                                             Log.d("EventDetailFragment", "Removed invalid user ID: " + invalidUserId + " from list: " + listName);
@@ -626,12 +601,92 @@ public class EventDetailFragment extends Fragment {
                         } else {
                             Log.d("EventDetailFragment", "No invalid user IDs to remove in list: " + listName);
                         }
+
+                        if (listsProcessed.incrementAndGet() == totalLists) {
+                            callback.run();
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Log.e("EventDetailFragment", "Failed to complete user ID validation tasks for list: " + listName, e);
+                        if (listsProcessed.incrementAndGet() == totalLists) {
+                            callback.run();
+                        }
                     });
         }
     }
+
+
+    private void updateUIWithEventData() {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            // Check if the event image exists
+            String eventImageUrl = event.getEventImage();
+
+            if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
+                // Load the event image using Glide
+                Glide.with(getActivity())
+                        .load(eventImageUrl)
+                        .into(eventImage);
+                removeImageButton.setVisibility(View.VISIBLE);
+            } else {
+                // Show a "+" icon if no image exists
+                eventImage.setImageResource(R.drawable.baseline_add); // Placeholder drawable
+                removeImageButton.setVisibility(View.GONE);
+            }
+
+            String eventQrCodeUrl = event.getEventQrCode();
+            if (eventQrCodeUrl != null && !eventQrCodeUrl.isEmpty()) {
+                eventQrCode.setVisibility(View.VISIBLE);
+                Glide.with(getActivity())
+                        .load(eventQrCodeUrl)
+                        .into(eventQrCode);
+            } else {
+                eventQrCode.setVisibility(View.GONE); // Hide the QR code if not available
+            }
+
+            eventNameTextView.setText(event.getEventName());
+            eventDescriptionTextView.setText("Event Description ✏️: " + event.getEventDetails());
+            eventDateTextView.setText("Event Date 📅: " + event.getEventDate());
+            eventTimeTextView.setText("Event Time ⏰: " + event.getEventTime());
+            eventCapacityTextView.setText("Event Capacity\uD83E\uDDE2: " + event.getEventCapacity());
+
+            int waitlistCount = event.getEventWaitlist().size();  // Number of users on the waitlist
+            int acceptedCount = event.getEventEnrolled().size(); // Number of users accepted
+            int declinedCount = event.getEventDeclined().size(); // Number of users declined
+            int invitedCount = event.getEventInvited().size(); // Number of users invited
+            int rejectedCount = event.getEventRejected().size(); // Number of users rejected
+
+            // Set the waitlist, accepted, declined, and pending counts
+            eventWaitlistCount.setText("Users on waitlist ⌛: " + waitlistCount);
+            eventAcceptedCount.setText("Users accepted ✅: " + acceptedCount);
+            eventDeclinedCount.setText("Users declined ❌: " + declinedCount);
+            eventPendingCount.setText("Users invited count 📩: " + invitedCount);
+            eventRejectedCount.setText("Users rejected ✖️: " + rejectedCount);
+
+            // Additional UI updates if needed
+            // ...
+
+            // Hide the lottery button if conditions are met
+            if (event.getEventEnrolled().size() >= event.getEventCapacity() || event.getEventWaitlist().size() == 0) {
+                eventRunLottery.setVisibility(View.INVISIBLE);
+                eventNumberOfApplicants.setVisibility(View.INVISIBLE);
+            } else {
+                eventRunLottery.setVisibility(View.VISIBLE);
+                eventNumberOfApplicants.setVisibility(View.VISIBLE);
+            }
+
+            // Check if event has started
+            if (event.getEventStart()) {
+                eventStartButton.setVisibility(View.INVISIBLE);
+                eventStartInfo.setVisibility(View.VISIBLE);
+            } else {
+                eventStartButton.setVisibility(View.VISIBLE);
+                eventStartInfo.setVisibility(View.GONE);
+            }
+        });
+    }
+
 
 
 
