@@ -10,10 +10,7 @@ package com.example.minion_project.events;
 
 import static java.lang.Boolean.FALSE;
 
-import com.example.minion_project.user.User;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Event {
     private String eventID;
@@ -316,7 +313,7 @@ public class Event {
     }
 
 
-
+    public void setEventInvited(ArrayList<String> invitedUserIds) {
+        this.eventInvited = invitedUserIds;
+    }
 }
-
-

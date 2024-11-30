@@ -34,13 +34,4 @@ public class Facility {
     public void setFacilityImage(String facilityImage) {
         this.facilityImage = facilityImage;
     }
-
-    @Override
-    public String toString() {
-        return "Facility{" +
-                "documentID='" + documentID + '\'' +
-                ", facilityID='" + facilityID + '\'' +
-                ", facilityImage='" + facilityImage + '\'' +
-                '}';
-    }
 }
