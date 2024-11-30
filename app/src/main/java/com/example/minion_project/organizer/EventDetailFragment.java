@@ -50,6 +50,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link EventDetailFragment#newInstance} factory method to
@@ -62,6 +65,7 @@ public class EventDetailFragment extends Fragment {
     private ListenerRegistration eventListenerRegistration;
 
     ImageView eventImage;
+    ImageView eventQrCode;
     TextView eventNameTextView;
     TextView eventDateTextView;
     TextView eventTimeTextView;
@@ -74,6 +78,7 @@ public class EventDetailFragment extends Fragment {
     TextView eventStartInfo;
     TextView eventRejectedCount;
     EditText eventNumberOfApplicants;
+    Button showWaitlistMap;
     Button eventRunLottery;
     Button removeImageButton;
     Button eventStartButton;
@@ -97,6 +102,7 @@ public class EventDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
         // Use the 'event' object to populate the UI
         eventImage = view.findViewById(R.id.eventImage);
+        eventQrCode = view.findViewById(R.id.eventQrCode);
         eventNameTextView = view.findViewById(R.id.eventTitle);
         eventDateTextView = view.findViewById(R.id.eventDate);
         eventTimeTextView = view.findViewById(R.id.eventTime);
@@ -112,6 +118,7 @@ public class EventDetailFragment extends Fragment {
         eventRejectedCount= view.findViewById(R.id.eventRejectedCount);
         eventNumberOfApplicants=view.findViewById(R.id.eventNumberOfApplicants);
         removeImageButton = view.findViewById(R.id.removeImageButton);
+        showWaitlistMap=view.findViewById(R.id.showWaitlistMap);
         notification=new Notification();
 
         if (getArguments() != null) {
@@ -126,6 +133,22 @@ public class EventDetailFragment extends Fragment {
                 Log.d("EventDetailFragment", "Number of applicants: " + numberOfApplicants);
                 handleLottery(numberOfApplicants);
             }
+        });
+
+        //show map
+        showWaitlistMap.setOnClickListener(v->{
+            //open the mapactivity fragment
+            ArrayList<String> waitlisted=event.getEventWaitlist();
+            eventController.getLocation(waitlisted, new EventController.LocationCallback() {
+                @Override
+                public void onLocationFetched(ArrayList<HashMap<String, Double>> locations) {
+
+                    Intent intent = new Intent(getActivity(), MapsActivity.class);
+                    intent.putExtra("waitlisted", locations); // Pass the fetched data
+                    startActivity(intent);
+                }
+            });
+
         });
 
         // Set click listener on the lists of users
@@ -606,6 +629,17 @@ public class EventDetailFragment extends Fragment {
         } else {
             eventImage.setImageResource(R.drawable.baseline_add);
             removeImageButton.setVisibility(View.GONE);
+        }
+
+        // Load the QR code
+        String eventQrCodeUrl = event.getEventQrCode();
+        if (eventQrCodeUrl != null && !eventQrCodeUrl.isEmpty()) {
+            eventQrCode.setVisibility(View.VISIBLE);
+            Glide.with(getActivity())
+                    .load(eventQrCodeUrl)
+                    .into(eventQrCode);
+        } else {
+            eventQrCode.setVisibility(View.GONE); // Hide the QR code if not available
         }
 
         // Update text views
