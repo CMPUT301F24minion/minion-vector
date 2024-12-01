@@ -10,11 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.minion_project.FireStoreClass;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
@@ -22,9 +17,14 @@ import com.example.minion_project.events.EventsAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
-public class AdminEvents extends Fragment implements EventsAdapter.OnEventDeleteListener {
+public class AdminEvents extends Fragment implements EventsAdapter.OnEventDeleteListener, EventsAdapter.OnItemClickListener {
 
     private RecyclerView adminEventsRecyclerView;
     private EventsAdapter eventsAdapter;
@@ -34,28 +34,14 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
 
     private static final String TAG = "AdminEvents";
 
-    /**
-     * Default constructor
-     */
     public AdminEvents() {
         // Required empty public constructor
     }
 
-    /**
-     * Factory method to create a new instance of this fragment
-     *
-     * @return A new instance of fragment AdminEvents.
-     */
     public static AdminEvents newInstance() {
         return new AdminEvents();
     }
 
-    /**
-     * Initialize Firestore and event list
-     *
-     * @param savedInstanceState If the fragment is being re-created from
-     *                           a previous saved state, this is the state.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,18 +50,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         eventList = new ArrayList<>();
     }
 
-    /**
-     * Inflate the layout and setup RecyclerView
-     *
-     * @param inflater           The LayoutInflater object that can be used to inflate
-     *                           any views in the fragment,
-     * @param container          If non-null, this is the parent view that the fragment's
-     *                           UI should be attached to. The fragment should not add the view itself,
-     *                           but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     *                           from a previous saved state as given here.
-     * @return The View for the fragment's UI, or null.
-     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,6 +58,7 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         adminEventsRecyclerView = view.findViewById(R.id.adminEventsRecyclerView);
         adminEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventsAdapter = new EventsAdapter(getContext(), eventList, this);
+        eventsAdapter.setOnItemClickListener(this); // Set the item click listener
         adminEventsRecyclerView.setAdapter(eventsAdapter);
 
         fetchEvents();
@@ -91,9 +66,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         return view;
     }
 
-    /**
-     * Fetch all events from Firestore and populate the RecyclerView
-     */
     private void fetchEvents() {
         eventsRef.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -122,11 +94,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 });
     }
 
-    /**
-     * Handle event deletion from the adapter
-     *
-     * @param event The event to be deleted
-     */
     @Override
     public void onEventDelete(Event event) {
         // Show a confirmation dialog
@@ -145,17 +112,46 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 .show();
     }
 
+    @Override
+    public void onItemClick(Event event) {
+        // Show options dialog
+        boolean isQrCodeEnabled = event.isQrCodeEnabled();
+        String qrCodeOption = isQrCodeEnabled ? "Disable QR Code" : "Enable QR Code";
 
-    /**
-     * Placeholder method to retrieve adminDeviceID
-     *
-     * @return adminDeviceID as a String
-     */
+        String[] options = {qrCodeOption, "Delete Event"};
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Event Options")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        // Toggle QR Code enabled/disabled
+                        toggleQrCode(event);
+                    } else if (which == 1) {
+                        // Delete Event
+                        onEventDelete(event);
+                    }
+                })
+                .show();
+    }
+
+    private void toggleQrCode(Event event) {
+        boolean newQrCodeState = !event.isQrCodeEnabled();
+        eventsRef.document(event.getEventID())
+                .update("qrCodeEnabled", newQrCodeState)
+                .addOnSuccessListener(aVoid -> {
+                    event.setQrCodeEnabled(newQrCodeState);
+                    eventsAdapter.notifyDataSetChanged();
+                    String message = newQrCodeState ? "QR Code enabled" : "QR Code disabled";
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating QR code state: " + e.getMessage());
+                    Toast.makeText(getContext(), "Failed to update QR code state.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private String getAdminDeviceID() {
         // Implement logic to retrieve the admin's deviceID
-        // This could be from Firebase Authentication or another secure source
-        // For example:
-        // return FirebaseAuth.getInstance().getCurrentUser().getUid();
         return "admin_device_id"; // Replace with actual retrieval logic
     }
 }
