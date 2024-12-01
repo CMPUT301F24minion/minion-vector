@@ -86,7 +86,7 @@ public class OrganizerCreateEvent extends Fragment {
                     .addToBackStack(null) // Add this transaction to the back stack
                     .commit();
             if (getActivity() instanceof OrganizerActivity) {
-                ((OrganizerActivity) getActivity()).updateHeaderText("Facility");
+                ((OrganizerActivity) getActivity()).updateHeaderText("My Facility");
             }
         }
 
@@ -113,7 +113,7 @@ public class OrganizerCreateEvent extends Fragment {
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             if (getActivity() instanceof OrganizerActivity) {
-                ((OrganizerActivity) getActivity()).updateHeaderText("Facility");
+                ((OrganizerActivity) getActivity()).updateHeaderText("My Facility");
             }
         });
 
