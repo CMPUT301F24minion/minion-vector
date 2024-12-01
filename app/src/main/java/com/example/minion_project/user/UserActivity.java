@@ -62,6 +62,12 @@ public class UserActivity extends AppCompatActivity {
         // set up the user class
         android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        headerImage.setOnClickListener(v -> {
+            // Navigate to the UserSettingsFragment when header image is clicked
+            replaceFragment(new UserSettingsFragment());
+            binding.textView.setText("Settings"); // Update the header text
+        });
+
         // controller
         // Check if user exists
         usersRef.document(android_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

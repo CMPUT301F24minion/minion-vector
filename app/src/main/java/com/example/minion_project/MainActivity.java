@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestLocationPermissions();
+                    showNotificationPreferenceDialog();
                     return;
                 }
                 fetchAndUpdateUser();
@@ -259,7 +260,50 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void showNotificationPreferenceDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Enable Notifications")
+                .setMessage("Do you want to enable notifications for updates and reminders?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    enableNotifications();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    disableNotifications();
+                })
+                .setCancelable(false)
+                .show();
+    }
 
+    private void enableNotifications() {
+        // Check and request notification permissions for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        REQUEST_NOTIFICATION_PERMISSION);
+            } else {
+                saveNotificationPreference(true);
+            }
+        } else {
+            saveNotificationPreference(true);
+        }
+    }
+
+    private void disableNotifications() {
+        saveNotificationPreference(false);
+        Toast.makeText(this, "Notifications disabled.", Toast.LENGTH_SHORT).show();
+    }
+    private void saveNotificationPreference(boolean isEnabled) {
+        Map<String, Object> notificationData = Map.of("allowNotifications", isEnabled);
+
+        All_UsersRef.document(android_id)
+                .update(notificationData)
+                .addOnSuccessListener(aVoid -> {
+                    String message = isEnabled ? "Notifications enabled." : "Notifications disabled.";
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                });
+    }
 
 
 

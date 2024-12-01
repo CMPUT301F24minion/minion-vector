@@ -85,7 +85,9 @@ public class OrganizerCreateEvent extends Fragment {
                     .replace(container.getId(), facilityFragment)
                     .addToBackStack(null) // Add this transaction to the back stack
                     .commit();
-            return null; // Return null to stop further execution
+            if (getActivity() instanceof OrganizerActivity) {
+                ((OrganizerActivity) getActivity()).updateHeaderText("My Facility");
+            }
         }
 
         // Proceed with setting up views if facilityID is not empty
@@ -110,6 +112,9 @@ public class OrganizerCreateEvent extends Fragment {
             intent.setAction("OPEN_FACILITY_FRAGMENT");
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            if (getActivity() instanceof OrganizerActivity) {
+                ((OrganizerActivity) getActivity()).updateHeaderText("My Facility");
+            }
         });
 
         return view;
