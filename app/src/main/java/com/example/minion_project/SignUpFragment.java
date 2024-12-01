@@ -1,5 +1,6 @@
 package com.example.minion_project;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import android.content.Intent;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -56,14 +58,6 @@ public class SignUpFragment extends Fragment {
     private TextView userNotRecognized;
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
-
-    // New additions for randomization feature
-    private static final int[] COLORS = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA};
-    private static final int[] PROFILE_DRAWABLES = {
-            R.drawable.baseline_add,
-            R.drawable.baseline_adjust_24,
-            R.drawable.baseline_tag_faces,
-    };
 
     /**
      * Factory method to create a new instance of this fragment.
@@ -134,13 +128,13 @@ public class SignUpFragment extends Fragment {
      * Sets the profile image to the first letter of the user's name
      * with a default background color.
      */
-    private void randomizeProfile() {
+    private Bitmap randomizeProfile() {
         String name = nameEditText.getText().toString().trim();
         if (name.isEmpty()) {
-            // Set default image or background if name is empty
-            profileImageView.setBackgroundColor(Color.LTGRAY); // Default light gray background
-            profileImageView.setImageDrawable(null); // Clear any previous image
-            return;
+            // Set a default background if no name is entered
+            profileImageView.setBackgroundColor(Color.LTGRAY); // Default background
+            profileImageView.setImageDrawable(null); // Clear previous image
+            return null;
         }
 
         char firstLetter = name.charAt(0); // Get the first letter of the name
@@ -151,7 +145,7 @@ public class SignUpFragment extends Fragment {
         Canvas canvas = new Canvas(bitmap);
 
         // Fill the background with a default color
-        canvas.drawColor(Color.WHITE); // Light gray background
+        canvas.drawColor(Color.WHITE);
 
         // Configure the Paint object to draw the text
         Paint paint = new Paint();
@@ -169,9 +163,15 @@ public class SignUpFragment extends Fragment {
         // Draw the first letter
         canvas.drawText(String.valueOf(firstLetter).toUpperCase(), x, y, paint);
 
-        // Set the Bitmap as the profile picture
-        profileImageView.setImageBitmap(bitmap);
+        // Set the Bitmap to the ImageView
+        Glide.with(this)
+                .load(bitmap) // Load the generated bitmap
+                .circleCrop() // Optional: Apply circular cropping if desired
+                .into(profileImageView);
+
+        return bitmap; // Return the generated Bitmap
     }
+
 
 
     /**
@@ -229,7 +229,7 @@ public class SignUpFragment extends Fragment {
             user.put("profileImage", imageUrl);
             HashMap<String, String> events = new HashMap<>();
             user.put("Events", events);
-            user.put("AllowNotifications", TRUE);
+            user.put("AllowNotifications", FALSE);
             user.put("longitude", null);
             user.put("latitude", null);
 
@@ -316,11 +316,11 @@ public class SignUpFragment extends Fragment {
      * Uploads the selected image to Firebase Storage.
      */
     private void uploadImageToFirebase() {
-        if (imageUri != null) {
-            // Upload image using imageUri
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
 
+        if (imageUri != null) {
+            // Upload the selected image
             storageRef.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
@@ -328,24 +328,27 @@ public class SignUpFragment extends Fragment {
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
-            // Handle case when no image is selected
-            Bitmap bitmap = Bitmap.createBitmap(profileImageView.getWidth(), profileImageView.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            profileImageView.draw(canvas);
+            // Generate and upload the random profile image
+            Bitmap bitmap = randomizeProfile();
+            if (bitmap != null) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference("profile_images/" + android_id + ".jpg");
-
-            UploadTask uploadTask = storageRef.putBytes(data);
-            uploadTask.addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String imageUrl = uri.toString();
-                        signUpUser(imageUrl);  // Save the image URL in Firestore
-                    }))
-                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
+                storageRef.putBytes(data)
+                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String imageUrl = uri.toString();
+                            signUpUser(imageUrl);  // Save the image URL in Firestore
+                        }))
+                        .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload random image", Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(getActivity(), "No image provided or generated.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
+
+
+
+
 }

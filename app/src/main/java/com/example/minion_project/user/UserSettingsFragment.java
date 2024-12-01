@@ -1,6 +1,7 @@
 package com.example.minion_project.user;
 import com.example.minion_project.MainActivity;
 
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -64,6 +65,7 @@ public class UserSettingsFragment extends Fragment {
 
     private SwitchCompat notificationToggle;
 
+
     /**
      * Create a new instance of UserSettingsFragment
      * @param param1
@@ -122,6 +124,7 @@ public class UserSettingsFragment extends Fragment {
             public void onClick(View view) {
                 // Save or update user information
                 updateUserInfo(androidID);
+                Toast.makeText(getActivity(), "changes Saved", Toast.LENGTH_SHORT).show();
             };
 
         });
@@ -130,7 +133,14 @@ public class UserSettingsFragment extends Fragment {
         removeImageButton.setOnClickListener(view13 -> removeProfileImage(androidID)); // Removes the profile image
 
         notificationToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            updateAllowNotification(androidID, isChecked);
+            if (isChecked) {
+                // Show a popup with options when toggled "on"
+                showNotificationPreferenceDialog(androidID);
+            } else {
+                // Update Firestore and disable notifications
+                updateAllowNotification(androidID, false);
+                Toast.makeText(getActivity(), "Notifications disabled", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
@@ -421,5 +431,39 @@ public class UserSettingsFragment extends Fragment {
                     // Handle error
                 });
     }
+    private void showNotificationPreferenceDialog(String androidID) {
+        // Options for the dialog
+        String[] options = {"Always Allow", "Only During App Usage", "Do Not Disturb"};
+
+        // Create an AlertDialog
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Notification Preferences")
+                .setItems(options, (dialog, which) -> {
+                    switch (which) {
+                        case 0: // Always Allow
+                            updateAllowNotification(androidID, true);
+                            Toast.makeText(getActivity(), "Notifications set to Always Allow", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case 1: // Only During App Usage
+                            // Implement logic for "Only During App Usage" (if applicable)
+                            updateAllowNotification(androidID, true); // Adjust logic as needed
+                            Toast.makeText(getActivity(), "Notifications set to Only During App Usage", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case 2: // Do Not Disturb
+                            notificationToggle.setChecked(false); // Revert the toggle to "off"
+                            updateAllowNotification(androidID, false);
+                            Toast.makeText(getActivity(), "Notifications set to Do Not Disturb", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    // Revert the toggle to "off" if the user cancels
+                    notificationToggle.setChecked(false);
+                })
+                .show();
+    }
+
 
 }
