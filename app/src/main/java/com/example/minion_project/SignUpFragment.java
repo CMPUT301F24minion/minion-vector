@@ -156,7 +156,7 @@ public class SignUpFragment extends Fragment {
         // Configure the Paint object to draw the text
         Paint paint = new Paint();
         paint.setColor(Color.BLACK); // Text color
-        paint.setTextSize(80); // Text size
+        paint.setTextSize(100); // Text size
         paint.setAntiAlias(true);
         paint.setTextAlign(Paint.Align.CENTER);
 
