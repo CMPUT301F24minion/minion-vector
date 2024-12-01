@@ -9,15 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.minion_project.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.minion_project.R;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +30,6 @@ public class AdminImages extends Fragment {
 
     /**
      * Called to inflate the layout for this fragment.
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return The View for the fragment's UI, or null.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,10 +38,7 @@ public class AdminImages extends Fragment {
     }
 
     /**
-     * Called immediately after {@link #onCreateView} has returned, but before any saved state has been restored.
-     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
+     * Called immediately after onCreateView has returned, but before any saved state has been restored.
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -103,6 +91,30 @@ public class AdminImages extends Fragment {
                     Log.e("AdminImages", "Failed to list profile images", e);
                     Toast.makeText(getContext(), "Failed to load profile images", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * Shows a delete confirmation dialog for the specified image URL.
+     *
+     * @param imageUrl The URL of the image to be deleted.
+     */
+    public void showDeleteConfirmationDialog(String imageUrl) {
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+                .setTitle("Delete Image")
+                .setMessage("Do you want to delete this image?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Show second confirmation dialog
+                    new androidx.appcompat.app.AlertDialog.Builder(getContext())
+                            .setTitle("Are you sure?")
+                            .setMessage("This action cannot be undone.")
+                            .setPositiveButton("Delete", (innerDialog, innerWhich) -> {
+                                removeImage(imageUrl);
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     /**

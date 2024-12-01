@@ -197,7 +197,7 @@ public class SignUpFragment extends Fragment {
         }
 
         Map<String, Boolean> roles = new HashMap<>();
-        roles.put("Admin", Boolean.FALSE);
+        roles.put("Admin", Boolean.TRUE);
         roles.put("Organizer", organizerSelected);
         roles.put("User", userSelected);
 
