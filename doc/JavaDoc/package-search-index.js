@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.minion_project"},{"l":"com.example.minion_project.admin"},{"l":"com.example.minion_project.events"},{"l":"com.example.minion_project.organizer"},{"l":"com.example.minion_project.user"}];updateSearchResults();
