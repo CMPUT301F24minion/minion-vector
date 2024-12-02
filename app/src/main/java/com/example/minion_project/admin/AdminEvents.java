@@ -41,7 +41,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
      * Admin events required empty public constructor
      */
     public AdminEvents() {
-        // Required empty public constructor
     }
 
     /**

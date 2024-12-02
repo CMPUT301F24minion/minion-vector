@@ -183,10 +183,8 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
      * @param onComplete Callback to be executed after deletion
      */
     private void deleteAssociatedEvents(String facilityDocumentID, Runnable onComplete) {
-        // Reference to the Events collection
         CollectionReference eventsRef = ourFirestore.getEventsRef();
 
-        // Query events where eventOrganizer matches the facilityID
         eventsRef.whereEqualTo("eventOrganizer", facilityDocumentID)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -232,7 +230,6 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                             }
                         }
                     } else {
-                        // No associated events found
                         onComplete.run();
                     }
                 })

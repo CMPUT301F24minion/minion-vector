@@ -30,9 +30,7 @@ public class AdminActivity extends AppCompatActivity {
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Default fragment when the admin activity starts
         replaceFragment(new AdminEvents());
-        // binding.adminTextView.setText("Admin Events");
 
         // Admin bottom navigation
         binding.adminBottomNavigationView.setOnItemSelectedListener(item -> {
