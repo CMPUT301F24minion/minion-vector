@@ -114,7 +114,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         Event event = eventList.get(position);
         holder.eventName.setText(event.getEventName());
         holder.eventDate.setText("Date: " + event.getEventDate());
-        holder.facilityName.setText("Facility: " + event.getEventOrganizer());
+        holder.facilityName.setText("FacilityID: " + event.getEventOrganizer());
         holder.qrCodeStatus.setText("QR Code: " + (event.isQrCodeEnabled() ? "Enabled" : "Disabled"));
 
         String imageUrl = event.getEventImage();
