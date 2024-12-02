@@ -119,5 +119,8 @@ public class OrganizerActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayoutOrganizer, fragment);
         fragmentTransaction.commit();
     }
+    public void updateHeaderText(String text) {
+        binding.organizerTextView.setText(text);
+    }
 
 }

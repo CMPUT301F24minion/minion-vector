@@ -5,23 +5,12 @@
     android:id="@+id/user_attending"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".user.UserScanFragment">
 
     <FrameLayout
         android:id="@+id/user_event"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!-- Centered Scan Button -->
-    <Button
-        android:id="@+id/QrBtn"
-        android:layout_width="138dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Scan QR"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.5" /> <!-- This centers the button vertically -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,3 @@
-/**
- * Fragment handles the display of one of the organizer functions (generating an event)
- * Displays the create event layout and maintains all input handling features and
- * communication (via storing) with the database (text upload, image upload, data selection)
- * Has connectings to the users, organizers, events collections
- */
-
 package com.example.minion_project.organizer;
 
 import static java.lang.Boolean.FALSE;
@@ -24,9 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,30 +42,33 @@ public class OrganizerCreateEvent extends Fragment {
     private static final String TAG = "OrganizerCreateEvent";
     private static final int QR_SIZE = 100;
 
-    private Button selectTime, selectDate, uploadImage, createEventButton;
-    private EditText createEventTitle, createEventDetails, createEventInvitations, facilityName;
+    private LinearLayout selectTime, selectDate, uploadImage, createEventButton;
+    private EditText createEventTitle, createEventDetails, createEventInvitations;
     private FireStoreClass ourFirestore = new FireStoreClass();
     private String selectedDate = "";
     private String selectedTime = "";
     private ImageView eventImageView;
-    private Button editFacilityButton;
+    private LinearLayout editFacilityButton;
     private Organizer Organizer;
-    // contoller
+    // Controller
     private OrganizerController organizerController;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private Uri imageUri;
-    //initalize controller
+
+    // Initialize controller
     public OrganizerCreateEvent(OrganizerController organizercontroller){
-        this.organizerController=organizercontroller;
-        this.Organizer=organizercontroller.getOrganizer();
+        this.organizerController = organizercontroller;
+        this.Organizer = organizercontroller.getOrganizer();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Inflate the layout
         View view = inflater.inflate(R.layout.fragment_organizer_create_event, container, false);
 
         // Check if the facilityID is empty
@@ -85,7 +81,9 @@ public class OrganizerCreateEvent extends Fragment {
                     .replace(container.getId(), facilityFragment)
                     .addToBackStack(null) // Add this transaction to the back stack
                     .commit();
-            return null; // Return null to stop further execution
+            if (getActivity() instanceof OrganizerActivity) {
+                ((OrganizerActivity) getActivity()).updateHeaderText("My Facility");
+            }
         }
 
         // Proceed with setting up views if facilityID is not empty
@@ -110,6 +108,9 @@ public class OrganizerCreateEvent extends Fragment {
             intent.setAction("OPEN_FACILITY_FRAGMENT");
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            if (getActivity() instanceof OrganizerActivity) {
+                ((OrganizerActivity) getActivity()).updateHeaderText("My Facility");
+            }
         });
 
         return view;
@@ -149,8 +150,6 @@ public class OrganizerCreateEvent extends Fragment {
 
     /**
      * Creates an event
-     *
-     *
      */
     private void createEvent() {
         String eventTitle = createEventTitle.getText().toString().trim();
@@ -161,7 +160,7 @@ public class OrganizerCreateEvent extends Fragment {
         try {
             eventInvitations = Integer.parseInt(invitationsString);
         } catch (NumberFormatException e) {
-
+            // Handle exception if needed
         }
         String time = selectedTime;
         String date = selectedDate;
@@ -173,17 +172,16 @@ public class OrganizerCreateEvent extends Fragment {
             Toast.makeText(getContext(), "Please enter details to the event", Toast.LENGTH_SHORT).show();
             return;
         }
-        //COMMENTED OUT TO DEVELOP EASIER
-//        else if (facility.isEmpty()) {
-//            Toast.makeText(getContext(), "Please enter the name of the facility", Toast.LENGTH_SHORT).show();
-//            return;
-//        }else if (time.isEmpty()) {
-//            Toast.makeText(getContext(), "Please enter the time the event starts", Toast.LENGTH_SHORT).show();
-//            return;
-//        } else if (date.isEmpty()) {
-//            Toast.makeText(getContext(), "Please enter the date the event starts", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        // COMMENTED OUT TO DEVELOP EASIER
+        // else if (facility.isEmpty()) {
+        //     Toast.makeText(getContext(), "Please enter the name of the facility", Toast.LENGTH_SHORT).show();
+        //     return;
+        // } else if (time.isEmpty()) {
+        //     Toast.makeText(getContext(), "Please enter the time the event starts", Toast.LENGTH_SHORT).show();
+        //     return;
+        // } else if (date.isEmpty()) {
+        //     Toast.makeText(getContext(), "Please enter the date the event starts", Toast.LENGTH_SHORT).show();
+        // }
         Event event = new Event();
         event.setEventName(eventTitle);
         event.setEventDetails(eventDetails);
@@ -193,14 +191,13 @@ public class OrganizerCreateEvent extends Fragment {
         event.setEventOrganizer(Organizer.getDeviceID());
         event.setEventStart(FALSE);
 
-
         CollectionReference eventsRef = ourFirestore.getEventsRef();
         eventsRef.add(event)
-                .addOnSuccessListener(documentReference ->{
+                .addOnSuccessListener(documentReference -> {
                     String eventId = documentReference.getId();
                     event.setEventID(eventId);
-                    // we pass the event to controller
-                    // the controller updates both firestore and organizer class
+                    // We pass the event to controller
+                    // The controller updates both Firestore and organizer class
                     organizerController.addEvent(eventId);
                     Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
                     uploadImageToFirebaseAndCreateEvent(eventId);
@@ -209,8 +206,6 @@ public class OrganizerCreateEvent extends Fragment {
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-
-
     }
 
     private void updateOrganizerFacilityName(String facility) {
@@ -222,7 +217,7 @@ public class OrganizerCreateEvent extends Fragment {
     }
 
     private void generateAndUploadQRCode(String qrContent) {
-        // qrcontent is the eventID
+        // qrContent is the eventID
         try {
             BarcodeEncoder encoder = new BarcodeEncoder();
             Bitmap bitmap = encoder.encodeBitmap(qrContent, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
@@ -237,7 +232,7 @@ public class OrganizerCreateEvent extends Fragment {
             qrCodeRef.putBytes(data)
                     .addOnSuccessListener(taskSnapshot -> qrCodeRef.getDownloadUrl().addOnSuccessListener(qrUri -> {
                         String qrCodeUrl = qrUri.toString();
-                        saveToFirestore("eventQrCode",qrContent,qrCodeUrl);
+                        saveToFirestore("eventQrCode", qrContent, qrCodeUrl);
 
                     }))
                     .addOnFailureListener(e -> Log.e(TAG, "Failed to upload QR code: " + e.getMessage()));
@@ -257,6 +252,7 @@ public class OrganizerCreateEvent extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK
                 && data != null && data.getData() != null) {
             imageUri = data.getData();
@@ -273,25 +269,26 @@ public class OrganizerCreateEvent extends Fragment {
             storageRef.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(imageUri -> {
                         String downloadUrl = imageUri.toString();
-                        saveToFirestore("eventImage",eventId,downloadUrl);
+                        saveToFirestore("eventImage", eventId, downloadUrl);
                         // Now generate and upload QR code
                         generateAndUploadQRCode(eventId);
                     }))
                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show());
         } else {
-            generateAndUploadQRCode( eventId);
-
+            generateAndUploadQRCode(eventId);
         }
     }
-    private void saveToFirestore(String key,String eventId, String Url) {
+
+    private void saveToFirestore(String key, String eventId, String Url) {
         CollectionReference eventsRef = ourFirestore.getEventsRef();
 
         // Update the event document with the qrCodeUrl
         eventsRef.document(eventId).update(key, Url)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, " saved to Firestore successfully."))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Saved to Firestore successfully."))
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to save URL to Firestore: " + e.getMessage()));
         eventsRef.document(eventId).update("eventID", eventId);
     }
+
     private void clearInputs() {
         createEventTitle.setText("");
         createEventDetails.setText("");

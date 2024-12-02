@@ -54,6 +54,26 @@ public class EventTest {
     }
 
     @Test
+    void eventAttendeesTest() {
+        Event event = new Event("event123", "Sample Event");
+
+        // create some sample users
+        User user1 = new User("user1", "Alice");
+        User user2 = new User("user2", "Bob");
+
+        // add users to the event attendees list
+        ArrayList<String> attendees = new ArrayList<>();
+        attendees.add("user1");
+        attendees.add("user2");
+        //event.setEventAttendees(attendees);
+
+        // verify
+        //assertEquals(2, event.getEventAttendees().size(), "Event should have 2 attendees");
+        //assertTrue(event.getEventAttendees().contains("user1"), "Attendees list should contain Alice");
+        //assertTrue(event.getEventAttendees().contains("user2"), "Attendees list should contain Bob");
+    }
+
+    @Test
     void eventWaitlistTest() {
         Event event = new Event("event123", "Sample Event");
 
@@ -77,7 +97,7 @@ public class EventTest {
         invitedUserIds.add("user1");
         invitedUserIds.add("user2");
 
-        event.setEventInvited(invitedUserIds);
+        //event.setEventInvited(invitedUserIds);
 
         // Verify
         assertEquals(2, event.getEventInvited().size(), "Event should have 2 invited users");

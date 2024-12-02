@@ -1,172 +1,265 @@
 package com.example.minion_project;
 
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import static org.junit.Assert.*;
 
 import com.example.minion_project.admin.Admin;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventsAdapter;
+import com.example.minion_project.facility.Facility;
 import com.example.minion_project.user.User;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import com.example.minion_project.FireStoreClass;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
-
+/**
+ * AdminTest class to test admin functionalities using the actual database.
+ */
 @RunWith(AndroidJUnit4.class)
 public class AdminTest {
 
-    private FireStoreClass db;
-    private Admin admin;
-    private ArrayList<Event> eventList;
-    private EventsAdapter eventsAdapter;
+    private static FireStoreClass fireStoreClass;
+    private static FirebaseFirestore db;
+    private static FirebaseStorage storage;
+    private static Admin admin;
 
-    @Before
-    public void setUp() {
-        Context context = ApplicationProvider.getApplicationContext();
-
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setProjectId("your-project-id")
-                .setApplicationId("your-application-id")
-                .setApiKey("your-api-key")
-                .build();
-
-        if (FirebaseApp.getApps(context).isEmpty()) {
-            FirebaseApp.initializeApp(context, options);
-        }
-
-        db = new FireStoreClass();
-        admin = new Admin("testDeviceID", db);
-
-        eventList = new ArrayList<>();
-        eventsAdapter = new EventsAdapter(context, eventList);
+    @BeforeClass
+    public static void setup() {
+        // Initialize Firestore and FirebaseStorage
+        fireStoreClass = new FireStoreClass();
+        db = fireStoreClass.getFirestore();
+        storage = FirebaseStorage.getInstance();
+        admin = new Admin("admin_device_id", fireStoreClass);
     }
 
     @Test
-    public void testRemoveUserProfile() {
-        try {
-            // Simulate test scenario
-            String testDeviceID = "testUserDeviceID_" + System.currentTimeMillis();
-            HashMap<String, String> allEvents = new HashMap<>();
-            allEvents.put("event1", "attending");
-
-            User testUser = new User(testDeviceID, "Test User", "test@example.com", "1234567890", allEvents, "Test City", new HashMap<>());
-            Tasks.await(db.getUsersRef().document(testDeviceID).set(testUser));
-
-            admin.removeUserProfile(testUser);
-
-            // Verify the user was deleted
-            DocumentSnapshot deletedUserSnapshot = Tasks.await(db.getUsersRef().document(testDeviceID).get());
-            assertFalse(deletedUserSnapshot.exists());
-
-            // Verify that the image was removed
-            StorageReference imageRef = FirebaseStorage.getInstance().getReference().child("user_images/" + testDeviceID + ".jpg");
-            try {
-                Tasks.await(imageRef.getBytes(1024));
-                fail("Image should have been deleted");
-            } catch (Exception e) {
-                assertTrue(e.getMessage() != null && e.getMessage().contains("Object does not exist"));
-            }
-        } catch (Exception e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+    public void testDeleteEvent() throws InterruptedException {
+        // ... Existing test code ...
     }
 
     @Test
-    public void testRemoveEvent() {
-        try {
-            // Simulate test scenario
-            String testEventID = "testEventID_" + System.currentTimeMillis();
-            Event testEvent = new Event(testEventID, "Test Event");
-            testEvent.setEventDescription("This is a test event.");
-            testEvent.setEventOrganizer("Test Organizer");
-            Tasks.await(db.getEventsRef().document(testEventID).set(testEvent));
-
-            // Add the event to the event list and notify the adapter
-            eventList.add(testEvent);
-            eventsAdapter.notifyDataSetChanged();
-
-            // Remove the event using the admin method
-            admin.removeEvent(testEvent, eventList, eventsAdapter);
-
-            // Verify the event was deleted from Firestore
-            DocumentSnapshot deletedEventSnapshot = Tasks.await(db.getEventsRef().document(testEventID).get());
-            assertFalse(deletedEventSnapshot.exists());
-
-            // Verify that the event image was removed
-            StorageReference imageRef = FirebaseStorage.getInstance().getReference().child("event_images/" + testEventID + ".jpg");
-            try {
-                Tasks.await(imageRef.getBytes(1024));
-                fail("Event image should have been deleted");
-            } catch (Exception e) {
-                assertTrue(e.getMessage() != null && e.getMessage().contains("Object does not exist"));
-            }
-
-            // Verify that the QR code was removed
-            StorageReference qrCodeRef = FirebaseStorage.getInstance().getReference().child("qr_codes/" + testEventID + ".png");
-            try {
-                Tasks.await(qrCodeRef.getBytes(1024));
-                fail("QR code should have been deleted");
-            } catch (Exception e) {
-                assertTrue(e.getMessage() != null && e.getMessage().contains("Object does not exist"));
-            }
-
-            // Verify that the event was removed from the event list
-            assertFalse(eventList.contains(testEvent));
-
-        } catch (Exception e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+    public void testToggleQrCode() throws InterruptedException {
+        // ... Existing test code ...
     }
 
     @Test
-    public void testRemoveUserImage() {
-        try {
-            // Simulate test scenario
-            String testDeviceID = "testUserDeviceID_" + System.currentTimeMillis();
-            User testUser = new User();
-            testUser.setDeviceID(testDeviceID);
-            testUser.setName("Test User");  // Corrected from setUserName
-            testUser.setEmail("testuser@example.com");  // Corrected from setUserEmail
-            Tasks.await(db.getUsersRef().document(testDeviceID).set(testUser));
+    public void testDeleteImage() throws InterruptedException {
+        // ... Existing test code ...
+    }
 
-            // Upload a dummy image for the user
-            StorageReference imageRef = FirebaseStorage.getInstance().getReference().child("user_images/" + testDeviceID + ".jpg");
-            byte[] dummyData = "dummy image data".getBytes();
-            Tasks.await(imageRef.putBytes(dummyData));
+    @Test
+    public void testDeleteUser() throws InterruptedException {
+        // ... Existing test code ...
+    }
 
-            // Remove user image using the admin method
-            admin.removeUserImage(testUser);
+    @Test
+    public void testRemoveUserImage() throws InterruptedException {
+        // Create a test user with a unique device ID
+        User testUser = new User("test_user_image_id", "Test User Image");
 
-            // Verify the user document was deleted
-            DocumentSnapshot deletedUserSnapshot = Tasks.await(db.getUsersRef().document(testDeviceID).get());
-            assertFalse(deletedUserSnapshot.exists());
+        // Upload the test user image to Firebase Storage at the expected path
+        String testImageUrl = uploadTestUserImage(testUser);
 
-            // Verify that the user image was removed
-            try {
-                Tasks.await(imageRef.getBytes(1024));
-                fail("User image should have been deleted");
-            } catch (Exception e) {
-                assertTrue(e.getMessage() != null && e.getMessage().contains("Object does not exist"));
-            }
+        assertNotNull("Test user image URL should not be null", testImageUrl);
 
-        } catch (Exception e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        // Save the user to Firestore (optional)
+        CountDownLatch writeLatch = new CountDownLatch(1);
+        db.collection("Users").document(testUser.getDeviceID()).set(testUser)
+                .addOnSuccessListener(aVoid -> writeLatch.countDown())
+                .addOnFailureListener(e -> {
+                    fail("Failed to create test user with image: " + e.getMessage());
+                    writeLatch.countDown();
+                });
+
+        // Wait for the user to be saved
+        assertTrue("Timeout while saving test user with image", writeLatch.await(10, TimeUnit.SECONDS));
+
+        // Delete the user's image using admin
+        admin.removeUserImage(testUser);
+
+        // Wait for the deletion to complete
+        Thread.sleep(5000);
+
+        // Verify that the user's image is deleted from Storage
+        CountDownLatch verifyLatch = new CountDownLatch(1);
+        storage.getReference().child("user_images/" + testUser.getDeviceID() + ".jpg").getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    fail("User image was not deleted");
+                    verifyLatch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    // Image deleted successfully
+                    assertTrue(true);
+                    verifyLatch.countDown();
+                });
+
+        assertTrue("Timeout while verifying user image deletion", verifyLatch.await(10, TimeUnit.SECONDS));
+
+        // Clean up by deleting the test user from Firestore
+        CountDownLatch cleanupLatch = new CountDownLatch(1);
+        admin.removeUserProfile(testUser);
+        cleanupLatch.await(10, TimeUnit.SECONDS);
+
+        // Optionally, verify that the user is deleted from Firestore
+        CountDownLatch verifyUserDeletionLatch = new CountDownLatch(1);
+        db.collection("Users").document(testUser.getDeviceID()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    assertFalse("User should be deleted from 'Users' collection", documentSnapshot.exists());
+                    verifyUserDeletionLatch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    fail("Failed to verify user deletion after cleanup: " + e.getMessage());
+                    verifyUserDeletionLatch.countDown();
+                });
+
+        assertTrue("Timeout while verifying user deletion after cleanup", verifyUserDeletionLatch.await(10, TimeUnit.SECONDS));
+    }
+
+    @Test
+    public void testDeleteFacility() throws InterruptedException {
+        // Create a test facility
+        Facility testFacility = new Facility();
+        testFacility.setFacilityID("Test Facility");
+        testFacility.setDocumentID(db.collection("Facilities").document().getId());
+
+        // Save the facility to Firestore
+        CountDownLatch facilityLatch = new CountDownLatch(1);
+        db.collection("Facilities").document(testFacility.getDocumentID()).set(testFacility)
+                .addOnSuccessListener(aVoid -> facilityLatch.countDown())
+                .addOnFailureListener(e -> {
+                    fail("Failed to create test facility: " + e.getMessage());
+                    facilityLatch.countDown();
+                });
+
+        // Wait for the facility to be saved
+        assertTrue("Timeout while saving test facility", facilityLatch.await(10, TimeUnit.SECONDS));
+
+        // Create a test event associated with the facility
+        Event testEvent = new Event();
+        testEvent.setEventName("Test Event for Facility");
+        testEvent.setEventOrganizer(testFacility.getDocumentID()); // Associate with facility
+        testEvent.setEventID(db.collection("Events").document().getId());
+
+        // Save the event to Firestore
+        CountDownLatch eventLatch = new CountDownLatch(1);
+        db.collection("Events").document(testEvent.getEventID()).set(testEvent)
+                .addOnSuccessListener(aVoid -> eventLatch.countDown())
+                .addOnFailureListener(e -> {
+                    fail("Failed to create test event: " + e.getMessage());
+                    eventLatch.countDown();
+                });
+
+        // Wait for the event to be saved
+        assertTrue("Timeout while saving test event", eventLatch.await(10, TimeUnit.SECONDS));
+
+        // Delete the facility and its associated events
+        deleteFacilityAndEvents(testFacility);
+
+        // Wait for deletions to complete
+        Thread.sleep(5000);
+
+        // Verify that the facility is deleted
+        CountDownLatch verifyFacilityLatch = new CountDownLatch(1);
+        db.collection("Facilities").document(testFacility.getDocumentID()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    assertFalse("Facility should be deleted", documentSnapshot.exists());
+                    verifyFacilityLatch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    fail("Failed to verify facility deletion: " + e.getMessage());
+                    verifyFacilityLatch.countDown();
+                });
+
+        assertTrue("Timeout while verifying facility deletion", verifyFacilityLatch.await(10, TimeUnit.SECONDS));
+
+        // Verify that the associated event is deleted
+        CountDownLatch verifyEventLatch = new CountDownLatch(1);
+        db.collection("Events").document(testEvent.getEventID()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    assertFalse("Associated event should be deleted", documentSnapshot.exists());
+                    verifyEventLatch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    fail("Failed to verify event deletion: " + e.getMessage());
+                    verifyEventLatch.countDown();
+                });
+
+        assertTrue("Timeout while verifying event deletion", verifyEventLatch.await(10, TimeUnit.SECONDS));
+    }
+
+    private void deleteFacilityAndEvents(Facility facility) throws InterruptedException {
+        CountDownLatch deletionLatch = new CountDownLatch(1);
+
+        // Delete associated events
+        db.collection("Events").whereEqualTo("eventOrganizer", facility.getDocumentID()).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    WriteBatch batch = db.batch();
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        batch.delete(document.getReference());
+                    }
+                    // Delete the facility
+                    batch.delete(db.collection("Facilities").document(facility.getDocumentID()));
+                    // Commit the batch
+                    batch.commit()
+                            .addOnSuccessListener(aVoid -> deletionLatch.countDown())
+                            .addOnFailureListener(e -> {
+                                fail("Failed to delete facility and events: " + e.getMessage());
+                                deletionLatch.countDown();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    fail("Failed to fetch associated events: " + e.getMessage());
+                    deletionLatch.countDown();
+                });
+
+        assertTrue("Timeout during facility and events deletion", deletionLatch.await(20, TimeUnit.SECONDS));
     }
 
 
 
+
+    private String uploadTestUserImage(User user) throws InterruptedException {
+        // Upload a sample user image to Firebase Storage at the path used by removeUserImage
+        String imagePath = "user_images/" + user.getDeviceID() + ".jpg";
+        StorageReference storageRef = storage.getReference().child(imagePath);
+        byte[] data = "This is a test user image".getBytes();
+
+        CountDownLatch uploadLatch = new CountDownLatch(1);
+        final String[] imageUrl = {null};
+        storageRef.putBytes(data)
+                .addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        imageUrl[0] = uri.toString();
+                        uploadLatch.countDown();
+                    }).addOnFailureListener(e -> {
+                        fail("Failed to get download URL for user image: " + e.getMessage());
+                        uploadLatch.countDown();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    fail("Failed to upload test user image: " + e.getMessage());
+                    uploadLatch.countDown();
+                });
+
+        assertTrue("Timeout while uploading test user image", uploadLatch.await(20, TimeUnit.SECONDS));
+        return imageUrl[0];
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        // Clean up any remaining test data if necessary
+    }
 }

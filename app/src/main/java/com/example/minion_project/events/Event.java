@@ -18,6 +18,7 @@ public class Event {
     private String eventName;
     private String eventDescription;
     private Integer eventCapacity;
+    private boolean qrCodeEnabled;
 
     private String eventOrganizer;
 
@@ -62,6 +63,7 @@ public class Event {
         this.eventLocation = "";
         this.eventImage = "";
         this.eventQrCode = "";
+        this.qrCodeEnabled = true;
     }
 
     /**
@@ -85,9 +87,19 @@ public class Event {
         this.eventImage = "";
         this.eventQrCode = "";
         this.eventStart= FALSE;
+        this.qrCodeEnabled = true;
 
 
     }
+
+    public boolean isQrCodeEnabled() {
+        return qrCodeEnabled;
+    }
+
+    public void setQrCodeEnabled(boolean qrCodeEnabled) {
+        this.qrCodeEnabled = qrCodeEnabled;
+    }
+
     public ArrayList<String> getEventEnrolled() {
         return eventEnrolled;
     }
