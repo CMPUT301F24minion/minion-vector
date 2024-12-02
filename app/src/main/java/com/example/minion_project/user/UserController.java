@@ -98,6 +98,12 @@ public class UserController {
             }
         }
     }
+
+    /**
+     * Accept an invite to an event.
+     * @param eventId The ID of the event to accept the invite for.
+     * @return true or false
+     */
     public Boolean AcceptInvite(String eventId) {
         //fetch eventfirst
         Event event = eventController.getEvent(eventId, new EventController.EventCallback() {
@@ -128,6 +134,10 @@ public class UserController {
                 }
             }
 
+            /**
+             * onError method for handling errors
+             * @param errorMessage The error message to be displayed
+             */
             @Override
             public void onError(String errorMessage) {
             }
@@ -138,6 +148,11 @@ public class UserController {
     return FALSE;
     };
 
+    /**
+     * Decline an invite to an event.
+     * @param eventID The ID of the event to decline the invite for.
+     * @return true or false
+     */
     public Boolean DeclineInvite(String eventID) {
         //fetch eventfirst
         Event event = eventController.getEvent(eventID, new EventController.EventCallback() {
@@ -169,6 +184,10 @@ public class UserController {
                 }
             }
 
+            /**
+             * onError method for handling errors
+             * @param errorMessage
+             */
             @Override
             public void onError(String errorMessage) {
             }
@@ -179,7 +198,9 @@ public class UserController {
         return FALSE;
     }
 
-    //fetch user infor with new info
+    /**
+     * Fetch user data from Firestore
+     */
     public void fetchUser(){
         usersRef.document(user.getDeviceID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             /**

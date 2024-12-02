@@ -16,17 +16,33 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * UserAdapter class for handling user selection in a RecyclerView.
+ */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private final Context context;
     private final ArrayList<String> users;
     private final Set<String> selectedUsers = new HashSet<>();
 
+    /**
+     * Constructor for UserAdapter.
+     * @param context The context in which the adapter is used.
+     * @param users The list of users to be displayed.
+     */
     public UserAdapter(Context context, ArrayList<String> users) {
         this.context = context;
         this.users = users;
     }
 
+    /**
+     * onCreateViewHolder method for creating a new ViewHolder.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,6 +50,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return new UserViewHolder(view);
     }
 
+    /**
+     * onBindViewHolder method for binding data to a ViewHolder.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         String userName = users.get(position);
@@ -53,19 +75,34 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         });
     }
 
+    /**
+     * getItemCount method for getting the total number of items in the data set held by the adapter.
+     * @return The total number of items in this adapter.
+     */
     @Override
     public int getItemCount() {
         return users.size();
     }
 
+    /**
+     * getSelectedUsers method to get the set of selected users.
+     * @return The set of selected users.
+     */
     public Set<String> getSelectedUsers() {
         return selectedUsers;
     }
 
+    /**
+     * UserViewHolder class for holding references to the views in each item of the RecyclerView.
+     */
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView userName;
         CheckBox userCheckBox;
 
+        /**
+         * Constructor for UserViewHolder.
+         * @param itemView The View that represents the item in the RecyclerView.
+         */
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.userName);
