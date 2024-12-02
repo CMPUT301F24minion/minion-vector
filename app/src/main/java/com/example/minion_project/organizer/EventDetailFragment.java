@@ -644,10 +644,10 @@ public class EventDetailFragment extends Fragment {
 
         // Update text views
         eventNameTextView.setText(event.getEventName());
-        eventDescriptionTextView.setText("Event Description ✏️: " + event.getEventDetails());
-        eventDateTextView.setText("Event Date 📅: " + event.getEventDate());
-        eventTimeTextView.setText("Event Time ⏰: " + event.getEventTime());
-        eventCapacityTextView.setText("Event Capacity🧢: " + event.getEventCapacity());
+        eventDescriptionTextView.setText("Details   " + event.getEventDetails());
+        eventDateTextView.setText("Date   " + event.getEventDate());
+        eventTimeTextView.setText("Time   " + event.getEventTime());
+        eventCapacityTextView.setText("Capacity   " + event.getEventCapacity());
 
         // Update counts
         int waitlistCount = event.getEventWaitlist().size();
@@ -656,11 +656,11 @@ public class EventDetailFragment extends Fragment {
         int invitedCount = event.getEventInvited().size();
         int rejectedCount = event.getEventRejected().size();
 
-        eventWaitlistCount.setText("Users on waitlist ⌛: " + waitlistCount);
-        eventAcceptedCount.setText("Users accepted ✅: " + acceptedCount);
-        eventDeclinedCount.setText("Users declined ❌: " + declinedCount);
-        eventPendingCount.setText("Users invited count 📩: " + invitedCount);
-        eventRejectedCount.setText("Users rejected ✖️: " + rejectedCount);
+        eventWaitlistCount.setText("Waitlist   " + waitlistCount);
+        eventAcceptedCount.setText("Accepted   " + acceptedCount);
+        eventDeclinedCount.setText("Declined   " + declinedCount);
+        eventPendingCount.setText("Users Invited   " + invitedCount);
+        eventRejectedCount.setText("Users Rejected   " + rejectedCount);
 
         this.lottery = new Lottery(event);
 
