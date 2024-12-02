@@ -198,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    /**
+     * Creates a notification channel for displaying notifications
+     */
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "my_channel_id";
@@ -213,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Requests location permissions
+     */
     private void requestLocationPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -222,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fetches and updates the user's location in Firestore
+     */
     private void fetchAndUpdateUser() {
         // Check permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -260,6 +269,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows a dialog to enable notifications
+     */
     private void showNotificationPreferenceDialog() {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Enable Notifications")
@@ -274,6 +286,9 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Enables notifications
+     */
     private void enableNotifications() {
         // Check and request notification permissions for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -290,10 +305,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Disables notifications
+     */
     private void disableNotifications() {
         saveNotificationPreference(false);
         Toast.makeText(this, "Notifications disabled.", Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * Saves the notification preference in Firestore
+     * @param isEnabled true if notifications are enabled, false otherwise
+     */
     private void saveNotificationPreference(boolean isEnabled) {
         Map<String, Object> notificationData = Map.of("allowNotifications", isEnabled);
 

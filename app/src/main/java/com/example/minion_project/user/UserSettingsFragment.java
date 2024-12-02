@@ -219,6 +219,12 @@ public class UserSettingsFragment extends Fragment {
                 });
     }
 
+    /**
+     * Generates a profile image with the first letter of the name
+     * @param androidID the unique devide ID of a user
+     * @param firstLetter the first letter of the name
+     * @param userData the user data to be updated in Firestore
+     */
     private void generateLetterProfile(String androidID, char firstLetter, Map<String, Object> userData) {
         // Create a Bitmap with the first letter
         int imageSize = 200; // Size of the profile picture
@@ -259,10 +265,6 @@ public class UserSettingsFragment extends Fragment {
                     fire.getUsersRef().document(androidID).update("profileImage", downloadUrl);
                 }));
     }
-
-
-
-
 
     /**
      * Gets existing data from Firestore and updates the UI to display
@@ -405,6 +407,11 @@ public class UserSettingsFragment extends Fragment {
         }
     }
 
+    /**
+     * Saves the new profile image URL to Firestore in both references
+     * @param androidID the unique devide ID of a user
+     * @param downloadUrl the new profile image URL
+     */
     private void saveProfileImageUrlToFirestore(String androidID, String downloadUrl) {
         // Prepare update tasks for both collections
         Map<String, Object> updateData = new HashMap<>();
@@ -431,6 +438,11 @@ public class UserSettingsFragment extends Fragment {
                     // Handle error
                 });
     }
+
+    /**
+     * Shows a popup with options for notification preferences
+     * @param androidID the unique devide ID of a user
+     */
     private void showNotificationPreferenceDialog(String androidID) {
         // Options for the dialog
         String[] options = {"Always Allow", "Only During App Usage", "Do Not Disturb"};
