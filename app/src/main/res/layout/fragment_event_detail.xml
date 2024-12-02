@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@color/zxing_custom_viewfinder_laser"
+        android:background="@color/white
+"
         android:gravity="top">
 
         <RelativeLayout
