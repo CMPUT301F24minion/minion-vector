@@ -27,6 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * AdminFacilities is a fragment that displays a list of facilities
+ */
 public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFacilityClickListener {
 
     private RecyclerView recyclerView;
@@ -35,14 +38,26 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
     private FireStoreClass ourFirestore;
     private CollectionReference facilitiesRef;
 
+    /**
+     * AdminFacilities required empty public constructor
+     */
     public AdminFacilities() {
         // Required empty public constructor
     }
 
+    /**
+     * Factory method to create a new instance of this fragment
+     * @return A new instance of fragment AdminFacilities
+     */
     public static AdminFacilities newInstance() {
         return new AdminFacilities();
     }
 
+    /**
+     * Called to initialize the fragment when it is created.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +66,18 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
         facilityList = new ArrayList<>();
     }
 
+    /**
+     * Inflate the layout for this fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return view The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +94,9 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
         return view;
     }
 
+    /**
+     * Fetch facilities from Firestore
+     */
     private void fetchFacilities() {
         facilitiesRef.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -100,11 +130,19 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                 });
     }
 
+    /**
+     * Handle facility click
+     * @param facility
+     */
     @Override
     public void onFacilityClick(Facility facility) {
         showDeleteConfirmationDialog(facility);
     }
 
+    /**
+     * Show a confirmation dialog before deleting a facility
+     * @param facility Facility to be deleted
+     */
     private void showDeleteConfirmationDialog(Facility facility) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Facility")
@@ -116,6 +154,10 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                 .show();
     }
 
+    /**
+     * Delete a facility and its associated events
+     * @param facility Facility to be deleted
+     */
     private void deleteFacilityAndEvents(Facility facility) {
         // Delete associated events first
         deleteAssociatedEvents(facility.getDocumentID(), () -> {
@@ -135,6 +177,11 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
         });
     }
 
+    /**
+     * Delete associated events for a facility
+     * @param facilityDocumentID Facility document ID
+     * @param onComplete Callback to be executed after deletion
+     */
     private void deleteAssociatedEvents(String facilityDocumentID, Runnable onComplete) {
         // Reference to the Events collection
         CollectionReference eventsRef = ourFirestore.getEventsRef();
@@ -195,6 +242,10 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                 });
     }
 
+    /**
+     * Delete a file from Firebase Storage
+     * @param fileUrl URL of the file to be deleted
+     */
     private void deleteFileFromStorage(String fileUrl) {
         if (fileUrl != null && !fileUrl.isEmpty()) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -210,6 +261,11 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
         }
     }
 
+    /**
+     * Delete event references from Users and Organizers
+     * @param eventID Event ID
+     * @param event Event object
+     */
     private void deleteEventReferencesFromUsersAndOrganizers(String eventID, Event event) {
         // Reference to Users and Organizers collections
         CollectionReference usersRef = ourFirestore.getUsersRef();

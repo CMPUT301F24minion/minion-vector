@@ -37,22 +37,46 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
 
     private static final String TAG = "AdminProfiles";
 
+    /**
+     * Default constructor required for Fragment.
+     */
     public AdminProfiles() {
         // Required empty public constructor
     }
 
+    /**
+     * Factory method to create a new instance of this fragment.
+     * @return
+     */
     public static AdminProfiles newInstance() {
         return new AdminProfiles();
     }
 
+    /**
+     * Called to do initial creation of a fragment.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ourFirestore = new FireStoreClass();
-        usersRef = ourFirestore.getUsersRef(); // Ensure this method returns the users collection
+        usersRef = ourFirestore.getUsersRef();
         userList = new ArrayList<>();
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -60,6 +84,12 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
         return inflater.inflate(R.layout.fragment_admin_profiles, container, false);
     }
 
+    /**
+     * Called immediately after the fragment's view has been created.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
@@ -142,7 +172,7 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
     private void deleteUser(User user) {
         // References to Firestore user documents in both collections
         DocumentReference userDocRef = usersRef.document(user.getDeviceID());
-        CollectionReference allUsersRef = ourFirestore.getAll_UsersRef(); // This method exists in your FireStoreClass
+        CollectionReference allUsersRef = ourFirestore.getAll_UsersRef();
         DocumentReference allUserDocRef = allUsersRef.document(user.getDeviceID());
 
         // Delete user from 'Users' collection
