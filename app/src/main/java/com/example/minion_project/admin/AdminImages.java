@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.graphics.Rect;
 
 import com.example.minion_project.R;
 import com.google.firebase.storage.FirebaseStorage;
@@ -16,7 +17,7 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -45,7 +46,10 @@ public class AdminImages extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.recyclerViewAdminImages);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        int spacingInPixels = (int) (8 * getResources().getDisplayMetrics().density);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, spacingInPixels, true));
 
         imageUrls = new ArrayList<>();
         adapter = new AdminImagesAdapter(getContext(), imageUrls, this); // Pass 'this' as the third parameter
@@ -135,5 +139,50 @@ public class AdminImages extends Fragment {
             Log.e("AdminImages", "Error deleting image: " + e.getMessage());
             Toast.makeText(getContext(), "Failed to delete image.", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    /**
+     * Adds spacing between items in the grid.
+     */
+    public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        /**
+         * Constructor for GridSpacingItemDecoration.
+         *
+         * @param spanCount   The number of columns in the grid.
+         * @param spacing     The spacing in pixels between items.
+         * @param includeEdge Whether to include edge spacing.
+         */
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, View view, RecyclerView parent, @NonNull RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * (spacing / spanCount)
+                outRect.right = (column + 1) * spacing / spanCount;    // (column + 1) * (spacing / spanCount)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount;          // column * (spacing / spanCount)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * (spacing / spanCount)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
     }
 }
