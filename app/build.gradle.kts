@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+
     //firestore do not touch
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation(libs.firebase.firestore)
@@ -52,16 +53,16 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+    implementation(libs.testng)
+    testImplementation(libs.androidx.core)
 
     annotationProcessor(libs.compiler)
-
-    testImplementation(libs.junit)
 
     // Android Instrumented Testing
 
     testImplementation(libs.junit)
-    testImplementation("org.mockito:mockito-core:4.11.0")
-    testImplementation("org.mockito:mockito-inline:4.11.0")
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.mockito.inline)
 
     // AndroidX Test (optional, for instrumentation tests)
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -73,8 +74,6 @@ dependencies {
 
     //
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     // AndroidX Test
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test:rules:1.5.0")
@@ -82,6 +81,16 @@ dependencies {
     // Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.mockito.inline)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)
+
+    androidTestImplementation(libs.androidx.junit.v115)
+    androidTestImplementation(libs.androidx.test.espresso.espresso.core.v351)
+    androidTestImplementation(libs.mockito.android)
 
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     implementation(libs.appcompat)

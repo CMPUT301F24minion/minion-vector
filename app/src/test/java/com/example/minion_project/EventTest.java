@@ -1,17 +1,18 @@
 package com.example.minion_project;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.minion_project.events.Event;
-import com.example.minion_project.user.User;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class EventTest {
+
     @Test
     void eventConstructorTest() {
-        // create a new event
+        // Create a new event
         Event event = new Event("event123", "Sample Event");
 
         // Verify that the event is instantiated correctly
@@ -20,9 +21,8 @@ public class EventTest {
 
         assertEquals("", event.getEventDate(), "Event date should be empty");
         assertEquals("", event.getEventDescription(), "Event description should be empty");
-        assertEquals("", event.getEventCapacity(), "Event capacity should be empty");
+        assertEquals(10, event.getEventCapacity(), "Event capacity should be the default value (10)");
         assertEquals("", event.getEventOrganizer(), "Event organizer should be empty");
-        //assertTrue(event.getEventAttendees().isEmpty(), "Event attendees should be empty");
         assertTrue(event.getEventWaitlist().isEmpty(), "Event waitlist should be empty");
         assertTrue(event.getEventInvited().isEmpty(), "Event invited list should be empty");
         assertEquals("", event.getEventLocation(), "Event location should be empty");
@@ -34,19 +34,19 @@ public class EventTest {
     void eventGetterSetterTest() {
         Event event = new Event("event123", "Sample Event");
 
-        // set values
+        // Set values
         event.setEventDate("2024-11-01");
         event.setEventDescription("Sample event description");
-        //event.setEventCapacity("100");
+        event.setEventCapacity(100);
         event.setEventOrganizer("Organizer Name");
         event.setEventLocation("Event Location");
         event.setEventImage("image_url");
         event.setEventQrCode("qr_code");
 
-        // verify values
+        // Verify values
         assertEquals("2024-11-01", event.getEventDate(), "Event date should be '2024-11-01'");
         assertEquals("Sample event description", event.getEventDescription(), "Event description should be 'Sample event description'");
-        assertEquals("100", event.getEventCapacity(), "Event capacity should be '100'");
+        assertEquals(100, event.getEventCapacity(), "Event capacity should be '100'");
         assertEquals("Organizer Name", event.getEventOrganizer(), "Event organizer should be 'Organizer Name'");
         assertEquals("Event Location", event.getEventLocation(), "Event location should be 'Event Location'");
         assertEquals("image_url", event.getEventImage(), "Event image URL should be 'image_url'");
@@ -77,17 +77,16 @@ public class EventTest {
     void eventWaitlistTest() {
         Event event = new Event("event123", "Sample Event");
 
-
-        // add users to the event waitlist
+        // Add users to the event waitlist
         ArrayList<String> waitlist = new ArrayList<>();
         waitlist.add("user1");
         waitlist.add("user2");
         event.setEventWaitlist(waitlist);
 
-        // verify that waitlisted was correct
+        // Verify that the waitlist is correct
         assertEquals(2, event.getEventWaitlist().size(), "Event should have 2 users in the waitlist");
-        assertTrue(event.getEventWaitlist().contains("user1"), "Waitlist should contain Alice");
-        assertTrue(event.getEventWaitlist().contains("user2"), "Waitlist should contain Bob");
+        assertTrue(event.getEventWaitlist().contains("user1"), "Waitlist should contain 'user1'");
+        assertTrue(event.getEventWaitlist().contains("user2"), "Waitlist should contain 'user2'");
     }
 
     @Test
@@ -100,7 +99,7 @@ public class EventTest {
 
         //event.setEventInvited(invitedUserIds);
 
-        // verify
+        // Verify
         assertEquals(2, event.getEventInvited().size(), "Event should have 2 invited users");
         assertTrue(event.getEventInvited().contains("user1"), "Invited list should contain 'user1'");
         assertTrue(event.getEventInvited().contains("user2"), "Invited list should contain 'user2'");
@@ -110,12 +109,13 @@ public class EventTest {
     void eventEdgeCasesTest() {
         Event event = new Event();
 
-        // verify
+        // Verify default values
         assertEquals("", event.getEventID(), "Event ID should be empty");
         assertEquals("", event.getEventName(), "Event name should be empty");
-        //assertTrue(event.getEventAttendees().isEmpty(), "Attendees list should be empty");
         assertTrue(event.getEventWaitlist().isEmpty(), "Waitlist should be empty");
+        assertTrue(event.getEventInvited().isEmpty(), "Invited list should be empty");
 
+        // Test null assignments
         event.setEventName("New Event");
         assertEquals("New Event", event.getEventName(), "Event name should be 'New Event'");
 

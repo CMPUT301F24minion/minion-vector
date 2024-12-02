@@ -27,23 +27,16 @@ public class Notification {
     private String uniqueDocumentID;
 
     private static final String CHANNEL_ID = "my_channel_id";
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    // Predefined document IDs for the four notification types
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String Won = "Won_lottery";
     private static final String Lost = "lost_lottery";
     private static final String cancelled = "cancelled_event";
     private static final String waitlisted = "waitlistlist_entrants";
 
-    // Predefined messages (assumed to be stored in Firestore documents)
-    // If you have constants in code, you can use them here
-
-    // Default constructor
     public Notification() {
         this.receiver = "";
     }
 
-    // Constructor with receiver
     public Notification(String receiver) {
         this.receiver = receiver;
         this.uniqueDocumentID = db.collection("Notifications").document().getId(); // Generate unique ID at creation
@@ -53,7 +46,6 @@ public class Notification {
      *
      * @return the uniqueDocumentID
      */
-
     public String getUniqueDocumentID() {
         return uniqueDocumentID;
     }
@@ -133,16 +125,10 @@ public class Notification {
                                     if (allowNotifications != null && allowNotifications) {
                                         String title = document.getString("Title");
                                         String message = document.getString("Message");
-
                                         // Send notification
                                         sendNotification(context, title, message);
-                                    } else {
-                                        System.out.println("User has disabled notifications.");
                                     }
-                                } else {
-                                    System.out.println("User document does not exist.");
                                 }
-
                                 // Remove the androidID from the array after processing
                                 androidIDs.remove(getReceiver());
                                 Map<String, Object> updates = new HashMap<>();
@@ -154,54 +140,13 @@ public class Notification {
                                     System.err.println("Error updating notification document: " + e.getMessage());
                                 });
 
-                            } else {
-                                System.err.println("Error getting user document: " + userTask.getException().getMessage());
                             }
                         });
 
-                    } else {
-                        System.out.println("AndroidID not found in notification document: " + documentID);
                     }
-                } else {
-                    System.out.println("Notification document does not exist: " + documentID);
                 }
-            } else {
-                System.err.println("Error getting notification document: " + task.getException().getMessage());
             }
         });
-    }
-
-
-    /**
-     * this method calls the method that adds the user to the documentID of winning the lottery
-     * @param androidID
-     */
-    public void addUserToNotificationWon(String androidID) {
-        addUserToNotificationDocument(Won, androidID);
-    }
-
-    /**
-     * this method calls the method that adds the user to the documentID of losing the lottery system
-     * @param androidID
-     */
-    public void addUserToNotificationLost(String androidID) {
-        addUserToNotificationDocument(Lost, androidID);
-    }
-
-    /**
-     * this method calls the method that adds the user to the documentID of cancelling the event
-     * @param androidID
-     */
-    public void addUserToNotificationCancelled(String androidID) {
-        addUserToNotificationDocument(cancelled, androidID);
-    }
-
-    /**
-     * this method calls the method that adds the user to the documentID of being waitlisted
-     * @param androidID
-     */
-    public void addUserToNotificationWaitlisted(String androidID) {
-        addUserToNotificationDocument(waitlisted, androidID);
     }
 
     /**
@@ -230,13 +175,7 @@ public class Notification {
                         Map<String, Object> updates = new HashMap<>();
                         updates.put("ID", androidIDs);
 
-                        docRef.update(updates).addOnSuccessListener(aVoid -> {
-                            System.out.println("Notification document updated successfully.");
-                        }).addOnFailureListener(e -> {
-                            System.err.println("Error updating notification document: " + e.getMessage());
-                        });
-                    } else {
-                        System.out.println("AndroidID already exists in notification document: " + documentID);
+                        docRef.update(updates);
                     }
                 } else {
                     // Document does not exist, create it
@@ -244,16 +183,9 @@ public class Notification {
                     List<String> androidIDs = new ArrayList<>();
                     androidIDs.add(androidID);
                     data.put("ID", androidIDs);
-                    // message and title are constants; assume they are already set in Firestore
 
-                    docRef.set(data).addOnSuccessListener(aVoid -> {
-                        System.out.println("Notification document created successfully.");
-                    }).addOnFailureListener(e -> {
-                        System.err.println("Error creating notification document: " + e.getMessage());
-                    });
+                    docRef.set(data);
                 }
-            } else {
-                System.err.println("Error getting notification document: " + task.getException().getMessage());
             }
         });
     }

@@ -64,17 +64,3 @@ public class Facility {
     public void setFacilityImage(String facilityImage) {
         this.facilityImage = facilityImage;
     }
-
-    /**
-     *
-     * @return String representation of the Facility object
-     */
-    @Override
-    public String toString() {
-        return "Facility{" +
-                "documentID='" + documentID + '\'' +
-                ", facilityID='" + facilityID + '\'' +
-                ", facilityImage='" + facilityImage + '\'' +
-                '}';
-    }
-}
