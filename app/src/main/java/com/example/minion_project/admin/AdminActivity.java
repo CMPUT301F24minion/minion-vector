@@ -40,16 +40,16 @@ public class AdminActivity extends AppCompatActivity {
 
             if (itemId == R.id.menu_admin_events) {
                 replaceFragment(new AdminEvents());
-                // binding.adminTextView.setText("Admin Events");
+                 binding.adminTextView.setText("Admin Events");
             } else if (itemId == R.id.menu_admin_images) {
                 replaceFragment(new AdminImages());
-                // binding.adminTextView.setText("Admin Images");
+                 binding.adminTextView.setText("Admin Images");
             } else if (itemId == R.id.menu_admin_profiles) {
                 replaceFragment(new AdminProfiles());
-                // binding.adminTextView.setText("Admin Profiles");
+                 binding.adminTextView.setText("Admin Profiles");
             } else if (itemId == R.id.menu_admin_facilities) {
                 replaceFragment(new AdminFacilities());
-                // binding.adminTextView.setText("Admin Facilities");
+                 binding.adminTextView.setText("Admin Facilities");
             }
 
             return true;
