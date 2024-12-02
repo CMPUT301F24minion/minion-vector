@@ -2,17 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="userNavBar">#A192E4</color>
-    <color name="organizerNavBar">#A192E4</color>
-    <color name="adminNavBar">#A192E4</color>
-    <color name="top_margin">#D6D0E9</color>
+    <color name="userNavBar">#1976D2</color>
+    <color name="organizerNavBar">#1976D2</color>
+    <color name="adminNavBar">#1976D2</color>
+    <color name="top_margin">#2468AB</color>
     <color name="lilac">#C4BEE2</color>
     <color name="pink">#FFBB86FC</color>
     <color name="purple">#FF6200EE</color>
     <color name="royalPurple">#FF3700B3</color>
     <color name="teal">#FF03DAC5</color>
     <color name="seaGreen">#FF018786</color>
-    <color name="lightLilac">#CCC7E7</color>
+    <color name="lightLilac">#1976D2</color>
     <color name="material3deepPurple">#392C47</color>
     <color name="purple_200">#BB86FC</color>
     <color name="purple_500">#6200EE</color>
