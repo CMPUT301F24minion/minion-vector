@@ -64,7 +64,6 @@ public class AdminImages extends Fragment {
     private void loadImagesFromFirebaseStorage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        // Load event images
         StorageReference eventImagesRef = storage.getReference().child("event_images");
         eventImagesRef.listAll()
                 .addOnSuccessListener(listResult -> {
@@ -169,16 +168,16 @@ public class AdminImages extends Fragment {
             int column = position % spanCount; // item column
 
             if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * (spacing / spanCount)
-                outRect.right = (column + 1) * spacing / spanCount;    // (column + 1) * (spacing / spanCount)
+                outRect.left = spacing - column * spacing / spanCount;
+                outRect.right = (column + 1) * spacing / spanCount;
 
                 if (position < spanCount) { // top edge
                     outRect.top = spacing;
                 }
                 outRect.bottom = spacing; // item bottom
             } else {
-                outRect.left = column * spacing / spanCount;          // column * (spacing / spanCount)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * (spacing / spanCount)
+                outRect.left = column * spacing / spanCount;
+                outRect.right = spacing - (column + 1) * spacing / spanCount;
                 if (position >= spanCount) {
                     outRect.top = spacing; // item top
                 }

@@ -21,7 +21,7 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
 
     private Context context;
     private List<String> imageUrls;
-    private AdminImages adminImages; // Reference to the fragment for delete actions
+    private AdminImages adminImages;
 
     /**
      * Constructor for AdminImagesAdapter

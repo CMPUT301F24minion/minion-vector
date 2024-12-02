@@ -36,7 +36,6 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
     private CollectionReference facilitiesRef;
 
     public AdminFacilities() {
-        // Required empty public constructor
     }
 
     public static AdminFacilities newInstance() {
@@ -124,7 +123,7 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                     .delete()
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getContext(), "Facility and associated events deleted successfully.", Toast.LENGTH_SHORT).show();
-                        // Remove facility from local list and notify adapter
+                        // Remove from local list and notify adapter
                         facilityList.remove(facility);
                         adapter.notifyDataSetChanged();
                     })
@@ -136,7 +135,6 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
     }
 
     private void deleteAssociatedEvents(String facilityDocumentID, Runnable onComplete) {
-        // Reference to the Events collection
         CollectionReference eventsRef = ourFirestore.getEventsRef();
 
         // Query events where eventOrganizer matches the facilityID
@@ -169,10 +167,8 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                                 batch.delete(document.getReference());
                             }
 
-                            // After processing each event
                             deletionsCompleted[0]++;
                             if (deletionsCompleted[0] == eventsToDelete) {
-                                // Commit the batch after all events are processed
                                 batch.commit()
                                         .addOnSuccessListener(aVoid -> {
                                             Log.d("AdminFacilities", "Associated events and their files deleted successfully.");
@@ -185,7 +181,6 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
                             }
                         }
                     } else {
-                        // No associated events found
                         onComplete.run();
                     }
                 })
@@ -215,7 +210,7 @@ public class AdminFacilities extends Fragment implements FacilitiesAdapter.OnFac
         CollectionReference usersRef = ourFirestore.getUsersRef();
         CollectionReference organizersRef = ourFirestore.getOrganizersRef();
 
-        // Remove the event from users in eventEnrolled, eventWaitlist, eventInvited, etc.
+        // Remove the event from users in eventEnrolled, eventWaitlist, eventInvited
         ArrayList<String> userIds = new ArrayList<>();
         if (event.getEventEnrolled() != null) userIds.addAll(event.getEventEnrolled());
         if (event.getEventWaitlist() != null) userIds.addAll(event.getEventWaitlist());

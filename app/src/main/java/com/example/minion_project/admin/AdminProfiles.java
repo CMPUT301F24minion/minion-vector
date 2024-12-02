@@ -38,7 +38,6 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
     private static final String TAG = "AdminProfiles";
 
     public AdminProfiles() {
-        // Required empty public constructor
     }
 
     public static AdminProfiles newInstance() {
@@ -49,7 +48,7 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ourFirestore = new FireStoreClass();
-        usersRef = ourFirestore.getUsersRef(); // Ensure this method returns the users collection
+        usersRef = ourFirestore.getUsersRef();
         userList = new ArrayList<>();
     }
 
@@ -67,7 +66,7 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
         recyclerView = view.findViewById(R.id.adminProfilesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdminProfilesAdapter(getContext(), userList);
-        adapter.setOnUserClickListener(this); // Set the click listener
+        adapter.setOnUserClickListener(this);
         recyclerView.setAdapter(adapter);
 
         fetchUsers();
@@ -84,12 +83,11 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
                     for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
                         // Manually extract fields from Firestore document
                         String deviceID = document.getId();
-                        String name = document.getString("Name"); // Note the capital 'N'
-                        String email = document.getString("Email"); // Capital 'E'
-                        String phoneNumber = document.getString("Phone_number"); // Match the exact field name
-                        String city = document.getString("City"); // Capital 'C'
+                        String name = document.getString("Name");
+                        String email = document.getString("Email");
+                        String phoneNumber = document.getString("Phone_number");
+                        String city = document.getString("City");
 
-                        // Create a new User object
                         User user = new User();
                         user.setDeviceID(deviceID);
                         user.setName(name != null ? name : "No Name");
@@ -115,12 +113,11 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
      */
     @Override
     public void onUserClick(User user) {
-        // Show a confirmation dialog
+        // Show  dialog
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete User")
                 .setMessage("Do you want to delete this user profile?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    // Show second confirmation dialog
                     new AlertDialog.Builder(getContext())
                             .setTitle("Are you sure?")
                             .setMessage("This action cannot be undone.")
@@ -140,20 +137,16 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
      * @param user The user to be deleted.
      */
     private void deleteUser(User user) {
-        // References to Firestore user documents in both collections
         DocumentReference userDocRef = usersRef.document(user.getDeviceID());
         CollectionReference allUsersRef = ourFirestore.getAll_UsersRef(); // This method exists in your FireStoreClass
         DocumentReference allUserDocRef = allUsersRef.document(user.getDeviceID());
 
-        // Delete user from 'Users' collection
         userDocRef.delete()
                 .addOnSuccessListener(aVoid -> {
-                    // After deleting from 'Users', delete from 'All_Users'
                     allUserDocRef.delete()
                             .addOnSuccessListener(aVoid2 -> {
                                 Toast.makeText(getContext(), "User deleted successfully from both collections.", Toast.LENGTH_SHORT).show();
 
-                                // Remove user from local list and update adapter
                                 userList.remove(user);
                                 adapter.notifyDataSetChanged();
                             })

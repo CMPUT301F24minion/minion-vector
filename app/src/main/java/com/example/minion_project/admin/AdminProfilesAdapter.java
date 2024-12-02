@@ -21,12 +21,10 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
     private List<User> userList;
     private OnUserClickListener clickListener;
 
-    // Listener interface for item clicks
     public interface OnUserClickListener {
         void onUserClick(User user);
     }
 
-    // Setter for the click listener
     public void setOnUserClickListener(OnUserClickListener listener) {
         this.clickListener = listener;
     }
@@ -36,7 +34,6 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
         this.userList = userList;
     }
 
-    // ViewHolder class to hold each item view
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNameTextView;
         TextView userEmailTextView;
@@ -46,7 +43,6 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            // Initialize the views
             userNameTextView = itemView.findViewById(R.id.userNameTextView);
             userEmailTextView = itemView.findViewById(R.id.userEmailTextView);
             userPhoneNumberTextView = itemView.findViewById(R.id.userPhoneNumberTextView);
@@ -58,7 +54,6 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
     @NonNull
     @Override
     public AdminProfilesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate your item layout
         View view = LayoutInflater.from(context).inflate(R.layout.item_admin_profile, parent, false);
         return new ViewHolder(view);
     }
@@ -66,7 +61,6 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
     @Override
     public void onBindViewHolder(@NonNull AdminProfilesAdapter.ViewHolder holder, int position) {
         User user = userList.get(position);
-        // Set the user's details
         holder.userNameTextView.setText(user.getName());
         holder.userEmailTextView.setText(user.getEmail());
         holder.userPhoneNumberTextView.setText(user.getPhoneNumber());

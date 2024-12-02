@@ -35,7 +35,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
     private static final String TAG = "AdminEvents";
 
     public AdminEvents() {
-        // Required empty public constructor
     }
 
     public static AdminEvents newInstance() {
@@ -96,7 +95,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
 
     @Override
     public void onEventDelete(Event event) {
-        // Show a confirmation dialog
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Event")
                 .setMessage("Are you sure you want to delete this event?")
@@ -114,7 +112,6 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
 
     @Override
     public void onItemClick(Event event) {
-        // Show options dialog
         boolean isQrCodeEnabled = event.isQrCodeEnabled();
         String qrCodeOption = isQrCodeEnabled ? "Disable QR Code" : "Enable QR Code";
 
@@ -151,7 +148,7 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
     }
 
     private String getAdminDeviceID() {
-        // Implement logic to retrieve the admin's deviceID
-        return "admin_device_id"; // Replace with actual retrieval logic
+        // retrieve the admin's deviceID
+        return "admin_device_id";
     }
 }

@@ -81,11 +81,9 @@ public class EventController {
                 DocumentSnapshot document = task.getResult();
 
                 if (document.exists()) {
-                    // Use Firestore's arrayUnion to add "complete" to the eventWaitlist array
                     eventsRef.document(event.getEventID())
                             .update("eventWaitlist", FieldValue.arrayUnion(UserId))
                             .addOnSuccessListener(aVoid -> {
-                                // Successfully added to the waitlist
                                 Log.d("EventUpdate", "Successfully added 'complete' to the waitlist.");
                             })
                             .addOnFailureListener(e -> {
@@ -104,7 +102,7 @@ public class EventController {
     /**
      * addToEventInvited:  a method to add a user to event inivted list
      * @param event
-     * @param userId
+     * @param userid
      * @return None
      */
     public void addToEventInvited(Event event,String userid){
@@ -135,7 +133,7 @@ public class EventController {
     /**
      * addToEventsRejected:  a method to add a user to event rejected list+ pool from lottery
      * @param event
-     * @param userId
+     * @param userid
      * @return None
      */
     public void addToEventsRejected(Event event,String userid){
@@ -185,7 +183,7 @@ public class EventController {
     /**
      * add Events to Enrolled
      * @param event event that user will be removed from
-     * @param UserID userID that will be removed from event
+     * @param userid userID that will be removed from event
      */
     public void addToEventsEnrolled(Event event, String userid) {
         eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
@@ -193,11 +191,9 @@ public class EventController {
                 DocumentSnapshot document = task.getResult();
 
                 if (document.exists()) {
-                    // Use Firestore's arrayUnion to add "complete" to the eventWaitlist array
                     eventsRef.document(event.getEventID())
                             .update("eventEnrolled", FieldValue.arrayUnion(userid))
                             .addOnSuccessListener(aVoid -> {
-                                // Successfully added to the waitlist
                                 Log.d("EventUpdate", "Successfully added  to the enrolled.");
                             })
                             .addOnFailureListener(e -> {
@@ -220,11 +216,9 @@ public class EventController {
     public void removeFromInvited(Event event, String UserID) {
         eventsRef.document(event.getEventID()).update("eventInvited", FieldValue.arrayRemove(UserID))
                 .addOnSuccessListener(aVoid -> {
-                    // Log success message
                     Log.d("Firestore", "User " + UserID + " successfully removed from the invited for event " + event.getEventID());
                 })
                 .addOnFailureListener(e -> {
-                    // Log failure message
                     Log.e("Firestore", "Error removing user " + UserID + " from the invited for event " + event.getEventID(), e);
                 });
     }
@@ -257,7 +251,6 @@ public class EventController {
                                         Log.d("EventController", "User not found: " + userId);
                                     }
 
-                                    // Check if all users are processed
                                     if (userNames.size() == userIds.size()) {
                                         Log.d("EventController", "All user names fetched: " + userNames);
                                         callback.onUserListFetched(userNames);
@@ -277,7 +270,6 @@ public class EventController {
         });
     }
 
-    // Callback interface for user list fetching
     public interface UserListCallback {
         void onUserListFetched(ArrayList<Map.Entry<String, String>>  userNames);
 
@@ -287,7 +279,6 @@ public class EventController {
      * Function to start the event
      */
     public  void startEvent(Event event){
-        //set the event start to true
         eventsRef.document(event.getEventID()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
