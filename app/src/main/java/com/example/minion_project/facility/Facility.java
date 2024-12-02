@@ -19,6 +19,7 @@ public class Facility {
 
     /**
      * getDocumentID
+     *
      * @return documentID
      */
     public String getDocumentID() {
@@ -27,6 +28,7 @@ public class Facility {
 
     /**
      * setDocumentID
+     *
      * @param documentID The document ID to set
      */
     public void setDocumentID(String documentID) {
@@ -35,6 +37,7 @@ public class Facility {
 
     /**
      * getFacilityID
+     *
      * @return facilityID
      */
     public String getFacilityID() {
@@ -43,6 +46,7 @@ public class Facility {
 
     /**
      * setFacilityID
+     *
      * @param facilityID The facility ID to set
      */
     public void setFacilityID(String facilityID) {
@@ -51,6 +55,7 @@ public class Facility {
 
     /**
      * getFacilityImage
+     *
      * @return facilityImage
      */
     public String getFacilityImage() {
@@ -59,8 +64,10 @@ public class Facility {
 
     /**
      * setFacilityImage
+     *
      * @param facilityImage The facility image to set
      */
     public void setFacilityImage(String facilityImage) {
         this.facilityImage = facilityImage;
     }
+}
