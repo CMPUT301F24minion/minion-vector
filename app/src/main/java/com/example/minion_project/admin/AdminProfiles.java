@@ -41,7 +41,6 @@ public class AdminProfiles extends Fragment implements AdminProfilesAdapter.OnUs
      * Default constructor required for Fragment.
      */
     public AdminProfiles() {
-        // Required empty public constructor
     }
 
     /**
