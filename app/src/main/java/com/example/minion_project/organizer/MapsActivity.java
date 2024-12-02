@@ -17,11 +17,19 @@ import com.example.minion_project.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * MapsActivity is a class that extends FragmentActivity and implements OnMapReadyCallback.
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private  ArrayList<HashMap<String, Double>> locations;
+
+    /**
+     * Called when the activity is first created.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

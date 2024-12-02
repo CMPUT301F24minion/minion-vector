@@ -21,11 +21,20 @@ import com.example.minion_project.events.EventsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter class for displaying user event status.
+ */
 public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatusAdapter.ViewHolder> {
     private Context context;
     private ArrayList<UserEvent> eventList;
     private UserController userController;
 
+    /**
+     * Constructor for UserEventStatusAdapter.
+     * @param context The context in which the adapter is used.
+     * @param eventList The list of events to display.
+     * @param usercontroller The user controller for managing user interactions with events.
+     */
     public UserEventStatusAdapter(Context context, ArrayList<UserEvent> eventList,UserController usercontroller) {
         this.context = context;
         this.eventList = eventList;
@@ -33,6 +42,14 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
     }
 
 
+    /**
+     * Creates a new ViewHolder for the RecyclerView.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +58,12 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
         return new ViewHolder(itemView);
     }
 
+    /**
+     * Updates the contents of the ViewHolder to reflect the item at the given position.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserEvent event = eventList.get(position);
@@ -48,12 +71,21 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
             holder.eventSelectedTextView.setVisibility(View.VISIBLE);
             // Set OnClickListener if status is "invited"
             holder.itemView.setOnClickListener(new View.OnClickListener() {
+                /**
+                 * Handles click events on the item view.
+                 * @param v The View that was clicked.
+                 */
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Accept Invite")
                             .setMessage("Do you want to accept or decline the invitation?")
                             .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                                /**
+                                 * Handles click events on the Accept button.
+                                 * @param dialog The AlertDialog that was clicked.
+                                 * @param id The ID of the clicked button.
+                                 */
                                 public void onClick(DialogInterface dialog, int id) {
                                     // Handle Accept action
                                     Toast.makeText(context, "You have accepted the invitation!", Toast.LENGTH_SHORT).show();
@@ -65,6 +97,11 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
                                 }
                             })
                             .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                                /**
+                                 * Handles click events on the Decline button.
+                                 * @param dialog The AlertDialog that was clicked.
+                                 * @param id The ID of the clicked button.
+                                 */
                                 public void onClick(DialogInterface dialog, int id) {
                                     Toast.makeText(context, "You have declined the invitation!", Toast.LENGTH_SHORT).show();
 
@@ -92,11 +129,18 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
 
     }
 
+    /**
+     * get eventList size
+     * @return The number of items in the eventList.
+     */
     @Override
     public int getItemCount() {
         return eventList.size();
     }
 
+    /**
+     * ViewHolder class for holding the views for each item in the RecyclerView.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 //        public ImageView eventImage;
         public TextView eventTitle;
@@ -107,6 +151,10 @@ public class UserEventStatusAdapter extends RecyclerView.Adapter<UserEventStatus
         public TextView eventRejectedView;
         public TextView eventAcceptedView;
 
+        /**
+         * Constructor for ViewHolder.
+         * @param view The View that holds the layout for each item in the RecyclerView.
+         */
         public ViewHolder(View view) {
             super(view);
             eventsDate = view.findViewById(R.id.eventDate);

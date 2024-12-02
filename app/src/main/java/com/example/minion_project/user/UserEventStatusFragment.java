@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment class to display user event status.
+ */
 public class UserEventStatusFragment extends Fragment {
 
     private RecyclerView userEventStatusRecyclerView;
@@ -35,10 +38,28 @@ public class UserEventStatusFragment extends Fragment {
     private ArrayList<UserEvent> eventList;
     private FireStoreClass ourFirestore=new FireStoreClass();
     private UserController userController;
+
+    /**
+     * Constructor for UserEventStatusFragment.
+     * @param userController The user controller for managing user interactions with events.
+     */
     public UserEventStatusFragment(UserController userController) {
         this.userController=userController;
 
     }
+
+    /**
+     * Creates a new instance of UserEventStatusFragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return new instance of UserEventStatusFragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,6 +78,10 @@ public class UserEventStatusFragment extends Fragment {
 
         return rootView;
     }
+
+    /**
+     * onResume method to fetch user info and events.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -76,6 +101,10 @@ public class UserEventStatusFragment extends Fragment {
             eventDate = itemView.findViewById(R.id.event_Date);
         }
     }
+
+    /**
+     * Fetch events associated with the user and update the adapter.
+     */
     public void fetchEvents() {
         HashMap<String,String> eventIds = userController.user.getAllEvents();
 

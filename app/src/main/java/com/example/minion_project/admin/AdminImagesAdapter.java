@@ -17,6 +17,9 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+/**
+ * AdminImagesAdapter is an adapter for displaying images in a RecyclerView.
+ */
 public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.ViewHolder> {
 
     private Context context;
@@ -36,6 +39,14 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
         this.adminImages = adminImages;
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

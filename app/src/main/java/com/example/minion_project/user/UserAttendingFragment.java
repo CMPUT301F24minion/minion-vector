@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * UserAttendingFragment class for handling the RecyclerView for user attending events.
+ */
 public class UserAttendingFragment extends Fragment {
 
     private RecyclerView userEventStatusRecyclerView;
@@ -30,6 +33,18 @@ public class UserAttendingFragment extends Fragment {
     private FirebaseFirestore firestore;
     private String currentUserId; // Replace this with your method of fetching the logged-in user's ID
 
+    /**
+     * onCreateView method for creating the view for the fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_event_status, container, false);
@@ -49,6 +64,10 @@ public class UserAttendingFragment extends Fragment {
         return view;
     }
 
+    /**
+     * getCurrentUserId method for getting the unique device ID.
+     * @return The unique device ID.
+     */
     private String getCurrentUserId() {
         // Retrieve the unique device ID using ANDROID_ID
         return Settings.Secure.getString(
@@ -58,6 +77,9 @@ public class UserAttendingFragment extends Fragment {
     }
 
 
+    /**
+     * fetchEnrolledEvents method for fetching the user's enrolled events.
+     */
     private void fetchEnrolledEvents() {
         firestore.collection("Users").document(currentUserId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -84,6 +106,10 @@ public class UserAttendingFragment extends Fragment {
         });
     }
 
+    /**
+     * fetchEventDetails method for fetching event details.
+     * @param eventId The ID of the event to fetch details for.
+     */
     private void fetchEventDetails(String eventId) {
         firestore.collection("Events").document(eventId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

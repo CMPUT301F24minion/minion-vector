@@ -36,10 +36,18 @@ public class Event {
     private Integer DEFAULT_CAPACITY=10;
     private Boolean eventStart;
 
+    /**
+     * getEventStart did the event start? true or false
+     * @return eventStart
+     */
     public Boolean getEventStart() {
         return eventStart;
     }
 
+    /**
+     * setEventStart did the event start? true or false
+     * @param eventStart did the event start?
+     */
     public void setEventStart(Boolean eventStart) {
         this.eventStart = eventStart;
     }
@@ -92,34 +100,66 @@ public class Event {
 
     }
 
+    /**
+     * getQrCodeEnabled
+     * @return qrCodeEnabled
+     */
     public boolean isQrCodeEnabled() {
         return qrCodeEnabled;
     }
 
+    /**
+     * setQrCodeEnabled
+     * @param qrCodeEnabled boolean
+     */
     public void setQrCodeEnabled(boolean qrCodeEnabled) {
         this.qrCodeEnabled = qrCodeEnabled;
     }
 
+    /**
+     * Get list of enrolled users in event
+     * @return eventEnrolled
+     */
     public ArrayList<String> getEventEnrolled() {
         return eventEnrolled;
     }
 
+    /**
+     * Set list of enrolled users in event
+     * @param eventEnrolled ArrayList<String>
+     */
     public void setEventEnrolled(ArrayList<String> eventEnrolled) {
         this.eventEnrolled = eventEnrolled;
     }
 
+    /**
+     * Get list of declined users in event
+     * @return eventDeclined
+     */
     public ArrayList<String> getEventDeclined() {
         return eventDeclined;
     }
 
+    /**
+     * Set list of declined users in event
+     * @param eventDeclined ArrayList<String>
+     */
     public void setEventDeclined(ArrayList<String> eventDeclined) {
         this.eventDeclined = eventDeclined;
     }
 
+    /**
+     * getEventRejected
+     * @return eventRejected
+     */
     public ArrayList<String> getEventRejected() {
         return eventRejected;
     }
 
+    /**
+     * Set list of rejected users in event
+     * @param eventRejected ArrayList<String>
+     */
     public void setEventRejected(ArrayList<String> eventRejected) {
         this.eventRejected = eventRejected;
     }

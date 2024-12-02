@@ -12,20 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.minion_project.Notification;
 import com.example.minion_project.R;
 import com.example.minion_project.events.Event;
 import com.example.minion_project.events.EventController;
-import com.example.minion_project.user.UserController;
 
 
 public class UserEventFragment extends Fragment {
     private TextView eventNameTextView;
     private TextView eventDescriptionTextView;
     private TextView eventLocationTextView;
+    private ImageView eventPhoto;
     private TextView eventStatus;
     private Button eventJoinButton;
     private Button eventUnJoinButton;
@@ -74,6 +76,7 @@ public class UserEventFragment extends Fragment {
         eventJoinButton = view.findViewById(R.id.event_join);
         eventStatus = view.findViewById(R.id.event_status);
         eventUnJoinButton=view.findViewById(R.id.event_unjoin);
+        eventPhoto = view.findViewById(R.id.event_image);
 
 
         eventJoinButton.setOnClickListener(v->joinEvent());
@@ -162,6 +165,10 @@ private void ButtonVisibility(){
                     eventNameTextView.setText(event.getEventName());
                     eventDescriptionTextView.setText(event.getEventDescription());
                     eventLocationTextView.setText(event.getEventLocation());
+                    Glide.with(requireActivity())
+                            .load(event.getEventImage())
+                            .circleCrop()
+                            .into(eventPhoto);
                     UserEventFragment.this.event = event;
 
                     //set Event status for the user

@@ -16,31 +16,51 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * FacilitiesAdapter: Adapter for displaying a list of facilities in a RecyclerView.
+ */
 public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.ViewHolder> {
 
     private Context context;
     private List<Facility> facilityList;
     private OnFacilityClickListener facilityClickListener;
 
-    // Interface for item click actions
+    /**
+     * Interface for handling facility click events
+     */
     public interface OnFacilityClickListener {
         void onFacilityClick(Facility facility);
     }
 
+    /**
+     * Set the facility click listener
+     * @param listener The listener
+     */
     public void setOnFacilityClickListener(OnFacilityClickListener listener) {
         this.facilityClickListener = listener;
     }
 
+    /**
+     * Constructor for FacilitiesAdapter
+     * @param context The context of the activity
+     * @param facilityList The list of facilities to display
+     */
     public FacilitiesAdapter(Context context, List<Facility> facilityList) {
         this.context = context;
         this.facilityList = facilityList;
     }
 
-    // ViewHolder class to hold each item view
+    /**
+     * ViewHolder class for holding the view for each facility item
+     */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView facilityNameTextView;
         ImageView facilityImageView;
 
+        /**
+         * Constructor for ViewHolder
+         * @param itemView The view for the facility item
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             // Initialize the views
@@ -51,6 +71,10 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Handle click events on the item view
+         * @param view The view that was clicked
+         */
         @Override
         public void onClick(View view) {
             if (facilityClickListener != null) {
@@ -63,6 +87,14 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
         }
     }
 
+    /**
+     * onCreateViewHolder
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public FacilitiesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -71,6 +103,12 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
         return new ViewHolder(view);
     }
 
+    /**
+     * onBindViewHolder
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull FacilitiesAdapter.ViewHolder holder, int position) {
         Facility facility = facilityList.get(position);
@@ -94,6 +132,10 @@ public class FacilitiesAdapter extends RecyclerView.Adapter<FacilitiesAdapter.Vi
                 .into(holder.facilityImageView);
     }
 
+    /**
+     * getItemCount
+     * @return facilityList size
+     */
     @Override
     public int getItemCount() {
         return facilityList.size();

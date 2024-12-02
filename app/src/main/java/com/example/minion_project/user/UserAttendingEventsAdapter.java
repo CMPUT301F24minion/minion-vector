@@ -14,16 +14,32 @@ import com.example.minion_project.events.Event;
 
 import java.util.List;
 
+/**
+ * UserAttendingEventsAdapter class for handling the RecyclerView for user attending events.
+ */
 public class UserAttendingEventsAdapter extends RecyclerView.Adapter<UserAttendingEventsAdapter.EventViewHolder> {
 
     private final Context context;
     private final List<Event> events;
 
+    /**
+     * Constructor for UserAttendingEventsAdapter.
+     * @param context The context in which the adapter is used.
+     * @param events The list of events to be displayed.
+     */
     public UserAttendingEventsAdapter(Context context, List<Event> events) {
         this.context = context;
         this.events = events;
     }
 
+    /**
+     * onCreateViewHolder method for creating a new ViewHolder.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -31,6 +47,12 @@ public class UserAttendingEventsAdapter extends RecyclerView.Adapter<UserAttendi
         return new EventViewHolder(view);
     }
 
+    /**
+     * onBindViewHolder method for binding data to a ViewHolder.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = events.get(position);
@@ -46,15 +68,26 @@ public class UserAttendingEventsAdapter extends RecyclerView.Adapter<UserAttendi
         holder.enrolledMessage.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * getItemCount method for getting the total number of items in the data set held by the adapter.
+     * @return The total number of items in this adapter.
+     */
     @Override
     public int getItemCount() {
         return events.size();
     }
 
+    /**
+     * EventViewHolder class for holding references to the views in each item of the RecyclerView.
+     */
     static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView eventTitle, eventDetails, eventStatus, eventDate;
         TextView selectionMessage, rejectedMessage, enrolledMessage;
 
+        /**
+         * Constructor for EventViewHolder.
+         * @param itemView The View that represents the item in the RecyclerView.
+         */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
 
