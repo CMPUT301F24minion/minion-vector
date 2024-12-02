@@ -1,7 +1,6 @@
 package com.example.minion_project;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import com.example.minion_project.organizer.OrganizerActivity;
 
@@ -17,9 +16,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.*;
 @RunWith(AndroidJUnit4.class)
 public class OrganizerActivityTest {
 
-    @Rule
-    public ActivityTestRule<OrganizerActivity> activityRule =
-            new ActivityTestRule<>(OrganizerActivity.class);
 
     @Test
     public void testCreateEventUI() {

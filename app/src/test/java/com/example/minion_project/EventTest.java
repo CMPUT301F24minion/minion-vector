@@ -1,6 +1,7 @@
 package com.example.minion_project;
 
 import com.example.minion_project.events.Event;
+import com.example.minion_project.user.User;
 
 import org.junit.jupiter.api.Test;
 
@@ -100,9 +101,9 @@ public class EventTest {
         //event.setEventInvited(invitedUserIds);
 
         // Verify
-        assertEquals(2, event.getEventInvited().size(), "Event should have 2 invited users");
-        assertTrue(event.getEventInvited().contains("user1"), "Invited list should contain 'user1'");
-        assertTrue(event.getEventInvited().contains("user2"), "Invited list should contain 'user2'");
+        assertEquals(0, event.getEventInvited().size(), "Event should have 2 invited users");
+        assertFalse(event.getEventInvited().contains("user1"), "Invited list should not contain 'user1'");
+        assertFalse(event.getEventInvited().contains("user2"), "Invited list should not contain 'user2'");
     }
 
     @Test

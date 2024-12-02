@@ -27,6 +27,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private OnImageSelectListener imageSelectListener;
     private OnItemClickListener listener;
 
+    public <E> EventsAdapter(ArrayList<E> es) {
+    }
+
     /**
      * Interface for handling event deletion
      */
