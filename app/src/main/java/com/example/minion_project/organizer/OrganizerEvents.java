@@ -25,6 +25,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+/**
+ * OrganizerEvents is a fragment that displays a list of events organized by an organizer.
+ */
 public class OrganizerEvents extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;  // Request code for image picker
 
@@ -36,11 +39,27 @@ public class OrganizerEvents extends Fragment {
 
     private Event selectedEvent;  // Keep track of which event's image is being replaced
 
+    /**
+     * Constructor for OrganizerEvents
+     * @param organizerController OrganizerController
+     */
     public OrganizerEvents(OrganizerController organizerController) {
         this.organizerController = organizerController;
         this.ourFirestore = new FireStoreClass();
     }
 
+    /**
+     * Creates the view for the fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizer_events, container, false);
@@ -63,6 +82,11 @@ public class OrganizerEvents extends Fragment {
         });
         return view;
     }
+
+    /**
+     * Opens the EventDetailFragment with the selected event
+     * @param event The selected event
+     */
     private void openEventDetailFragment(Event event) {
         EventDetailFragment eventDetailFragment = new EventDetailFragment();
 
@@ -77,12 +101,27 @@ public class OrganizerEvents extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
+
+    /**
+     * Opens the image picker
+     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Handles the result of the activity
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -98,6 +137,11 @@ public class OrganizerEvents extends Fragment {
         }
     }
 
+    /**
+     * Replace's the event image with the new image
+     * @param event The event to update
+     * @param newImageUri The new image URI
+     */
     private void replaceEventImage(Event event, Uri newImageUri) {
         String oldImageUrl = event.getEventImage();
         String newImageName = "event_images/" + event.getEventID() + "_new.jpg";
@@ -138,6 +182,9 @@ public class OrganizerEvents extends Fragment {
                 });
     }
 
+    /**
+     * Fetches the events from Firestore
+     */
     private void fetchEvents() {
         ArrayList<String> eventIds = organizerController.getOrganizer().getAllEvents();
         FirebaseFirestore db = ourFirestore.getFirestore();

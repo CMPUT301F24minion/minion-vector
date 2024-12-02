@@ -37,12 +37,20 @@ public class OrganizerActivity extends AppCompatActivity {
 
     public OrganizerController organizerController;
 
+    /**
+     * Called when the activity receives a new intent.
+     * @param intent The new intent to be handled.
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent);
     }
 
+    /**
+     * Handles the intent received by the activity.
+     * @param intent The intent to be handled.
+     */
     private void handleIntent(Intent intent) {
         if (intent != null) {
             String action = intent.getAction();
@@ -113,12 +121,22 @@ public class OrganizerActivity extends AppCompatActivity {
             return true;
         });
     }
+
+    /**
+     * Replaces the current fragment with a new fragment.
+     * @param fragment The fragment to be replaced.
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayoutOrganizer, fragment);
         fragmentTransaction.commit();
     }
+
+    /**
+     * Updates the header text of the activity.
+     * @param text The new text to be displayed in the header.
+     */
     public void updateHeaderText(String text) {
         binding.organizerTextView.setText(text);
     }

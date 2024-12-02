@@ -84,10 +84,19 @@ public class EventDetailFragment extends Fragment {
     Button eventStartButton;
     EventController eventController;
 
+    /**
+     * Required empty public constructor
+     */
     public EventDetailFragment() {
         this.eventController=new EventController();
     }
 
+    /**
+     *
+     * @param param1
+     * @param param2
+     * @return
+     */
     public static EventDetailFragment newInstance(String param1, String param2) {
         EventDetailFragment fragment = new EventDetailFragment();
         Bundle args = new Bundle();
@@ -97,6 +106,19 @@ public class EventDetailFragment extends Fragment {
 
     private Event event;
     private Lottery lottery;
+
+    /**
+     * Called to create and return the view hierarchy associated with the fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return view The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
@@ -140,6 +162,11 @@ public class EventDetailFragment extends Fragment {
             //open the mapactivity fragment
             ArrayList<String> waitlisted=event.getEventWaitlist();
             eventController.getLocation(waitlisted, new EventController.LocationCallback() {
+
+                /**
+                 * Callback method to handle the fetched locations.
+                 * @param locations The fetched locations
+                 */
                 @Override
                 public void onLocationFetched(ArrayList<HashMap<String, Double>> locations) {
 
@@ -189,12 +216,20 @@ public class EventDetailFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Handle the lottery
+     * @param num Number of applicants
+     */
     private void  handleLottery(Integer num){
         Log.d("EventDetailFragment", "Handling lottery with num: " + num);
         lottery.poolApplicants(num);
 
     };
 
+    /**
+     * Fetch event data from Firestore
+     * @param eventID Event ID
+     */
     private void fetchEventData(String eventID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference eventRef = db.collection("Events").document(eventID);
@@ -230,6 +265,17 @@ public class EventDetailFragment extends Fragment {
     }
 
 
+    /**
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -244,12 +290,19 @@ public class EventDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Open image picker
+     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Replace event image
+     * @param newImageUri New image URI
+     */
     private void replaceEventImage(Uri newImageUri) {
         String oldImageUrl = event.getEventImage();
         String newImageName = "event_images/" + event.getEventID() + "_new.jpg";
@@ -286,6 +339,9 @@ public class EventDetailFragment extends Fragment {
                 });
     }
 
+    /**
+     * Remove image
+     */
     private void removeImage() {
         if (event.getEventImage() != null) {
             FirebaseStorage.getInstance().getReferenceFromUrl(event.getEventImage())
@@ -311,6 +367,9 @@ public class EventDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Show edit event details dialog
+     */
     private void showEditEventDetailsDialog() {
         // Create an AlertDialog builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -349,6 +408,9 @@ public class EventDetailFragment extends Fragment {
         builder.create().show();
     }
 
+    /**
+     * Show edit event title dialog
+     */
     private void showEditEventTitleDialog() {
         if (event == null) {
             Toast.makeText(getContext(), "Event data not available", Toast.LENGTH_SHORT).show();
@@ -394,6 +456,9 @@ public class EventDetailFragment extends Fragment {
         builder.create().show();
     }
 
+    /**
+     * Open time picker dialog
+     */
     private void openTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -417,6 +482,9 @@ public class EventDetailFragment extends Fragment {
         timePickerDialog.show();
     }
 
+    /**
+     * Open date picker dialog
+     */
     private void openDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -441,6 +509,11 @@ public class EventDetailFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    /**
+     * Show user list dialog
+     * @param listField Name of the list field
+     * @param title Title of the dialog
+     */
     private void showUserListDialog(String listField, String title) {
         if (event == null) {
             Toast.makeText(getContext(), "Event data not available", Toast.LENGTH_SHORT).show();
@@ -448,6 +521,10 @@ public class EventDetailFragment extends Fragment {
         }
 
         eventController.fetchUserNamesFromList(event.getEventID(), listField, new EventController.UserListCallback() {
+            /**
+             * Callback method to handle the fetched user names.
+             * @param userNames List of user names
+             */
             @Override
             public void onUserListFetched(ArrayList<Map.Entry<String, String>> userNames) {
                 // Check if no users were found
@@ -531,6 +608,10 @@ public class EventDetailFragment extends Fragment {
                 builder.create().show();
             }
 
+            /**
+             * Callback method to handle the error.
+             * @param errorMessage Error message
+             */
             @Override
             public void onError(String errorMessage) {
                 // Handle the error callback
@@ -540,6 +621,10 @@ public class EventDetailFragment extends Fragment {
         });
     }
 
+    /**
+     * Clean invalid user IDs from event lists
+     * @param event Event to clean user IDs from
+     */
     private void cleanInvalidUserIds(Event event) {
         Log.d("EventDetailFragment", "cleanInvalidUserIds called for event ID: " + event.getEventID());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -618,6 +703,10 @@ public class EventDetailFragment extends Fragment {
     }
 
 
+    /**
+     * Update UI with event data
+     * @param event Event to update UI with
+     */
     private void updateUI(Event event) {
         // Load the event image
         String eventImageUrl = event.getEventImage();
@@ -683,6 +772,9 @@ public class EventDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Destroy view
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

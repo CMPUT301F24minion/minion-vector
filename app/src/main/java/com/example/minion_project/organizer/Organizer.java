@@ -8,6 +8,7 @@ package com.example.minion_project.organizer;
 
 import java.util.ArrayList;
 
+
 public class Organizer {
     private String deviceID;
     private String name;
@@ -16,6 +17,9 @@ public class Organizer {
     private ArrayList<String> allEvents;
     private boolean facility;
 
+    /**
+     * Default constructor for Organizer class
+     */
     public Organizer() {
         this.allEvents = null;
         this.phoneNumber = "";

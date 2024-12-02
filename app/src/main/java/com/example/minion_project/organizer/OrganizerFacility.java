@@ -25,6 +25,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * OrganizerFacility is a fragment that allows an organizer to set up their facility.
+ */
 public class OrganizerFacility extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -37,10 +40,26 @@ public class OrganizerFacility extends Fragment {
     private FireStoreClass firestore = new FireStoreClass();
     private OrganizerController organizerController;
 
+    /**
+     * Constructor for OrganizerFacility
+     * @param organizerController OrganizerController
+     */
     public OrganizerFacility(OrganizerController organizerController) {
         this.organizerController = organizerController;
     }
 
+    /**
+     * On create view for the fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return The View for the fragment's UI, or null.
+     */
     @SuppressLint("WrongViewCast")
     @Nullable
     @Override
@@ -60,6 +79,9 @@ public class OrganizerFacility extends Fragment {
         return view;
     }
 
+    /**
+     * Loads the existing facility data from Firestore
+     */
     private void loadExistingFacilityData() {
         String organizerID = organizerController.getOrganizer().getDeviceID();
         firestore.getFirestore().collection("Facility")
@@ -85,6 +107,9 @@ public class OrganizerFacility extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to load facility data", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Opens the image chooser
+     */
     private void openImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -92,6 +117,17 @@ public class OrganizerFacility extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Facility Image"), PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Handles the result of the activity
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -101,6 +137,9 @@ public class OrganizerFacility extends Fragment {
         }
     }
 
+    /**
+     * Saves the facility details to Firestore
+     */
     private void saveFacilityDetails() {
         String facilityName = facilityNameInput.getText().toString().trim();
         if (facilityName.isEmpty()) {
@@ -124,6 +163,11 @@ public class OrganizerFacility extends Fragment {
         }
     }
 
+    /**
+     * Saves the facility details to Firestore
+     * @param facilityName The name of the facility
+     * @param facilityImageURL The URL of the facility image
+     */
     private void saveFacilityDataToFirestore(String facilityName, String facilityImageURL) {
         String organizerID = organizerController.getOrganizer().getDeviceID();
         Map<String, Object> facilityData = new HashMap<>();
@@ -144,6 +188,9 @@ public class OrganizerFacility extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to save facility details", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Navigates back to the create event fragment
+     */
     private void navigateBackToCreateEvent() {
         // Navigate back to OrganizerActivity with intent
         Intent intent = new Intent(requireActivity(), OrganizerActivity.class);

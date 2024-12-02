@@ -37,7 +37,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
-
+/**
+ * OrganizerCreateEvent is a fragment that allows an organizer to create a new event.
+ */
 public class OrganizerCreateEvent extends Fragment {
     private static final String TAG = "OrganizerCreateEvent";
     private static final int QR_SIZE = 100;
@@ -57,13 +59,27 @@ public class OrganizerCreateEvent extends Fragment {
 
     private Uri imageUri;
 
-    // Initialize controller
+    /**
+     * Constructor for OrganizerCreateEvent
+     * @param organizercontroller OrganizerController
+     */
     public OrganizerCreateEvent(OrganizerController organizercontroller){
         this.organizerController = organizercontroller;
         this.Organizer = organizercontroller.getOrganizer();
     }
 
-
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -116,7 +132,9 @@ public class OrganizerCreateEvent extends Fragment {
         return view;
     }
 
-
+    /**
+     * Opens a time picker dialog
+     */
     private void openTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -130,6 +148,9 @@ public class OrganizerCreateEvent extends Fragment {
         timePickerDialog.show();
     }
 
+    /**
+     * Opens a date picker dialog
+     */
     private void openDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -144,6 +165,9 @@ public class OrganizerCreateEvent extends Fragment {
         datePickerDialog.show();
     }
 
+    /**
+     * Opens a file chooser to select an image
+     */
     private void uploadImage() {
         openFileChooser();
     }
@@ -208,14 +232,22 @@ public class OrganizerCreateEvent extends Fragment {
                         Toast.makeText(getContext(), "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Updates the facility name in Firestore
+     * @param facility The new facility name
+     */
     private void updateOrganizerFacilityName(String facility) {
-        String organizerID = Organizer.getDeviceID(); // Assuming this is the ID used in Firestore
+        String organizerID = Organizer.getDeviceID();
         ourFirestore.getOrganizersRef().document(organizerID)
                 .update("facilityName", facility)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Facility name updated successfully."))
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to update facility name: " + e.getMessage()));
     }
 
+    /**
+     * Generates and uploads a QR code for the event
+     * @param qrContent
+     */
     private void generateAndUploadQRCode(String qrContent) {
         // qrContent is the eventID
         try {
@@ -241,7 +273,9 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
-
+    /**
+     * Opens a file chooser to select an image
+     */
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -249,6 +283,17 @@ public class OrganizerCreateEvent extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select event Poster"), PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Handles the result of the activity
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -260,6 +305,10 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
+    /**
+     * Uploads the image to Firebase Storage and creates the event
+     * @param eventId The ID of the event
+     */
     private void uploadImageToFirebaseAndCreateEvent(String eventId) {
         if (imageUri != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -279,6 +328,12 @@ public class OrganizerCreateEvent extends Fragment {
         }
     }
 
+    /**
+     * Saves the URL to Firestore
+     * @param key The key to be used in the Firestore document
+     * @param eventId The ID of the event
+     * @param Url The URL to be saved
+     */
     private void saveToFirestore(String key, String eventId, String Url) {
         CollectionReference eventsRef = ourFirestore.getEventsRef();
 
@@ -289,6 +344,9 @@ public class OrganizerCreateEvent extends Fragment {
         eventsRef.document(eventId).update("eventID", eventId);
     }
 
+    /**
+     * Clears the input fields
+     */
     private void clearInputs() {
         createEventTitle.setText("");
         createEventDetails.setText("");
