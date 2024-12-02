@@ -1,37 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/backgroundColor">
 
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/facilityManagerTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Facility Manager"
+        android:textSize="50sp"
+        android:textColor="@color/primaryColor"
+        android:gravity="center"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Horizontal Section for Image and Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+
+        <!-- Facility Image -->
+        <ImageView
+            android:id="@+id/facilityPhoto"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:background="@drawable/imageview_border"
+            android:layout_marginEnd="16dp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- Select Image Button -->
+            <LinearLayout
+                android:id="@+id/selectImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/camera_icon"
+                    android:contentDescription="Camera Icon" />
+            </LinearLayout>
+
+            <!-- Save Facility Button -->
+            <LinearLayout
+                android:id="@+id/saveFacilityButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="@color/teal_200">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/checkmark"
+                    android:contentDescription="Checkmark Icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Facility Name Input -->
     <EditText
         android:id="@+id/facilityName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Facility Name"
-        android:padding="8dp" />
-
-    <ImageView
-        android:id="@+id/facilityPhoto"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_menu_gallery" />
-
-    <Button
-        android:id="@+id/selectImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Image"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp" />
-
-    <Button
-        android:id="@+id/saveFacilityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Facility"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp" />
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColor="@color/textPrimary"
+        android:textSize="16sp" />
 </LinearLayout>

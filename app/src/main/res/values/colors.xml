@@ -19,5 +19,11 @@
     <color name="purple_700">#3700B3</color>
     <color name="teal_200">#03DAC5</color>
     <color name="teal_700">#018786</color>
+    <color name="backgroundColor">#F9F9F9</color>
+    <color name="primaryColor">#6200EE</color>
+    <color name="secondaryColor">#03DAC5</color>
+    <color name="textPrimary">#212121</color>
+    <color name="grey">#BDBDBD</color>
+
 
 </resources>

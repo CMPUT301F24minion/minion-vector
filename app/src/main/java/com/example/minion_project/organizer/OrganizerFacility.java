@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,7 +30,7 @@ public class OrganizerFacility extends Fragment {
 
     private EditText facilityNameInput;
     private ImageView facilityImagePreview;
-    private Button saveButton, selectImageButton;
+    private LinearLayout saveButton, selectImageButton;
 
     private String existingImageURL;
     private Uri imageUri;
