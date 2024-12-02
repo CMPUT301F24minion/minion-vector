@@ -17,6 +17,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * EventsAdapter: Adapter for displaying a list of events in a RecyclerView.
+ */
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
     private Context context;
     private ArrayList<Event> eventList;
@@ -24,43 +27,72 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private OnImageSelectListener imageSelectListener;
     private OnItemClickListener listener;
 
-    // Interface for handling delete actions
+    /**
+     * Interface for handling event deletion
+     */
     public interface OnEventDeleteListener {
         void onEventDelete(Event event);
     }
 
-    // Interface for handling item clicks
+    /**
+     * Interface for handling item click
+     */
     public interface OnItemClickListener {
         void onItemClick(Event event);
     }
 
-    // Interface for handling image selection
+    /**
+     * Interface for handling image selection
+     */
     public interface OnImageSelectListener {
         void onImageSelect(Event event);
     }
 
-    // Constructor for EventsAdapter
+    /**
+     * Constructor for EventsAdapter
+     * @param context The context of the activity
+     * @param eventList The list of events to display
+     * @param deleteListener The listener for event deletion
+     */
     public EventsAdapter(Context context, ArrayList<Event> eventList, OnEventDeleteListener deleteListener) {
         this.context = context;
         this.eventList = eventList;
         this.deleteListener = deleteListener;
     }
 
-    // Alternative constructor without delete listener
+    /**
+     * Constructor for EventsAdapter
+     * @param context The context of the activity
+     * @param eventList The list of events to display
+     */
     public EventsAdapter(Context context, ArrayList<Event> eventList) {
         this(context, eventList, null);
     }
 
-    // Set the item click listener
+    /**
+     * Set the item click listener
+     * @param listener The listener
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    // Set the image select listener
+    /**
+     * Set the image selection listener
+     * @param listener The listener
+     */
     public void setOnImageSelectListener(OnImageSelectListener listener) {
         this.imageSelectListener = listener;
     }
 
+    /**
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -110,6 +142,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         });
     }
 
+    /**
+     * getItemcount
+     * @return eventList size
+     */
     @Override
     public int getItemCount() {
         return eventList.size();
@@ -123,6 +159,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         ImageView eventImage;
         ImageView deleteButton;
 
+        /**
+         * Constructor for EventViewHolder
+         * @param itemView The view for the event item
+         */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             eventName = itemView.findViewById(R.id.event_name);

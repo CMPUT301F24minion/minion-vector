@@ -104,7 +104,7 @@ public class EventController {
     /**
      * addToEventInvited:  a method to add a user to event inivted list
      * @param event
-     * @param userId
+     * @param userid
      * @return None
      */
     public void addToEventInvited(Event event,String userid){
@@ -135,7 +135,7 @@ public class EventController {
     /**
      * addToEventsRejected:  a method to add a user to event rejected list+ pool from lottery
      * @param event
-     * @param userId
+     * @param userid
      * @return None
      */
     public void addToEventsRejected(Event event,String userid){
@@ -185,7 +185,7 @@ public class EventController {
     /**
      * add Events to Enrolled
      * @param event event that user will be removed from
-     * @param UserID userID that will be removed from event
+     * @param userid userID that will be removed from event
      */
     public void addToEventsEnrolled(Event event, String userid) {
         eventsRef.document(event.getEventID()).get().addOnCompleteListener(task -> {
@@ -229,6 +229,12 @@ public class EventController {
                 });
     }
 
+    /**
+     * Fetch user names from a list in an event
+     * @param eventId event ID
+     * @param listField list field name
+     * @param callback callback to be executed once user names are fetched
+     */
     public void fetchUserNamesFromList(String eventId, String listField, UserListCallback callback) {
         eventsRef.document(eventId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -277,7 +283,9 @@ public class EventController {
         });
     }
 
-    // Callback interface for user list fetching
+    /**
+     * UserListCallback interface for handling user list-related callbacks
+     */
     public interface UserListCallback {
         void onUserListFetched(ArrayList<Map.Entry<String, String>>  userNames);
 
@@ -326,8 +334,12 @@ public class EventController {
                 });
     }
 
-
-public void rejecetUser(String eventId, String userId){
+    /**
+     * Function to reject a user
+     * @param eventId event ID
+     * @param userId user ID
+     */
+    public void rejecetUser(String eventId, String userId){
     usersRef.document(userId).get().addOnCompleteListener(task -> {
         if (task.isSuccessful()) {
             DocumentSnapshot document = task.getResult();
@@ -367,6 +379,12 @@ public void rejecetUser(String eventId, String userId){
         }
     });
 }
+
+    /**
+     * Fetch location of users
+     * @param waitlistUsers list of user IDs
+     * @param callback callback to be executed once locations are fetched
+     */
     public void getLocation(ArrayList<String> waitlistUsers, LocationCallback callback) {
         ArrayList<HashMap<String, Double>> ans = new ArrayList<>();
         int totalUsers = waitlistUsers.size();
@@ -416,6 +434,9 @@ public void rejecetUser(String eventId, String userId){
 
     }
 
+    /**
+     * Interface for handling location-related callbacks
+     */
     public interface LocationCallback {
         void onLocationFetched(ArrayList<HashMap<String, Double>> locations);
     }
