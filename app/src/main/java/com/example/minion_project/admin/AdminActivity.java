@@ -12,12 +12,19 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.minion_project.R;
 import com.example.minion_project.databinding.ActivityAdminBinding;
 
+/**
+ * AdminActivity is the main activity for the admin.
+ */
 public class AdminActivity extends AppCompatActivity {
 
     // Binding object for activity layout views
     private ActivityAdminBinding binding;
 
+
     @Override
+    /**
+     * Called when the Admin activity is first created
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
@@ -25,7 +32,6 @@ public class AdminActivity extends AppCompatActivity {
 
         // Default fragment when the admin activity starts
         replaceFragment(new AdminEvents());
-        // Assuming you have a TextView for the title, update accordingly
         // binding.adminTextView.setText("Admin Events");
 
         // Admin bottom navigation

@@ -23,6 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AdminImages is a fragment that displays a grid of images.
+ */
 public class AdminImages extends Fragment {
 
     private RecyclerView recyclerView;
@@ -163,6 +166,13 @@ public class AdminImages extends Fragment {
             this.includeEdge = includeEdge;
         }
 
+        /**
+         * Sets the spacing for each item in the RecyclerView.
+         * @param outRect Rect to receive the output.
+         * @param view    The child view to decorate
+         * @param parent  RecyclerView this ItemDecoration is decorating
+         * @param state   The current state of RecyclerView.
+         */
         @Override
         public void getItemOffsets(@NonNull Rect outRect, View view, RecyclerView parent, @NonNull RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view); // item position

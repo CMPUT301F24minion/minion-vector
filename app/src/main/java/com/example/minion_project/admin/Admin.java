@@ -17,6 +17,9 @@ import com.example.minion_project.user.User;
 
 import java.util.ArrayList;
 
+/**
+ * Admin class for managing admin-related operations
+ */
 public class Admin {
     public FireStoreClass db;
     public String deviceID;
@@ -82,7 +85,6 @@ public class Admin {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Admin", "Error deleting event: " + e.getMessage());
-                    // Optionally, notify the user via UI
                 });
     }
 

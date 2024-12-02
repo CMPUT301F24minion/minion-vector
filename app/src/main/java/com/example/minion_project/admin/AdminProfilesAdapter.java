@@ -15,28 +15,43 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * Adapter class for the RecyclerView in AdminProfiles.
+ */
 public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdapter.ViewHolder> {
 
     private Context context;
     private List<User> userList;
     private OnUserClickListener clickListener;
 
-    // Listener interface for item clicks
+    /**
+     * Interface for handling click events on user profiles.
+     */
     public interface OnUserClickListener {
         void onUserClick(User user);
     }
 
-    // Setter for the click listener
+    /**
+     * Set the click listener for user profiles.
+     * @param listener The click listener to be set.
+     */
     public void setOnUserClickListener(OnUserClickListener listener) {
         this.clickListener = listener;
     }
 
+    /**
+     * Constructor for the adapter.
+     * @param context The context in which the adapter is used.
+     * @param userList The list of users to be displayed.
+     */
     public AdminProfilesAdapter(Context context, List<User> userList) {
         this.context = context;
         this.userList = userList;
     }
 
-    // ViewHolder class to hold each item view
+    /**
+     * ViewHolder class for the RecyclerView items.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNameTextView;
         TextView userEmailTextView;
@@ -44,6 +59,10 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
         TextView userCityTextView;
         ImageView userIconImageView;
 
+        /**
+         * Constructor for the ViewHolder.
+         * @param itemView The view representing an individual item in the RecyclerView.
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             // Initialize the views
@@ -55,6 +74,14 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
         }
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public AdminProfilesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -63,6 +90,12 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
         return new ViewHolder(view);
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull AdminProfilesAdapter.ViewHolder holder, int position) {
         User user = userList.get(position);
@@ -80,6 +113,10 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
         });
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return userList.size()
+     */
     @Override
     public int getItemCount() {
         return userList.size();

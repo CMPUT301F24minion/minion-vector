@@ -24,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * AdminEvents is a fragment that displays a list of events
+ */
 public class AdminEvents extends Fragment implements EventsAdapter.OnEventDeleteListener, EventsAdapter.OnItemClickListener {
 
     private RecyclerView adminEventsRecyclerView;
@@ -34,14 +37,26 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
 
     private static final String TAG = "AdminEvents";
 
+    /**
+     * Admin events required empty public constructor
+     */
     public AdminEvents() {
         // Required empty public constructor
     }
 
+    /**
+     * Factory method to create a new instance of this fragment
+     * @return A new instance of fragment AdminEvents
+     */
     public static AdminEvents newInstance() {
         return new AdminEvents();
     }
 
+    /**
+     * Called to initialize the fragment when it is created.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +65,18 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         eventList = new ArrayList<>();
     }
 
+    /**
+     * Inflate the layout for this fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return view The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +93,9 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
         return view;
     }
 
+    /**
+     * Fetch events from Firestore
+     */
     private void fetchEvents() {
         eventsRef.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -94,6 +124,10 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 });
     }
 
+    /**
+     * Handle event deletion
+     * @param event Event to be deleted
+     */
     @Override
     public void onEventDelete(Event event) {
         // Show a confirmation dialog
@@ -112,6 +146,10 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 .show();
     }
 
+    /**
+     * Handle item click
+     * @param event Event that was clicked
+     */
     @Override
     public void onItemClick(Event event) {
         // Show options dialog
@@ -134,6 +172,10 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 .show();
     }
 
+    /**
+     * Toggle the QR code state for an event
+     * @param event Event for which to toggle the QR code state
+     */
     private void toggleQrCode(Event event) {
         boolean newQrCodeState = !event.isQrCodeEnabled();
         eventsRef.document(event.getEventID())
@@ -150,6 +192,10 @@ public class AdminEvents extends Fragment implements EventsAdapter.OnEventDelete
                 });
     }
 
+    /**
+     * Get the admin's deviceID
+     * @return Admin's deviceID
+     */
     private String getAdminDeviceID() {
         // Implement logic to retrieve the admin's deviceID
         return "admin_device_id"; // Replace with actual retrieval logic

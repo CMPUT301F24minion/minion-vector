@@ -1,184 +1,191 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="24dp">
+    android:fillViewport="true"
+    android:background="@android:color/white">
 
-    <!-- Event Title Input -->
-    <EditText
-        android:id="@+id/createEventTitleEditText"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Title"
-        android:padding="16dp"
-        android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:background="@android:color/white"
+        android:padding="24dp">
 
-    <!-- Event Details Input -->
-    <EditText
-        android:id="@+id/createEventDetailsEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Event Details"
-        android:padding="16dp"
-        android:layout_below="@id/createEventTitleEditText"
-        android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        <!-- Event Title Input -->
+        <EditText
+            android:id="@+id/createEventTitleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Title"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
-    <!-- Event Capacity (Number of Invitations) -->
-    <EditText
-        android:id="@+id/createEventInvitationsEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Invites"
-        android:inputType="numberSigned"
-        android:padding="16dp"
-        android:layout_below="@id/createEventDetailsEditText"
-        android:layout_marginBottom="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+            <!-- Event Details Input -->
+            <EditText
+                android:id="@+id/createEventDetailsEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Details"
+                android:padding="16dp"
+                android:layout_below="@id/createEventTitleEditText"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
-    <!-- Event Image -->
-    <ImageView
-        android:id="@+id/eventImageView"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_below="@id/createEventInvitationsEditText"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Event Image"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center"
-        android:background="@drawable/round_corners_image" />
+            <!-- Event Capacity (Number of Invitations) -->
+            <EditText
+                android:id="@+id/createEventInvitationsEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Invites"
+                android:inputType="numberSigned"
+                android:padding="16dp"
+                android:layout_below="@id/createEventDetailsEditText"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
-
-    <!-- Select Time Button -->
-    <LinearLayout
-        android:id="@+id/selectTimeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/createEventInvitationsEditText"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:background="@drawable/round_button"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/clock_icon"
-            android:contentDescription="Clock Icon" />
+            <!-- Event Image -->
+            <ImageView
+                android:id="@+id/eventImageView"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:layout_below="@id/createEventInvitationsEditText"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="Event Image"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:background="@drawable/round_corners_image" />
 
 
-    </LinearLayout>
+            <!-- Select Time Button -->
+            <LinearLayout
+                android:id="@+id/selectTimeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/createEventInvitationsEditText"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
 
-    <!-- Select Date Button -->
-    <LinearLayout
-        android:id="@+id/selectDateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/selectTimeButton"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:background="@drawable/round_button"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/calendar_icon"
-            android:contentDescription="Calendar Icon" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/clock_icon"
+                    android:contentDescription="Clock Icon" />
 
 
-    </LinearLayout>
+            </LinearLayout>
 
-    <!-- Upload Image Button -->
-    <LinearLayout
-        android:id="@+id/uploadImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/selectDateButton"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:background="@drawable/round_button"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
+            <!-- Select Date Button -->
+            <LinearLayout
+                android:id="@+id/selectDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/selectTimeButton"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/camera_icon"
-            android:contentDescription="Camera Icon" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/editFacilityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/uploadImageButton"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:background="@drawable/round_button"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/facility"
-            android:contentDescription="Facility Icon" />
-
-    </LinearLayout>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/calendar_icon"
+                    android:contentDescription="Calendar Icon" />
 
 
-    <!-- Create Event Button -->
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/createEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/editFacilityButton"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="48dp"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:background="@drawable/round_button"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"
-        android:backgroundTint="@color/teal_200">
+            <!-- Upload Image Button -->
+            <LinearLayout
+                android:id="@+id/uploadImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/selectDateButton"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/checkmark"
-            android:contentDescription="Checkmark Icon" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/camera_icon"
+                    android:contentDescription="Camera Icon" />
 
-    </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/editFacilityButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/uploadImageButton"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/facility"
+                    android:contentDescription="Facility Icon" />
+
+            </LinearLayout>
+
+
+            <!-- Create Event Button -->
+
+            <LinearLayout
+                android:id="@+id/createEventButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/editFacilityButton"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="48dp"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:background="@drawable/round_button"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="@color/teal_200">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/checkmark"
+                    android:contentDescription="Checkmark Icon" />
+
+            </LinearLayout>
 
 
 
-</RelativeLayout>
-
+        </RelativeLayout>
+</ScrollView>
 
 
 
