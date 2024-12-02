@@ -1,0 +1,4 @@
+To view the JavaDocs:
+1. Download `JavaDocsP4.zip`.
+2. Unzip the file.
+3. Open `index.html` in a web browser.
